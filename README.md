@@ -1,0 +1,1 @@
+- 本文は夏目漱石『坊っちゃん』 https://www.aozora.gr.jp/cards/000148/files/50420_76846.html から拝借した
