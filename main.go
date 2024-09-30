@@ -61,6 +61,23 @@ func (g *Game) Update() error {
 		eventQ.Run()
 	}
 
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
+		eventQ.Reset()
+	}
+
+	select {
+	case v := <-eventQ.NotifyChan:
+		switch event := v.(type) {
+		case *event.ChangeBg:
+			eimg, err := loadImage(event.Source)
+			if err != nil {
+				log.Fatal(err)
+			}
+			g.bgImage = eimg
+		}
+	default:
+	}
+
 	return nil
 }
 

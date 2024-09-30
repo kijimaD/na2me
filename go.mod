@@ -6,7 +6,7 @@ toolchain go1.22.7
 
 require (
 	github.com/hajimehoshi/ebiten/v2 v2.8.0
-	github.com/kijimaD/nova v0.0.1
+	github.com/kijimaD/nova v0.0.2
 	golang.org/x/text v0.18.0
 )
 
