@@ -116,7 +116,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	{
 		japaneseText := eventQ.Display()
-		const lineSpacing = fontSize + 4
+		const lineSpacing = fontSize + 8
 		x, y := padding, padding
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(float64(x), float64(y))
