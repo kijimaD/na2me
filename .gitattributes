@@ -1,1 +1,2 @@
-/**/*.sce linguist-vendored
+/*.sce linguist-vendored
+/*.js linguist-vendored
