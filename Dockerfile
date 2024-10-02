@@ -3,7 +3,7 @@
 ########
 
 # なぜかbuster以外だと、WASMビルドで真っ白表示になってしまう
-FROM golang:1.20-buster AS base
+FROM golang:1.22.8-bullseye AS base
 RUN apt update
 RUN apt install -y \
     gcc \
@@ -38,8 +38,8 @@ COPY . .
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     GO111MODULE=on \
-    go build -o ./bin/nova ./_example/main.go
-RUN upx-ucl --best --ultra-brute ./bin/nova
+    go build -o ./bin/na2me .
+RUN upx-ucl --best --ultra-brute ./bin/na2me
 
 ###########
 # release #
@@ -47,9 +47,9 @@ RUN upx-ucl --best --ultra-brute ./bin/nova
 
 FROM gcr.io/distroless/base-debian11:latest AS release
 
-COPY --from=builder /build/bin/nova /bin/
+COPY --from=builder /build/bin/na2me /bin/
 WORKDIR /work
-ENTRYPOINT ["nova"]
+ENTRYPOINT ["na2me"]
 
 ########
 # node #
