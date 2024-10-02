@@ -8,6 +8,7 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	embeds "github.com/kijimaD/na2me/embeds"
 )
 
 type MainMenuState struct {
@@ -38,9 +39,6 @@ func (st *MainMenuState) Update() Transition {
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		return Transition{Type: TransQuit}
-	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
-		return Transition{Type: TransSwitch, NewStates: []State{&PlayState{}}}
 	}
 
 	return Transition{Type: TransNone}
@@ -79,7 +77,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 			Bottom: 5,
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{}}}
+			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: embeds.Bochan}}}
 		}),
 	)
 	rootContainer.AddChild(button)

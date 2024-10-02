@@ -2,8 +2,10 @@ package embeds
 
 import "embed"
 
-//go:embed input.sce
-var Input []byte
+// 坊っちゃん
+//
+//go:embed scenario/bochan.sce
+var Bochan []byte
 
 //go:embed *
 var FS embed.FS
