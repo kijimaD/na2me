@@ -1,5 +1,5 @@
 // 参考: https://github.com/x-hgg-x/goecsengine/blob/master/states/lib.go
-package lib
+package states
 
 import (
 	"log"
@@ -13,6 +13,7 @@ type TransType int
 const (
 	TransNone TransType = iota
 	TransSwitch
+	TransQuit
 )
 
 type Transition struct {
@@ -50,6 +51,8 @@ func (sm *StateMachine) Update() {
 	switch sm.lastTransition.Type {
 	case TransSwitch:
 		sm._Switch(sm.lastTransition.NewStates)
+	case TransQuit:
+		sm._Quit()
 	}
 
 	if len(sm.states) < 1 {
@@ -74,4 +77,12 @@ func (sm *StateMachine) _Switch(newStates []State) {
 	sm.states[len(sm.states)-1].OnStop()
 	newStates[0].OnStart()
 	sm.states[len(sm.states)-1] = newStates[0]
+}
+
+func (sm *StateMachine) _Quit() {
+	for len(sm.states) > 0 {
+		sm.states[len(sm.states)-1].OnStop()
+		sm.states = sm.states[:len(sm.states)-1]
+	}
+	os.Exit(0)
 }
