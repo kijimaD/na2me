@@ -1,7 +1,6 @@
 package states
 
 import (
-	"bytes"
 	"image/color"
 	"log"
 	"math"
@@ -15,7 +14,6 @@ import (
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
 	"github.com/kijimaD/nova/parser"
-	"golang.org/x/text/language"
 )
 
 const (
@@ -25,15 +23,14 @@ const (
 	padding      = 40
 )
 
-var japaneseFaceSource *text.GoTextFaceSource
-var eventQ event.Queue
-
 type PlayState struct {
-	trans *Transition
+	trans  *Transition
+	eventQ event.Queue
 
 	bgImage     *ebiten.Image
 	promptImage *ebiten.Image
 	startTime   time.Time
+	faceFont    text.Face
 }
 
 func (st *PlayState) OnPause() {}
@@ -41,18 +38,8 @@ func (st *PlayState) OnPause() {}
 func (st *PlayState) OnResume() {}
 
 func (st *PlayState) OnStart() {
+	st.faceFont = loadFont("ui/JF-Dot-Kappa20B.ttf", fontSize)
 	st.startTime = time.Now()
-	{
-		font, err := embeds.FS.ReadFile("ui/JF-Dot-Kappa20B.ttf")
-		if err != nil {
-			log.Fatal(err)
-		}
-		s, err := text.NewGoTextFaceSource(bytes.NewReader(font))
-		if err != nil {
-			log.Fatal(err)
-		}
-		japaneseFaceSource = s
-	}
 
 	l := lexer.NewLexer(string(embeds.Input))
 	p := parser.NewParser(l)
@@ -62,8 +49,8 @@ func (st *PlayState) OnStart() {
 	}
 	e := event.NewEvaluator()
 	e.Eval(program)
-	eventQ = event.NewQueue(e)
-	eventQ.Start()
+	st.eventQ = event.NewQueue(e)
+	st.eventQ.Start()
 
 	{
 		eimg, err := loadImage("forest.jpg")
@@ -84,20 +71,27 @@ func (st *PlayState) OnStart() {
 func (st *PlayState) OnStop() {}
 
 func (st *PlayState) Update() Transition {
+	// transの書き換えで遷移する
+	if st.trans != nil {
+		next := *st.trans
+		st.trans = nil
+		return next
+	}
+
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
-		return Transition{Type: TransQuit}
+		return Transition{Type: TransSwitch, NewStates: []State{&MainMenuState{}}}
 	}
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
-		eventQ.Run()
+		st.eventQ.Run()
 	}
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
-		eventQ.Reset()
+		st.eventQ.Reset()
 	}
 
 	select {
-	case v := <-eventQ.NotifyChan:
+	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
 		case *event.ChangeBg:
 			eimg, err := loadImage(event.Source)
@@ -122,18 +116,12 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 
 	{
 		// 背景色
-		black := color.RGBA{0x00, 0x00, 0x00, 0x80}
+		black := color.RGBA{0x10, 0x10, 0x10, 0x80}
 		vector.DrawFilledRect(screen, 0, 0, screenWidth, screenHeight, black, false)
 	}
 
-	f := &text.GoTextFace{
-		Source:   japaneseFaceSource,
-		Size:     fontSize,
-		Language: language.Japanese,
-	}
-
 	// 待ち状態表示
-	if eventQ.OnAnim {
+	if st.eventQ.OnAnim {
 		elapsed := time.Since(st.startTime).Seconds()
 		offsetY := 4 * math.Sin(elapsed*4) // sin関数で上下に動かす
 		bounds := st.promptImage.Bounds()
@@ -146,13 +134,13 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	}
 
 	{
-		japaneseText := eventQ.Display()
+		japaneseText := st.eventQ.Display()
 		const lineSpacing = fontSize + 8
 		x, y := padding, padding
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(float64(x), float64(y))
 		op.LineSpacing = lineSpacing
-		text.Draw(screen, japaneseText, f, op)
+		text.Draw(screen, japaneseText, st.faceFont, op)
 	}
 }
 

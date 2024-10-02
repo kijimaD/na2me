@@ -2,23 +2,18 @@ package states
 
 import (
 	"image/color"
-	"log"
 
 	"github.com/ebitenui/ebitenui"
 	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/text/v2"
-	embeds "github.com/kijimaD/na2me/embeds"
 )
 
 type MainMenuState struct {
 	ui            *ebitenui.UI
 	trans         *Transition
-	faceSource    *text.GoTextFaceSource
 	rootContainer *widget.Container
-	faceFont      text.Face
 }
 
 func (st *MainMenuState) OnPause() {}
@@ -34,7 +29,7 @@ func (st *MainMenuState) OnStop() {}
 func (st *MainMenuState) Update() Transition {
 	st.ui.Update()
 
-	// transを書き換えて遷移する
+	// transの書き換えで遷移する
 	if st.trans != nil {
 		next := *st.trans
 		st.trans = nil
@@ -58,7 +53,7 @@ func (st *MainMenuState) Draw(screen *ebiten.Image) {
 func (st *MainMenuState) updateMenuContainer() {}
 
 func (st *MainMenuState) initUI() *ebitenui.UI {
-	st.faceFont = loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
+	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
 
 	buttonImage, _ := loadButtonImage()
 	rootContainer := widget.NewContainer(
@@ -74,7 +69,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 			}),
 		),
 		widget.ButtonOpts.Image(buttonImage),
-		widget.ButtonOpts.Text("坊っちゃん", st.faceFont, &widget.ButtonTextColor{
+		widget.ButtonOpts.Text("坊っちゃん", faceFont, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -103,21 +98,4 @@ func loadButtonImage() (*widget.ButtonImage, error) {
 		Hover:   hover,
 		Pressed: pressed,
 	}, nil
-}
-
-func loadFont(path string, size float64) text.Face {
-	fontFile, err := embeds.FS.Open(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	s, err := text.NewGoTextFaceSource(fontFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return &text.GoTextFace{
-		Source: s,
-		Size:   size,
-	}
 }
