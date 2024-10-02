@@ -147,5 +147,3 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 		text.Draw(screen, japaneseText, st.faceFont, op)
 	}
 }
-
-func (st *PlayState) updateMenuContainer() {}

@@ -8,6 +8,7 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	embeds "github.com/kijimaD/na2me/embeds"
 )
 
@@ -53,12 +54,27 @@ func (st *MainMenuState) updateMenuContainer() {}
 func (st *MainMenuState) initUI() *ebitenui.UI {
 	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
 
-	buttonImage, _ := loadButtonImage()
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.RGBA{0x13, 0x1a, 0x22, 0xff})),
-		widget.ContainerOpts.Layout(widget.NewAnchorLayout()),
+		widget.ContainerOpts.Layout(widget.NewRowLayout(
+			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
+			widget.RowLayoutOpts.Padding(widget.Insets{
+				Top:    10,
+				Bottom: 10,
+				Left:   10,
+				Right:  10,
+			}),
+			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
+		)),
 	)
+	rootContainer.AddChild(st.scenarioSelectButton("坊っちゃん", faceFont, embeds.Bochan))
+	rootContainer.AddChild(st.scenarioSelectButton("吾輩は猫である", faceFont, embeds.WagahaiHaNekoDearu))
 
+	return &ebitenui.UI{Container: rootContainer}
+}
+
+func (st *MainMenuState) scenarioSelectButton(label string, face text.Face, scenario []byte) *widget.Button {
+	buttonImage, _ := loadButtonImage()
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -67,7 +83,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 			}),
 		),
 		widget.ButtonOpts.Image(buttonImage),
-		widget.ButtonOpts.Text("坊っちゃん", faceFont, &widget.ButtonTextColor{
+		widget.ButtonOpts.Text(label, face, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -77,19 +93,16 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 			Bottom: 5,
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: embeds.Bochan}}}
+			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario}}}
 		}),
 	)
-	rootContainer.AddChild(button)
-	return &ebitenui.UI{Container: rootContainer}
+	return button
 }
 
 func loadButtonImage() (*widget.ButtonImage, error) {
-	idle := image.NewNineSliceColor(color.RGBA{R: 170, G: 170, B: 180, A: 255})
-
-	hover := image.NewNineSliceColor(color.RGBA{R: 130, G: 130, B: 150, A: 255})
-
-	pressed := image.NewNineSliceColor(color.RGBA{R: 100, G: 100, B: 120, A: 255})
+	idle := image.NewNineSliceColor(color.RGBA{R: 110, G: 110, B: 180, A: 255})
+	hover := image.NewNineSliceColor(color.RGBA{R: 110, G: 180, B: 130, A: 255})
+	pressed := image.NewNineSliceColor(color.RGBA{R: 80, G: 110, B: 100, A: 255})
 
 	return &widget.ButtonImage{
 		Idle:    idle,
