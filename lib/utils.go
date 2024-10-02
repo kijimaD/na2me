@@ -1,14 +1,15 @@
-package main
+package lib
 
 import (
 	"bytes"
 	"image"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	embeds "github.com/kijimaD/na2me/file"
 )
 
 func loadImage(filename string) (*ebiten.Image, error) {
-	bs, err := FS.ReadFile(filename)
+	bs, err := embeds.FS.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
