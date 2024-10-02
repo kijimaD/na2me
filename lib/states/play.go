@@ -10,7 +10,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
 	"github.com/kijimaD/nova/parser"
@@ -24,8 +23,9 @@ const (
 )
 
 type PlayState struct {
-	trans  *Transition
-	eventQ event.Queue
+	scenario []byte
+	trans    *Transition
+	eventQ   event.Queue
 
 	bgImage     *ebiten.Image
 	promptImage *ebiten.Image
@@ -38,10 +38,14 @@ func (st *PlayState) OnPause() {}
 func (st *PlayState) OnResume() {}
 
 func (st *PlayState) OnStart() {
+	if len(st.scenario) == 0 {
+		log.Fatal("シナリオが選択されていない")
+	}
+
 	st.faceFont = loadFont("ui/JF-Dot-Kappa20B.ttf", fontSize)
 	st.startTime = time.Now()
 
-	l := lexer.NewLexer(string(embeds.Input))
+	l := lexer.NewLexer(string(st.scenario))
 	p := parser.NewParser(l)
 	program, err := p.ParseProgram()
 	if err != nil {
@@ -143,5 +147,3 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 		text.Draw(screen, japaneseText, st.faceFont, op)
 	}
 }
-
-func (st *PlayState) updateMenuContainer() {}
