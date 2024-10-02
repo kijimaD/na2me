@@ -132,7 +132,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 func main() {
 	game := &Game{startTime: time.Now()}
 	{
-		font, err := FS.ReadFile("file/JF-Dot-Kappa20B.ttf")
+		font, err := FS.ReadFile("file/ui/JF-Dot-Kappa20B.ttf")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -162,7 +162,7 @@ func main() {
 		game.bgImage = eimg
 	}
 	{
-		eimg, err := loadImage("file/prompt.png")
+		eimg, err := loadImage("file/ui/prompt.png")
 		if err != nil {
 			log.Fatal(err)
 		}
