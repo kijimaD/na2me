@@ -69,6 +69,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 	)
 	rootContainer.AddChild(st.scenarioSelectButton("坊っちゃん", faceFont, embeds.Bochan))
 	rootContainer.AddChild(st.scenarioSelectButton("吾輩は猫である", faceFont, embeds.WagahaiHaNekoDearu))
+	rootContainer.AddChild(st.scenarioSelectButton("三四郎", faceFont, embeds.Sanshirou))
 
 	return &ebitenui.UI{Container: rootContainer}
 }
