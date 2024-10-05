@@ -12,6 +12,8 @@ type TransType int
 
 const (
 	TransNone TransType = iota
+	TransPop
+	TransPush
 	TransSwitch
 	TransQuit
 )
@@ -51,6 +53,10 @@ func (sm *StateMachine) Update() {
 	switch sm.lastTransition.Type {
 	case TransSwitch:
 		sm._Switch(sm.lastTransition.NewStates)
+	case TransPop:
+		sm._Pop()
+	case TransPush:
+		sm._Push(sm.lastTransition.NewStates)
 	case TransQuit:
 		sm._Quit()
 	}
@@ -66,6 +72,31 @@ func (sm *StateMachine) Update() {
 // Draw draws the screen after a state update
 func (sm *StateMachine) Draw(screen *ebiten.Image) {
 	sm.states[len(sm.states)-1].Draw(screen)
+}
+
+// Remove the active state and resume the next state
+func (sm *StateMachine) _Pop() {
+	sm.states[len(sm.states)-1].OnStop()
+	sm.states = sm.states[:len(sm.states)-1]
+
+	if len(sm.states) > 0 {
+		sm.states[len(sm.states)-1].OnResume()
+	}
+}
+
+// Pause the active state and add new states to the stack
+func (sm *StateMachine) _Push(newStates []State) {
+	if len(newStates) > 0 {
+		sm.states[len(sm.states)-1].OnPause()
+
+		for _, state := range newStates[:len(newStates)-1] {
+			state.OnStart()
+			state.OnPause()
+		}
+		newStates[len(newStates)-1].OnStart()
+
+		sm.states = append(sm.states, newStates...)
+	}
 }
 
 // Remove the active state and replace it by a new one

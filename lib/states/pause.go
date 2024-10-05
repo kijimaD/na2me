@@ -8,6 +8,7 @@ import (
 	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
@@ -57,6 +58,10 @@ func (st *PauseState) Update() Transition {
 		next := *st.trans
 		st.trans = nil
 		return next
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
+		return Transition{Type: TransPop, NewStates: []State{}}
 	}
 
 	return Transition{Type: TransNone}

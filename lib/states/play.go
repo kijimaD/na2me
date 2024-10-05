@@ -87,7 +87,7 @@ func (st *PlayState) Update() Transition {
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
-		return Transition{Type: TransSwitch, NewStates: []State{&PauseState{scenario: st.scenario}}}
+		return Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario}}}
 	}
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
