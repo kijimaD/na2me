@@ -23,9 +23,10 @@ const (
 )
 
 type PlayState struct {
-	scenario []byte
-	trans    *Transition
-	eventQ   event.Queue
+	scenario   []byte
+	startLabel *string
+	trans      *Transition
+	eventQ     event.Queue
 
 	bgImage     *ebiten.Image
 	promptImage *ebiten.Image
@@ -55,6 +56,9 @@ func (st *PlayState) OnStart() {
 	e.Eval(program)
 	st.eventQ = event.NewQueue(e)
 	st.eventQ.Start()
+	if st.startLabel != nil {
+		st.eventQ.Evaluator.Play(*st.startLabel)
+	}
 
 	{
 		eimg, err := loadImage("forest.jpg")
@@ -83,7 +87,7 @@ func (st *PlayState) Update() Transition {
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
-		return Transition{Type: TransSwitch, NewStates: []State{&MainMenuState{}}}
+		return Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario}}}
 	}
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
