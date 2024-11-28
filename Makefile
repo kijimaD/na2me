@@ -1,12 +1,12 @@
 .DEFAULT_GOAL := help
 
+.PHONY: run
+sample: ## サンプルを実行する
+	go run .
+
 .PHONY: test
 test: ## テストを実行する
 	go test ./... -v
-
-.PHONY: sample
-sample: ## サンプルを実行する
-	go run _sample
 
 .PHONY: help
 help: ## ヘルプを表示する
