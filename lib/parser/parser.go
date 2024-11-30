@@ -2,6 +2,7 @@ package parser
 
 import (
 	"log"
+	"strings"
 
 	"github.com/kijimaD/na2me/lib/ast"
 	"github.com/kijimaD/na2me/lib/lexer"
@@ -93,4 +94,25 @@ func (p *Parser) parseSentence() []ast.Node {
 	}
 
 	return []ast.Node{sentence}
+}
+
+// 指定文字以上経過後に「。」で分割する
+func splitByPeriod(text string, minLength int) []string {
+	const jpPeriodChar = '。'
+	result := []string{}
+	current := ""
+
+	for _, char := range text {
+		current += string(char)
+		if char == jpPeriodChar && len([]rune(current)) > minLength {
+			result = append(result, strings.TrimSpace(current))
+			current = ""
+		}
+	}
+
+	if len(strings.TrimSpace(current)) > 0 {
+		result = append(result, strings.TrimSpace(current))
+	}
+
+	return result
 }
