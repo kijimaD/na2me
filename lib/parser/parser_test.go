@@ -10,14 +10,39 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestScenarioPrint1(t *testing.T) {
+	l := lexer.New("あああ\n\nいいい\nううう\n")
+	p := New(l)
+	scenario := p.ParseScenario()
+	expect := `あああ
+[p]
+
+いいい
+[p]
+ううう
+[p]
+`
+	assert.Equal(t, expect, scenario.String())
+}
+
+func TestScenarioPrint2(t *testing.T) {
+	l := lexer.New("あああ\nいいい\nううう")
+	p := New(l)
+	scenario := p.ParseScenario()
+	expect := `あああ
+[p]
+いいい
+[p]
+ううう
+[p]
+`
+	assert.Equal(t, expect, scenario.String())
+}
+
 func TestParseScenario(t *testing.T) {
 	l := lexer.New("あああ\n\nいいい\n\nううう\n")
 	p := New(l)
 	scenario := p.ParseScenario()
-	nodes := []ast.Node{}
-	for _, n := range scenario.Nodes {
-		nodes = append(nodes, n)
-	}
 
 	expect := []ast.Node{
 		&ast.Sentence{Token: token.Token{Type: "SENTENCE", Literal: "あああ"}, Value: "あああ"},
@@ -29,18 +54,13 @@ func TestParseScenario(t *testing.T) {
 		&ast.Sentence{Token: token.Token{Type: "SENTENCE", Literal: "ううう"}, Value: "ううう"},
 		&ast.Newpage{Token: token.Token{Type: "NEWPAGE", Literal: "NEWPAGE"}},
 	}
-
-	assert.Equal(t, expect, nodes)
+	assert.Equal(t, expect, scenario.Nodes)
 }
 
 func TestParseScenario_長い文章は分割する(t *testing.T) {
 	l := lexer.New(`ああああああああああ,ああああああああああ,ああああああああああ,ああああああああああ,ああああああああああ。いいい`)
 	p := New(l)
 	scenario := p.ParseScenario()
-	nodes := []ast.Node{}
-	for _, n := range scenario.Nodes {
-		nodes = append(nodes, n)
-	}
 
 	expect := []ast.Node{
 		&ast.Sentence{Token: token.Token{Type: "SENTENCE", Literal: "ああああああああああ,ああああああああああ,ああああああああああ,ああああああああああ,ああああああああああ。いいい"}, Value: "ああああああああああ,ああああああああああ,ああああああああああ,ああああああああああ,ああああああああああ。"},
@@ -48,7 +68,7 @@ func TestParseScenario_長い文章は分割する(t *testing.T) {
 		&ast.Sentence{Token: token.Token{Type: "SENTENCE", Literal: "ああああああああああ,ああああああああああ,ああああああああああ,ああああああああああ,ああああああああああ。いいい"}, Value: "いいい"},
 		&ast.Newpage{Token: token.Token{Type: "NEWPAGE", Literal: "NEWPAGE"}},
 	}
-	assert.Equal(t, expect, nodes)
+	assert.Equal(t, expect, scenario.Nodes)
 }
 
 func TestSplitByPeriod(t *testing.T) {

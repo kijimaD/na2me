@@ -28,7 +28,12 @@ func (p *Scenario) String() string {
 	var out bytes.Buffer
 
 	for _, n := range p.Nodes {
-		out.WriteString(n.String())
+		_, isNewline := n.(*Newline)
+		output := n.String()
+		if !isNewline {
+			output = output + "\n"
+		}
+		out.WriteString(output)
 	}
 
 	return out.String()
@@ -44,7 +49,7 @@ func (n *Newline) TokenLiteral() string {
 }
 
 func (n *Newline) String() string {
-	return n.Token.Literal
+	return "\n"
 }
 
 // ================
@@ -57,7 +62,7 @@ func (n *Newpage) TokenLiteral() string {
 }
 
 func (n *Newpage) String() string {
-	return n.Token.Literal
+	return "[p]"
 }
 
 // ================
