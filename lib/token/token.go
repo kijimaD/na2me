@@ -11,4 +11,5 @@ const (
 	EOF      = "EOF"
 	SENTENCE = "SENTENCE"
 	NEWLINE  = "NEWLINE"
+	NEWPAGE  = "NEWPAGE"
 )

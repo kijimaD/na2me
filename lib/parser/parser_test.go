@@ -10,7 +10,7 @@ import (
 )
 
 func TestParseScenario(t *testing.T) {
-	l := lexer.New("あああ\nいいい\nううう")
+	l := lexer.New("あああ\n\nいいい\nううう\n")
 	p := New(l)
 	scenario := p.ParseScenario()
 	nodes := []ast.Node{}
@@ -20,10 +20,12 @@ func TestParseScenario(t *testing.T) {
 
 	expect := []ast.Node{
 		&ast.Sentence{Token: token.Token{Type: "SENTENCE", Literal: "あああ"}, Value: "あああ"},
+		&ast.Newpage{Token: token.Token{Type: "NEWLINE", Literal: "\n"}},
 		&ast.Newline{Token: token.Token{Type: "NEWLINE", Literal: "\n"}},
 		&ast.Sentence{Token: token.Token{Type: "SENTENCE", Literal: "いいい"}, Value: "いいい"},
-		&ast.Newline{Token: token.Token{Type: "NEWLINE", Literal: "\n"}},
+		&ast.Newpage{Token: token.Token{Type: "NEWLINE", Literal: "\n"}},
 		&ast.Sentence{Token: token.Token{Type: "SENTENCE", Literal: "ううう"}, Value: "ううう"},
+		&ast.Newpage{Token: token.Token{Type: "NEWLINE", Literal: "\n"}},
 	}
 
 	assert.Equal(t, expect, nodes)

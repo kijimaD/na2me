@@ -17,7 +17,7 @@ type Parser struct {
 	parseFns  map[token.TokenType]parseFn
 }
 
-type parseFn func() ast.Node
+type parseFn func() []ast.Node
 
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
@@ -43,15 +43,20 @@ func (p *Parser) nextToken() {
 	p.peekToken = p.l.NextToken()
 }
 
+// 次のトークンと引数の型を比較する
+func (p *Parser) peekTokenIs(t token.TokenType) bool {
+	return p.peekToken.Type == t
+}
+
 // パースを開始する。トークンを1つずつ辿る
 func (p *Parser) ParseScenario() *ast.Scenario {
 	scenario := &ast.Scenario{}
 	scenario.Nodes = []ast.Node{}
 
 	for p.curToken.Type != token.EOF {
-		stmt := p.parseNode()
-		if stmt != nil {
-			scenario.Nodes = append(scenario.Nodes, stmt)
+		node := p.parseNode()
+		if node != nil {
+			scenario.Nodes = append(scenario.Nodes, node...)
 		}
 		p.nextToken()
 	}
@@ -59,7 +64,7 @@ func (p *Parser) ParseScenario() *ast.Scenario {
 	return scenario
 }
 
-func (p *Parser) parseNode() ast.Node {
+func (p *Parser) parseNode() []ast.Node {
 	f := p.parseFns[p.curToken.Type]
 	if f == nil {
 		// p.noPrefixParseFnError(p.curToken.Type)
@@ -75,10 +80,17 @@ func (p *Parser) registerFunc(t token.TokenType, f parseFn) {
 	p.parseFns[t] = f
 }
 
-func (p *Parser) parseNewline() ast.Node {
-	return &ast.Newline{Token: p.curToken}
+func (p *Parser) parseNewline() []ast.Node {
+	return []ast.Node{&ast.Newline{Token: p.curToken}}
 }
 
-func (p *Parser) parseSentence() ast.Node {
-	return &ast.Sentence{Token: p.curToken, Value: p.curToken.Literal}
+func (p *Parser) parseSentence() []ast.Node {
+	sentence := &ast.Sentence{Token: p.curToken, Value: p.curToken.Literal}
+
+	if p.peekTokenIs(token.NEWLINE) {
+		p.nextToken()
+		return []ast.Node{sentence, &ast.Newpage{Token: p.curToken}}
+	}
+
+	return []ast.Node{sentence}
 }

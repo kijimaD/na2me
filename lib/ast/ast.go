@@ -48,6 +48,19 @@ func (n *Newline) String() string {
 }
 
 // ================
+type Newpage struct {
+	Token token.Token
+}
+
+func (n *Newpage) TokenLiteral() string {
+	return n.Token.Literal
+}
+
+func (n *Newpage) String() string {
+	return n.Token.Literal
+}
+
+// ================
 type Sentence struct {
 	Token token.Token
 	Value string
