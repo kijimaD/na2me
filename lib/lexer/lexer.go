@@ -3,7 +3,7 @@ package lexer
 import (
 	"unicode/utf8"
 
-	"github.com/kijimaD/nova/token"
+	"github.com/kijimaD/na2me/lib/token"
 )
 
 type Lexer struct {
@@ -13,10 +13,11 @@ type Lexer struct {
 	ch           rune
 }
 
-// ソースコード文字列を引数に取り、初期化する
-func NewLexer(input string) *Lexer {
+// 初期化する
+func New(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readRune()
+
 	return l
 }
 
@@ -42,27 +43,30 @@ func (l *Lexer) NextToken() token.Token {
 	l.skipWhitespace()
 
 	switch l.ch {
-	// case '"':
-	// 	tok.Type = token.STRING
-	// 	tok.Literal = l.readString()
+	case '\n':
+		tok.Literal = string(l.ch)
+		tok.Type = token.NEWLINE
+	case 0:
+		tok.Literal = ""
+		tok.Type = token.EOF
 	default:
-		// TODO: とりあえず改行まで取る
-		tok.Literal = l.readIdentifier()
+		tok.Literal = l.readSentence()
+		tok.Type = token.SENTENCE
 		return tok
 	}
-
 	l.readRune()
+
 	return tok
 }
 
 // 半角スペースを読み飛ばす
 func (l *Lexer) skipWhitespace() {
-	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+	for l.ch == ' ' || l.ch == '\t' {
 		l.readRune()
 	}
 }
 
-func (l *Lexer) readIdentifier() string {
+func (l *Lexer) readSentence() string {
 	prePosition := l.position
 	for l.ch != '\n' {
 		l.readRune()
@@ -70,6 +74,7 @@ func (l *Lexer) readIdentifier() string {
 			break
 		}
 	}
+
 	return l.input[prePosition:l.position]
 }
 
