@@ -3,7 +3,7 @@ package ast
 import (
 	"bytes"
 
-	"github.com/kijimaD/na2me/lib/token"
+	"github.com/kijimaD/na2me/lib/convert/token"
 )
 
 type Node interface {

@@ -4,9 +4,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/kijimaD/na2me/lib/ast"
-	"github.com/kijimaD/na2me/lib/lexer"
-	"github.com/kijimaD/na2me/lib/token"
+	"github.com/kijimaD/na2me/lib/convert/ast"
+	"github.com/kijimaD/na2me/lib/convert/lexer"
+	"github.com/kijimaD/na2me/lib/convert/token"
 )
 
 type Parser struct {
