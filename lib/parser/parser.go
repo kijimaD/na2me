@@ -86,25 +86,40 @@ func (p *Parser) parseNewline() []ast.Node {
 }
 
 func (p *Parser) parseSentence() []ast.Node {
-	sentence := &ast.Sentence{Token: p.curToken, Value: p.curToken.Literal}
+	const sentenceLength = 50
+	nodes := []ast.Node{}
+	splits := splitByPeriod(p.curToken.Literal, sentenceLength)
+	for _, s := range splits {
+		nodes = append(nodes, &ast.Sentence{Token: p.curToken, Value: s})
+		nodes = append(nodes, &ast.Newpage{Token: token.Token{Type: token.NEWPAGE, Literal: token.NEWPAGE}})
+	}
 
 	if p.peekTokenIs(token.NEWLINE) {
 		p.nextToken()
-		return []ast.Node{sentence, &ast.Newpage{Token: p.curToken}}
 	}
 
-	return []ast.Node{sentence}
+	return nodes
 }
 
 // 指定文字以上経過後に「。」で分割する
+// 括弧の中であれば分割しない
 func splitByPeriod(text string, minLength int) []string {
 	const jpPeriodChar = '。'
+	const jpBracketStartChar = '「'
+	const jpBracketEndChar = '」'
 	result := []string{}
 	current := ""
+	var insideBrackets bool
 
 	for _, char := range text {
+		if char == jpBracketStartChar {
+			insideBrackets = true
+		} else if char == jpBracketEndChar {
+			insideBrackets = false
+		}
+
 		current += string(char)
-		if char == jpPeriodChar && len([]rune(current)) > minLength {
+		if (char == jpPeriodChar || char == jpBracketEndChar) && !insideBrackets && len([]rune(current)) > minLength {
 			result = append(result, strings.TrimSpace(current))
 			current = ""
 		}
