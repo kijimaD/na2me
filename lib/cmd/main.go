@@ -2,9 +2,14 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 
 	"github.com/kijimaD/na2me/lib"
+	"github.com/kijimaD/na2me/lib/convert/lexer"
+	"github.com/kijimaD/na2me/lib/convert/parser"
 	"github.com/urfave/cli/v2"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 const splash = `───────────────────────────────────────────────────────
@@ -72,6 +77,23 @@ var CmdConvert = &cli.Command{
 }
 
 func cmdConvert(_ *cli.Context) error {
+	if terminal.IsTerminal(int(os.Stdin.Fd())) {
+		return fmt.Errorf("パイプで加工したいテキストを標準入力に渡す必要がある")
+	}
+
+	b, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		return err
+	}
+	if len(b) <= 0 {
+		return fmt.Errorf("パイプで加工したいテキストを標準入力に渡す必要がある")
+	}
+
+	l := lexer.New(string(b))
+	p := parser.New(l)
+	scenario := p.ParseScenario()
+
+	fmt.Println(scenario)
 
 	return nil
 }
