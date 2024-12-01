@@ -102,27 +102,53 @@ func (p *Parser) parseSentence() []ast.Node {
 	return nodes
 }
 
+// TODO: 先読みをするようにしたほうがよさそう
 // 指定文字以上経過後に"。"で分割する
 // minLengthを超えると、"。"や"」"で改行する。括弧の中では改行しない
 // forceLengthを超えると、括弧の中でも読点で分割を行う
 func splitByPeriod(text string, minLength int, forceLength int) []string {
 	const jpPeriodChar = '。'
 	const jpCommaChar = '、'
-	const jpBracketStartChar = '「'
-	const jpBracketEndChar = '」'
+	const jpBracketStartChar1 = '「'
+	const jpBracketEndChar1 = '」'
+	const parentStartChar = '('
+	const parentEndChar = ')'
+	const jpBracketStartChar2 = '［' // 半角の "[" とは違うことに注意!!
+	const jpBracketEndChar2 = '］'   // 半角の "]" とは違うことに注意!!
 	result := []string{}
 	current := ""
-	var insideBrackets bool
+
+	// 会話
+	var insideJPBrackets1 bool
+	// 大体脚注用なので中では改行しない
+	var insideJPBrackets2 bool
+	// 大体脚注用なので中では改行しない
+	var insideParentheses bool
 
 	for _, char := range text {
-		if char == jpBracketStartChar {
-			insideBrackets = true
-		} else if char == jpBracketEndChar {
-			insideBrackets = false
+		current += string(char)
+
+		if char == jpBracketStartChar1 {
+			insideJPBrackets1 = true
+		} else if char == jpBracketEndChar1 {
+			insideJPBrackets1 = false
+		}
+		if char == parentStartChar {
+			insideParentheses = true
+		} else if char == parentEndChar {
+			insideParentheses = false
+		}
+		if char == jpBracketStartChar2 {
+			insideJPBrackets2 = true
+		} else if char == jpBracketEndChar2 {
+			insideJPBrackets2 = false
 		}
 
-		current += string(char)
-		if (char == jpPeriodChar || char == jpBracketEndChar) && !insideBrackets && len([]rune(current)) > minLength {
+		if insideParentheses || insideJPBrackets2 {
+			continue
+		}
+
+		if (char == jpPeriodChar || char == jpBracketEndChar1) && !insideJPBrackets1 && len([]rune(current)) > minLength {
 			result = append(result, strings.TrimSpace(current))
 			current = ""
 		} else if char == jpPeriodChar && len([]rune(current)) > forceLength {
