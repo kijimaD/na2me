@@ -7,8 +7,10 @@ toolchain go1.22.7
 require (
 	github.com/ebitenui/ebitenui v0.6.0
 	github.com/hajimehoshi/ebiten/v2 v2.8.0
-	github.com/kijimaD/nova v0.0.4
+	github.com/kijimaD/nova v0.0.5
 	github.com/stretchr/testify v1.9.0
+	github.com/urfave/cli/v2 v2.27.5
+	golang.org/x/crypto v0.29.0
 	golang.org/x/text v0.20.0
 )
 
@@ -23,9 +25,7 @@ require (
 	github.com/jezek/xgb v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/urfave/cli/v2 v2.27.5 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
-	golang.org/x/crypto v0.29.0 // indirect
 	golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa // indirect
 	golang.org/x/image v0.20.0 // indirect
 	golang.org/x/sync v0.9.0 // indirect

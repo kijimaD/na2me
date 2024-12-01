@@ -27,7 +27,8 @@ const (
 )
 
 type PlayState struct {
-	ui *ebitenui.UI
+	ui             *ebitenui.UI
+	statsContainer *widget.Container
 
 	// 選択中のシナリオファイルのバイト列
 	scenario []byte
@@ -106,10 +107,12 @@ func (st *PlayState) Update() Transition {
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		st.eventQ.Run()
+		st.updateStatsContainer()
 	}
 
 	if touch.IsTouchJustReleased() {
 		st.eventQ.Run()
+		st.updateStatsContainer()
 	}
 
 	select {
@@ -181,6 +184,16 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			widget.RowLayoutOpts.Spacing(10),
 		)),
 	)
+	topContainer := widget.NewContainer(
+		widget.ContainerOpts.Layout(widget.NewRowLayout(
+			widget.RowLayoutOpts.Direction(widget.DirectionHorizontal),
+		)),
+	)
+
+	st.statsContainer = widget.NewContainer(
+		widget.ContainerOpts.Layout(widget.NewAnchorLayout()),
+	)
+	st.updateStatsContainer()
 
 	buttonImage, _ := loadButtonImage()
 	button := widget.NewButton(
@@ -204,7 +217,22 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			st.trans = &Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario}}}
 		}),
 	)
-	rootContainer.AddChild(button)
+	rootContainer.AddChild(topContainer)
+	topContainer.AddChild(button)
+	topContainer.AddChild(st.statsContainer)
 
 	return &ebitenui.UI{Container: rootContainer}
+}
+
+func (st *PlayState) updateStatsContainer() {
+	st.statsContainer.RemoveChildren()
+
+	text := widget.NewText(
+		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, st.faceFont, color.White),
+		widget.TextOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(widget.RowLayoutData{}),
+		),
+	)
+
+	st.statsContainer.AddChild(text)
 }
