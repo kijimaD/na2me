@@ -87,10 +87,11 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
 		)),
 	)
-	rootContainer.AddChild(st.mainMenuButton(faceFont))
+	rootContainer.AddChild(st.backButton(faceFont))
 	for _, label := range st.labels {
 		rootContainer.AddChild(st.labelSelectButton(label, faceFont, st.scenario))
 	}
+	rootContainer.AddChild(st.mainMenuButton(faceFont))
 
 	return &ebitenui.UI{Container: rootContainer}
 }
@@ -142,6 +143,32 @@ func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&MainMenuState{}}}
+		}),
+	)
+	return button
+}
+
+func (st *PauseState) backButton(face text.Face) *widget.Button {
+	buttonImage, _ := loadButtonImage()
+	button := widget.NewButton(
+		widget.ButtonOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
+				HorizontalPosition: widget.AnchorLayoutPositionCenter,
+				VerticalPosition:   widget.AnchorLayoutPositionCenter,
+			}),
+		),
+		widget.ButtonOpts.Image(buttonImage),
+		widget.ButtonOpts.Text("戻る", face, &widget.ButtonTextColor{
+			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
+		}),
+		widget.ButtonOpts.TextPadding(widget.Insets{
+			Left:   30,
+			Right:  30,
+			Top:    5,
+			Bottom: 5,
+		}),
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			st.trans = &Transition{Type: TransPop}
 		}),
 	)
 	return button
