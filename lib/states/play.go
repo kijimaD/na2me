@@ -10,6 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/kijimaD/na2me/lib/touch"
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
 	"github.com/kijimaD/nova/parser"
@@ -86,11 +87,16 @@ func (st *PlayState) Update() Transition {
 		return next
 	}
 
+	// TODO: わかりにくいので、ボタン表示したほうがよいだろう
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		return Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario}}}
 	}
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		st.eventQ.Run()
+	}
+
+	if touch.IsTouchJustReleased() {
 		st.eventQ.Run()
 	}
 
