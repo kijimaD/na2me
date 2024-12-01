@@ -61,7 +61,7 @@ func (st *PlayState) OnStart() {
 	}
 
 	{
-		eimg, err := loadImage("forest.jpg")
+		eimg, err := loadImage("black.png")
 		if err != nil {
 			log.Fatal(err)
 		}
