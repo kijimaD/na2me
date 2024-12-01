@@ -40,6 +40,8 @@ type PlayState struct {
 	trans *Transition
 	// イベントキュー
 	eventQ event.Queue
+	// アニメーション状態が切り替わったかを判断する用
+	prevOnAnim bool
 
 	bgImage     *ebiten.Image
 	promptImage *ebiten.Image
@@ -109,12 +111,10 @@ func (st *PlayState) Update() Transition {
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		st.eventQ.Run()
-		st.updateStatsContainer()
 	}
 
 	if touch.IsTouchJustReleased() {
 		st.eventQ.Run()
-		st.updateStatsContainer()
 	}
 
 	select {
@@ -128,6 +128,13 @@ func (st *PlayState) Update() Transition {
 			st.bgImage = eimg
 		}
 	default:
+	}
+
+	// 状態が切り替わったときだけ実行する
+	if st.prevOnAnim != st.eventQ.OnAnim {
+		st.updateStatsContainer()
+
+		st.prevOnAnim = !st.prevOnAnim
 	}
 
 	return Transition{Type: TransNone}
