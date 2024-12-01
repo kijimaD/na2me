@@ -270,9 +270,10 @@ func (st *PlayState) updateStatsContainer() {
 		),
 		widget.ProgressBarOpts.Values(0, len(st.eventQ.Evaluator.Events), st.eventQ.Evaluator.CurrentEventIdx+1),
 	)
+	rate := float64(st.eventQ.Evaluator.CurrentEventIdx+1) / float64(len(st.eventQ.Evaluator.Events)) * 100
 	progressBarLabel := widget.NewText(
 		widget.TextOpts.Text(
-			fmt.Sprintf("%d/%d", st.eventQ.Evaluator.CurrentEventIdx+1, len(st.eventQ.Evaluator.Events)),
+			fmt.Sprintf("%.1f%%", rate),
 			st.faceFont,
 			color.White,
 		),
