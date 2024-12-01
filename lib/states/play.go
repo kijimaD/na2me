@@ -1,12 +1,14 @@
 package states
 
 import (
+	"fmt"
 	"image/color"
 	"log"
 	"math"
 	"time"
 
 	"github.com/ebitenui/ebitenui"
+	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -184,16 +186,19 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			widget.RowLayoutOpts.Spacing(10),
 		)),
 	)
+
 	topContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionHorizontal),
+			widget.RowLayoutOpts.Padding(widget.Insets{
+				Top:    10,
+				Bottom: 10,
+				Left:   10,
+				Right:  10,
+			}),
+			widget.RowLayoutOpts.Spacing(10),
 		)),
 	)
-
-	st.statsContainer = widget.NewContainer(
-		widget.ContainerOpts.Layout(widget.NewAnchorLayout()),
-	)
-	st.updateStatsContainer()
 
 	buttonImage, _ := loadButtonImage()
 	button := widget.NewButton(
@@ -217,9 +222,17 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			st.trans = &Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario}}}
 		}),
 	)
+
+	st.statsContainer = widget.NewContainer(
+		widget.ContainerOpts.Layout(widget.NewRowLayout(
+			widget.RowLayoutOpts.Direction(widget.DirectionHorizontal),
+			widget.RowLayoutOpts.Spacing(10),
+		)),
+	)
+	st.updateStatsContainer()
+
+	topContainer.AddChild(button, st.statsContainer)
 	rootContainer.AddChild(topContainer)
-	topContainer.AddChild(button)
-	topContainer.AddChild(st.statsContainer)
 
 	return &ebitenui.UI{Container: rootContainer}
 }
@@ -229,10 +242,34 @@ func (st *PlayState) updateStatsContainer() {
 
 	text := widget.NewText(
 		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, st.faceFont, color.White),
-		widget.TextOpts.WidgetOpts(
-			widget.WidgetOpts.LayoutData(widget.RowLayoutData{}),
+	)
+
+	progressbar := widget.NewProgressBar(
+		widget.ProgressBarOpts.WidgetOpts(
+			widget.WidgetOpts.MinSize(140, 16),
+			widget.WidgetOpts.LayoutData(widget.RowLayoutData{
+				Position: widget.RowLayoutPositionCenter},
+			),
+		),
+		widget.ProgressBarOpts.Images(
+			&widget.ProgressBarImage{
+				Idle:  image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
+				Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
+			},
+			&widget.ProgressBarImage{
+				Idle:  image.NewNineSliceColor(color.NRGBA{255, 255, 255, 255}),
+				Hover: image.NewNineSliceColor(color.NRGBA{255, 255, 255, 255}),
+			},
+		),
+		widget.ProgressBarOpts.Values(0, len(st.eventQ.Evaluator.Events), st.eventQ.Evaluator.CurrentEventIdx+1),
+	)
+	progressBarLabel := widget.NewText(
+		widget.TextOpts.Text(
+			fmt.Sprintf("%d/%d", st.eventQ.Evaluator.CurrentEventIdx+1, len(st.eventQ.Evaluator.Events)),
+			st.faceFont,
+			color.White,
 		),
 	)
 
-	st.statsContainer.AddChild(text)
+	st.statsContainer.AddChild(text, progressbar, progressBarLabel)
 }
