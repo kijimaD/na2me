@@ -7,8 +7,8 @@
 *ch1
 一
 [p]
-[wait time="500"]
 [image source="sky.jpg"]
+[wait time="500"]
 
 吾輩は猫である。名前はまだ無い。
 [p]
