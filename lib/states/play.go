@@ -6,6 +6,8 @@ import (
 	"math"
 	"time"
 
+	"github.com/ebitenui/ebitenui"
+	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -20,14 +22,21 @@ const (
 	screenWidth  = 720
 	screenHeight = 720
 	fontSize     = 26
-	padding      = 40
+	padding      = 60
+	paddingSmall = 30
 )
 
 type PlayState struct {
-	scenario   []byte
+	ui *ebitenui.UI
+
+	// 選択中のシナリオファイルのバイト列
+	scenario []byte
+	// 指定された章で再生開始する。外部ステートから指定するときに使う
 	startLabel *string
-	trans      *Transition
-	eventQ     event.Queue
+	// ステート遷移
+	trans *Transition
+	// イベントキュー
+	eventQ event.Queue
 
 	bgImage     *ebiten.Image
 	promptImage *ebiten.Image
@@ -75,11 +84,15 @@ func (st *PlayState) OnStart() {
 		}
 		st.promptImage = eimg
 	}
+
+	st.ui = st.initUI()
 }
 
 func (st *PlayState) OnStop() {}
 
 func (st *PlayState) Update() Transition {
+	st.ui.Update()
+
 	// transの書き換えで遷移する
 	if st.trans != nil {
 		next := *st.trans
@@ -87,7 +100,6 @@ func (st *PlayState) Update() Transition {
 		return next
 	}
 
-	// TODO: わかりにくいので、ボタン表示したほうがよいだろう
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
 		return Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario}}}
 	}
@@ -127,7 +139,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	{
 		// 背景色
 		black := color.RGBA{0x10, 0x10, 0x10, 0x80}
-		vector.DrawFilledRect(screen, 0, 0, screenWidth, screenHeight, black, false)
+		vector.DrawFilledRect(screen, paddingSmall, paddingSmall, screenWidth-paddingSmall*2, screenHeight-paddingSmall*2, black, false)
 	}
 
 	// 待ち状態表示
@@ -146,10 +158,53 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	{
 		japaneseText := st.eventQ.Display()
 		const lineSpacing = fontSize + 8
-		x, y := padding, padding
+		x, y := padding-20, padding
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(float64(x), float64(y))
 		op.LineSpacing = lineSpacing
 		text.Draw(screen, japaneseText, st.faceFont, op)
 	}
+
+	st.ui.Draw(screen)
+}
+
+func (st *PlayState) initUI() *ebitenui.UI {
+	rootContainer := widget.NewContainer(
+		widget.ContainerOpts.Layout(widget.NewRowLayout(
+			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
+			widget.RowLayoutOpts.Padding(widget.Insets{
+				Top:    10,
+				Bottom: 10,
+				Left:   10,
+				Right:  10,
+			}),
+			widget.RowLayoutOpts.Spacing(10),
+		)),
+	)
+
+	buttonImage, _ := loadButtonImage()
+	button := widget.NewButton(
+		widget.ButtonOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
+				HorizontalPosition: widget.AnchorLayoutPositionCenter,
+				VerticalPosition:   widget.AnchorLayoutPositionCenter,
+			}),
+		),
+		widget.ButtonOpts.Image(buttonImage),
+		widget.ButtonOpts.Text("一覧", st.faceFont, &widget.ButtonTextColor{
+			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
+		}),
+		widget.ButtonOpts.TextPadding(widget.Insets{
+			Left:   30,
+			Right:  30,
+			Top:    5,
+			Bottom: 5,
+		}),
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			st.trans = &Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario}}}
+		}),
+	)
+	rootContainer.AddChild(button)
+
+	return &ebitenui.UI{Container: rootContainer}
 }

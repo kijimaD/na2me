@@ -97,6 +97,7 @@ func (st *MainMenuState) scenarioSelectButton(label string, face text.Face, scen
 			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario}}}
 		}),
 	)
+
 	return button
 }
 
