@@ -94,10 +94,6 @@ func (st *PlayState) Update() Transition {
 		st.eventQ.Run()
 	}
 
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
-		st.eventQ.Reset()
-	}
-
 	select {
 	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
