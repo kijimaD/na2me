@@ -125,6 +125,9 @@ func splitByPeriod(text string, minLength int, forceLength int) []string {
 		if (char == jpPeriodChar || char == jpBracketEndChar) && !insideBrackets && len([]rune(current)) > minLength {
 			result = append(result, strings.TrimSpace(current))
 			current = ""
+		} else if char == jpPeriodChar && len([]rune(current)) > forceLength {
+			result = append(result, strings.TrimSpace(current))
+			current = ""
 		} else if char == jpCommaChar && len([]rune(current)) > forceLength {
 			result = append(result, strings.TrimSpace(current))
 			current = ""
