@@ -27,3 +27,30 @@ func WarnLongLine(r io.Reader, w io.Writer, threshold int, fileName string) {
 		fmt.Fprintf(w, "Error reading: %v\n", err)
 	}
 }
+
+func WarnNotes(r io.Reader, w io.Writer, fileName string) {
+	fmt.Fprintf(w, "%s\n", fileName)
+
+	scanner := bufio.NewScanner(r)
+	lineNumber := 1
+	for scanner.Scan() {
+		line := scanner.Text()
+		notes := []string{
+			"＃",
+			"※",
+		}
+		for _, noteMark := range notes {
+			if strings.Contains(line, noteMark) {
+				fmt.Fprintf(w, "Line: %d\n", lineNumber)
+				fmt.Fprintf(w, "  %s\n", line)
+			}
+		}
+
+		lineNumber++
+	}
+	fmt.Fprintln(w, strings.Repeat("-", 80))
+
+	if err := scanner.Err(); err != nil {
+		fmt.Fprintf(w, "Error reading: %v\n", err)
+	}
+}

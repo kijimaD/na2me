@@ -36,6 +36,7 @@ func NewMainApp() *cli.App {
 		CmdLaunch,
 		CmdConvert,
 		CmdCheckLen,
+		CmdCheckNotes,
 	}
 	cli.AppHelpTemplate = fmt.Sprintf(`%s
 %s
@@ -129,6 +130,42 @@ func cmdCheckLen(_ *cli.Context) error {
 		// ファイルであり、指定の拡張子を持つ場合のみ処理
 		if !info.IsDir() && strings.HasSuffix(info.Name(), extension) {
 			check.WarnLongLine(f, os.Stdout, threshold, f.Name())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+var CmdCheckNotes = &cli.Command{
+	Name:        "checkNotes",
+	Usage:       "checkNotes",
+	Description: "checkNotes",
+	Action:      cmdCheckNotes,
+	Flags:       []cli.Flag{},
+}
+
+func cmdCheckNotes(_ *cli.Context) error {
+	directory := "./embeds/scenario" // 検索するディレクトリ
+	extension := ".sce"              // 対象ファイルの拡張子
+
+	// ディレクトリを再帰的に検索
+	err := filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		f, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		// ファイルであり、指定の拡張子を持つ場合のみ処理
+		if !info.IsDir() && strings.HasSuffix(info.Name(), extension) {
+			check.WarnNotes(f, os.Stdout, f.Name())
 		}
 
 		return nil

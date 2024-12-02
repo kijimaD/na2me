@@ -30,3 +30,23 @@ Line: 7, Length: 9
 `
 	assert.Equal(t, expect, buf.String())
 }
+
+func TestWarnNotes(t *testing.T) {
+	buf := bytes.Buffer{}
+	r := strings.NewReader(`sample
+＃警告1
+※警告2
+hello
+world
+`)
+	WarnNotes(r, &buf, "sample.txt")
+
+	expect := `sample.txt
+Line: 2
+  ＃警告1
+Line: 3
+  ※警告2
+--------------------------------------------------------------------------------
+`
+	assert.Equal(t, expect, buf.String())
+}
