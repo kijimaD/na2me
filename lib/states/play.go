@@ -151,7 +151,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	{
 		// 背景色
 		black := color.RGBA{0x10, 0x10, 0x10, 0x80}
-		vector.DrawFilledRect(screen, paddingSmall, paddingSmall, screenWidth-paddingSmall*2, screenHeight-paddingSmall*2, black, false)
+		vector.DrawFilledRect(screen, paddingSmall, padding, screenWidth-paddingSmall*2, screenHeight-paddingSmall*2, black, false)
 	}
 
 	// 待ち状態表示
@@ -170,7 +170,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	{
 		japaneseText := st.eventQ.Display()
 		const lineSpacing = fontSize + 8
-		x, y := padding-20, padding
+		x, y := padding-20, padding+paddingSmall
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(float64(x), float64(y))
 		op.LineSpacing = lineSpacing
@@ -181,6 +181,8 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 }
 
 func (st *PlayState) initUI() *ebitenui.UI {
+	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
+
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
@@ -216,12 +218,12 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			}),
 		),
 		widget.ButtonOpts.Image(buttonImage),
-		widget.ButtonOpts.Text("一覧", st.faceFont, &widget.ButtonTextColor{
+		widget.ButtonOpts.Text("一覧", faceFont, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
-			Left:   30,
-			Right:  30,
+			Left:   10,
+			Right:  10,
 			Top:    5,
 			Bottom: 5,
 		}),
@@ -245,27 +247,28 @@ func (st *PlayState) initUI() *ebitenui.UI {
 }
 
 func (st *PlayState) updateStatsContainer() {
+	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
 	st.statsContainer.RemoveChildren()
 
 	text := widget.NewText(
-		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, st.faceFont, color.White),
+		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, faceFont, color.NRGBA{100, 100, 100, 255}),
 	)
 
 	progressbar := widget.NewProgressBar(
 		widget.ProgressBarOpts.WidgetOpts(
-			widget.WidgetOpts.MinSize(140, 16),
+			widget.WidgetOpts.MinSize(300, 16),
 			widget.WidgetOpts.LayoutData(widget.RowLayoutData{
 				Position: widget.RowLayoutPositionCenter},
 			),
 		),
 		widget.ProgressBarOpts.Images(
 			&widget.ProgressBarImage{
-				Idle:  image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-				Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
+				Idle:  image.NewNineSliceColor(color.NRGBA{40, 40, 40, 255}),
+				Hover: image.NewNineSliceColor(color.NRGBA{40, 40, 40, 255}),
 			},
 			&widget.ProgressBarImage{
-				Idle:  image.NewNineSliceColor(color.NRGBA{255, 255, 255, 255}),
-				Hover: image.NewNineSliceColor(color.NRGBA{255, 255, 255, 255}),
+				Idle:  image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
+				Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
 			},
 		),
 		widget.ProgressBarOpts.Values(0, len(st.eventQ.Evaluator.Events), st.eventQ.Evaluator.CurrentEventIdx+1),
@@ -274,8 +277,8 @@ func (st *PlayState) updateStatsContainer() {
 	progressBarLabel := widget.NewText(
 		widget.TextOpts.Text(
 			fmt.Sprintf("%.1f%%", rate),
-			st.faceFont,
-			color.White,
+			faceFont,
+			color.NRGBA{100, 100, 100, 255},
 		),
 	)
 
