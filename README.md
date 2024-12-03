@@ -1,5 +1,7 @@
 夏目漱石の作品をノベルゲーム風に読めるようにする。
 
+![images](./top.png)
+
 - フォントは http://jikasei.me/font/jf-dotfont/ から拝借した
 - 本文は夏目漱石『坊っちゃん』 https://www.aozora.gr.jp/cards/000148/files/752_14964.html から拝借した
 
