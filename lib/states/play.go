@@ -151,7 +151,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	{
 		// 背景色
 		black := color.RGBA{0x10, 0x10, 0x10, 0x80}
-		vector.DrawFilledRect(screen, paddingSmall, padding, screenWidth-paddingSmall*2, screenHeight-paddingSmall*2, black, false)
+		vector.DrawFilledRect(screen, paddingSmall, padding, screenWidth-paddingSmall*2, screenHeight-padding*2, black, false)
 	}
 
 	// 待ち状態表示

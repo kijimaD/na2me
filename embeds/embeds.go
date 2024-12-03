@@ -18,6 +18,12 @@ type ScenarioMasterType struct {
 	ScenarioIndex map[string]int
 }
 
+func (master *ScenarioMasterType) GetScenario(key string) Scenario {
+	idx := master.ScenarioIndex[key]
+
+	return master.Scenarios[idx]
+}
+
 type Scenario struct {
 	LabelName string
 	Name      string

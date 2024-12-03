@@ -114,8 +114,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 		}),
 		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
 			key := e.(string)
-			idx := embeds.ScenarioMaster.ScenarioIndex[key]
-			scenario := embeds.ScenarioMaster.Scenarios[idx]
+			scenario := embeds.ScenarioMaster.GetScenario(key)
 
 			return scenario.LabelName
 		}),
@@ -123,8 +122,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 		widget.ListOpts.EntryTextPosition(widget.TextPositionStart, widget.TextPositionCenter),
 		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
 			key := args.Entry.(string)
-			idx := embeds.ScenarioMaster.ScenarioIndex[key]
-			scenario := embeds.ScenarioMaster.Scenarios[idx]
+			scenario := embeds.ScenarioMaster.GetScenario(key)
 
 			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario.Body}}}
 		}),
