@@ -10,16 +10,16 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/kijimaD/na2me/lib/eui"
+	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
 	"github.com/kijimaD/nova/parser"
-	"github.com/kijimaD/nova/utils"
 )
 
 type PauseState struct {
 	scenario []byte
 	trans    *Transition
-	faceFont text.Face
 
 	ui     *ebitenui.UI
 	labels []string
@@ -34,7 +34,6 @@ func (st *PauseState) OnStart() {
 		log.Fatal("シナリオが選択されていない")
 	}
 
-	st.faceFont = loadFont("ui/JF-Dot-Kappa20B.ttf", fontSize)
 	l := lexer.NewLexer(string(st.scenario))
 	p := parser.NewParser(l)
 	program, err := p.ParseProgram()
@@ -72,8 +71,6 @@ func (st *PauseState) Draw(screen *ebiten.Image) {
 }
 
 func (st *PauseState) initUI() *ebitenui.UI {
-	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
-
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.RGBA{0x13, 0x1a, 0x22, 0xff})),
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
@@ -87,43 +84,31 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
 		)),
 	)
-	rootContainer.AddChild(st.backButton(faceFont))
+	entries := []any{}
 	for _, label := range st.labels {
-		rootContainer.AddChild(st.labelSelectButton(label, faceFont, st.scenario))
+		entries = append(entries, label)
 	}
-	rootContainer.AddChild(st.mainMenuButton(faceFont))
+
+	list := eui.NewList(
+		widget.ListOpts.Entries(entries),
+		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
+			key := e.(string)
+
+			return key
+		}),
+		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
+			key := args.Entry.(string)
+			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: st.scenario, startLabel: utils.GetPtr(key)}}}
+		}),
+	)
+	rootContainer.AddChild(st.backButton(utils.BodyFont()))
+	rootContainer.AddChild(list)
+	rootContainer.AddChild(st.mainMenuButton(utils.BodyFont()))
 
 	return &ebitenui.UI{Container: rootContainer}
 }
 
-func (st *PauseState) labelSelectButton(startLabel string, face text.Face, scenario []byte) *widget.Button {
-	buttonImage, _ := loadButtonImage()
-	button := widget.NewButton(
-		widget.ButtonOpts.WidgetOpts(
-			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
-				HorizontalPosition: widget.AnchorLayoutPositionCenter,
-				VerticalPosition:   widget.AnchorLayoutPositionCenter,
-			}),
-		),
-		widget.ButtonOpts.Image(buttonImage),
-		widget.ButtonOpts.Text(startLabel, face, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
-		}),
-		widget.ButtonOpts.TextPadding(widget.Insets{
-			Left:   30,
-			Right:  30,
-			Top:    5,
-			Bottom: 5,
-		}),
-		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario, startLabel: utils.GetPtr(startLabel)}}}
-		}),
-	)
-	return button
-}
-
 func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
-	buttonImage, _ := loadButtonImage()
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -131,8 +116,8 @@ func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(buttonImage),
-		widget.ButtonOpts.Text("メインメニュー", face, &widget.ButtonTextColor{
+		widget.ButtonOpts.Image(utils.LoadButtonImage()),
+		widget.ButtonOpts.Text("終了", face, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -149,7 +134,6 @@ func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
 }
 
 func (st *PauseState) backButton(face text.Face) *widget.Button {
-	buttonImage, _ := loadButtonImage()
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -157,7 +141,7 @@ func (st *PauseState) backButton(face text.Face) *widget.Button {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(buttonImage),
+		widget.ButtonOpts.Image(utils.LoadButtonImage()),
 		widget.ButtonOpts.Text("戻る", face, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),

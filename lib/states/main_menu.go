@@ -10,6 +10,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	embeds "github.com/kijimaD/na2me/embeds"
+	"github.com/kijimaD/na2me/lib/eui"
+	"github.com/kijimaD/na2me/lib/utils"
 )
 
 type MainMenuState struct {
@@ -52,8 +54,6 @@ func (st *MainMenuState) Draw(screen *ebiten.Image) {
 func (st *MainMenuState) updateMenuContainer() {}
 
 func (st *MainMenuState) initUI() *ebitenui.UI {
-	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
-
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.RGBA{0x13, 0x1a, 0x22, 0xff})),
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
@@ -67,15 +67,33 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
 		)),
 	)
-	rootContainer.AddChild(st.scenarioSelectButton("坊っちゃん", faceFont, embeds.Bochan))
-	rootContainer.AddChild(st.scenarioSelectButton("吾輩は猫である", faceFont, embeds.WagahaiHaNekoDearu))
-	rootContainer.AddChild(st.scenarioSelectButton("三四郎", faceFont, embeds.Sanshirou))
+
+	entries := []any{}
+	for _, s := range embeds.ScenarioMaster.Scenarios {
+		entries = append(entries, s.Name)
+	}
+	list := eui.NewList(
+		widget.ListOpts.Entries(entries),
+		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
+			key := e.(string)
+			scenario := embeds.ScenarioMaster.GetScenario(key)
+
+			return scenario.LabelName
+		}),
+		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
+			key := args.Entry.(string)
+			scenario := embeds.ScenarioMaster.GetScenario(key)
+
+			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario.Body}}}
+		}),
+	)
+	rootContainer.AddChild(list)
 
 	return &ebitenui.UI{Container: rootContainer}
 }
 
 func (st *MainMenuState) scenarioSelectButton(label string, face text.Face, scenario []byte) *widget.Button {
-	buttonImage, _ := loadButtonImage()
+	buttonImage := utils.LoadButtonImage()
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -99,16 +117,4 @@ func (st *MainMenuState) scenarioSelectButton(label string, face text.Face, scen
 	)
 
 	return button
-}
-
-func loadButtonImage() (*widget.ButtonImage, error) {
-	idle := image.NewNineSliceColor(color.RGBA{R: 110, G: 110, B: 180, A: 255})
-	hover := image.NewNineSliceColor(color.RGBA{R: 110, G: 180, B: 130, A: 255})
-	pressed := image.NewNineSliceColor(color.RGBA{R: 80, G: 110, B: 100, A: 255})
-
-	return &widget.ButtonImage{
-		Idle:    idle,
-		Hover:   hover,
-		Pressed: pressed,
-	}, nil
 }
