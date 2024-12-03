@@ -10,6 +10,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	embeds "github.com/kijimaD/na2me/embeds"
+	"github.com/kijimaD/na2me/lib/eui"
+	"github.com/kijimaD/na2me/lib/utils"
 )
 
 type MainMenuState struct {
@@ -52,9 +54,6 @@ func (st *MainMenuState) Draw(screen *ebiten.Image) {
 func (st *MainMenuState) updateMenuContainer() {}
 
 func (st *MainMenuState) initUI() *ebitenui.UI {
-	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
-	buttonImage, _ := loadButtonImage()
-
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.RGBA{0x13, 0x1a, 0x22, 0xff})),
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
@@ -73,53 +72,14 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 	for _, s := range embeds.ScenarioMaster.Scenarios {
 		entries = append(entries, s.Name)
 	}
-	list := widget.NewList(
-		widget.ListOpts.ContainerOpts(widget.ContainerOpts.WidgetOpts(
-			widget.WidgetOpts.MinSize(150, 0),
-			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
-				HorizontalPosition: widget.AnchorLayoutPositionCenter,
-				VerticalPosition:   widget.AnchorLayoutPositionEnd,
-				StretchVertical:    true,
-				Padding:            widget.NewInsetsSimple(50),
-			}),
-		)),
+	list := eui.NewList(
 		widget.ListOpts.Entries(entries),
-		widget.ListOpts.ScrollContainerOpts(
-			widget.ScrollContainerOpts.Image(&widget.ScrollContainerImage{
-				Idle:     image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-				Disabled: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-				Mask:     image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-			}),
-		),
-		widget.ListOpts.SliderOpts(
-			widget.SliderOpts.Images(&widget.SliderTrackImage{
-				Idle:  image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-				Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-			}, buttonImage),
-			widget.SliderOpts.MinHandleSize(5),
-			widget.SliderOpts.TrackPadding(widget.NewInsetsSimple(2))),
-		widget.ListOpts.HideHorizontalSlider(),
-		widget.ListOpts.EntryFontFace(faceFont),
-		widget.ListOpts.EntryColor(&widget.ListEntryColor{
-			Selected:                   color.NRGBA{R: 0, G: 255, B: 0, A: 255},
-			Unselected:                 color.NRGBA{R: 254, G: 255, B: 255, A: 255},
-			SelectedBackground:         color.NRGBA{R: 130, G: 130, B: 200, A: 255},
-			SelectingBackground:        color.NRGBA{R: 130, G: 130, B: 130, A: 255},
-			SelectingFocusedBackground: color.NRGBA{R: 130, G: 140, B: 170, A: 255},
-			SelectedFocusedBackground:  color.NRGBA{R: 130, G: 130, B: 170, A: 255},
-			FocusedBackground:          color.NRGBA{R: 170, G: 170, B: 180, A: 255},
-			DisabledUnselected:         color.NRGBA{R: 100, G: 100, B: 100, A: 255},
-			DisabledSelected:           color.NRGBA{R: 100, G: 100, B: 100, A: 255},
-			DisabledSelectedBackground: color.NRGBA{R: 100, G: 100, B: 100, A: 255},
-		}),
 		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
 			key := e.(string)
 			scenario := embeds.ScenarioMaster.GetScenario(key)
 
 			return scenario.LabelName
 		}),
-		widget.ListOpts.EntryTextPadding(widget.NewInsetsSimple(5)),
-		widget.ListOpts.EntryTextPosition(widget.TextPositionStart, widget.TextPositionCenter),
 		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
 			key := args.Entry.(string)
 			scenario := embeds.ScenarioMaster.GetScenario(key)
@@ -133,7 +93,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 }
 
 func (st *MainMenuState) scenarioSelectButton(label string, face text.Face, scenario []byte) *widget.Button {
-	buttonImage, _ := loadButtonImage()
+	buttonImage := utils.LoadButtonImage()
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -157,16 +117,4 @@ func (st *MainMenuState) scenarioSelectButton(label string, face text.Face, scen
 	)
 
 	return button
-}
-
-func loadButtonImage() (*widget.ButtonImage, error) {
-	idle := image.NewNineSliceColor(color.RGBA{R: 110, G: 110, B: 180, A: 255})
-	hover := image.NewNineSliceColor(color.RGBA{R: 110, G: 180, B: 130, A: 255})
-	pressed := image.NewNineSliceColor(color.RGBA{R: 80, G: 110, B: 100, A: 255})
-
-	return &widget.ButtonImage{
-		Idle:    idle,
-		Hover:   hover,
-		Pressed: pressed,
-	}, nil
 }

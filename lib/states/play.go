@@ -15,6 +15,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/kijimaD/na2me/lib/touch"
+	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
 	"github.com/kijimaD/nova/parser"
@@ -46,7 +47,6 @@ type PlayState struct {
 	bgImage     *ebiten.Image
 	promptImage *ebiten.Image
 	startTime   time.Time
-	faceFont    text.Face
 }
 
 func (st *PlayState) OnPause() {}
@@ -58,7 +58,6 @@ func (st *PlayState) OnStart() {
 		log.Fatal("シナリオが選択されていない")
 	}
 
-	st.faceFont = loadFont("ui/JF-Dot-Kappa20B.ttf", fontSize)
 	st.startTime = time.Now()
 
 	l := lexer.NewLexer(string(st.scenario))
@@ -76,14 +75,14 @@ func (st *PlayState) OnStart() {
 	}
 
 	{
-		eimg, err := loadImage("black.png")
+		eimg := utils.LoadImage("black.png")
 		if err != nil {
 			log.Fatal(err)
 		}
 		st.bgImage = eimg
 	}
 	{
-		eimg, err := loadImage("ui/prompt.png")
+		eimg := utils.LoadImage("ui/prompt.png")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -121,10 +120,7 @@ func (st *PlayState) Update() Transition {
 	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
 		case *event.ChangeBg:
-			eimg, err := loadImage(event.Source)
-			if err != nil {
-				log.Fatal(err)
-			}
+			eimg := utils.LoadImage(event.Source)
 			st.bgImage = eimg
 		}
 	default:
@@ -174,15 +170,13 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(float64(x), float64(y))
 		op.LineSpacing = lineSpacing
-		text.Draw(screen, japaneseText, st.faceFont, op)
+		text.Draw(screen, japaneseText, utils.BodyFont(), op)
 	}
 
 	st.ui.Draw(screen)
 }
 
 func (st *PlayState) initUI() *ebitenui.UI {
-	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
-
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
@@ -209,7 +203,6 @@ func (st *PlayState) initUI() *ebitenui.UI {
 		)),
 	)
 
-	buttonImage, _ := loadButtonImage()
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -217,8 +210,8 @@ func (st *PlayState) initUI() *ebitenui.UI {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(buttonImage),
-		widget.ButtonOpts.Text("一覧", faceFont, &widget.ButtonTextColor{
+		widget.ButtonOpts.Image(utils.LoadButtonImage()),
+		widget.ButtonOpts.Text("一覧", utils.BodyFont(), &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -247,11 +240,10 @@ func (st *PlayState) initUI() *ebitenui.UI {
 }
 
 func (st *PlayState) updateStatsContainer() {
-	faceFont := loadFont("ui/JF-Dot-Kappa20B.ttf", 20)
 	st.statsContainer.RemoveChildren()
 
 	text := widget.NewText(
-		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, faceFont, color.NRGBA{100, 100, 100, 255}),
+		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, utils.BodyFont(), color.NRGBA{100, 100, 100, 255}),
 	)
 
 	progressbar := widget.NewProgressBar(
@@ -277,7 +269,7 @@ func (st *PlayState) updateStatsContainer() {
 	progressBarLabel := widget.NewText(
 		widget.TextOpts.Text(
 			fmt.Sprintf("%.1f%%", rate),
-			faceFont,
+			utils.BodyFont(),
 			color.NRGBA{100, 100, 100, 255},
 		),
 	)
