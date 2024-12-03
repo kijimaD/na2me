@@ -101,9 +101,9 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: st.scenario, startLabel: utils.GetPtr(key)}}}
 		}),
 	)
-	rootContainer.AddChild(st.backButton(utils.BodyFont()))
+	rootContainer.AddChild(st.backButton(utils.BodyFont))
 	rootContainer.AddChild(list)
-	rootContainer.AddChild(st.mainMenuButton(utils.BodyFont()))
+	rootContainer.AddChild(st.mainMenuButton(utils.BodyFont))
 
 	return &ebitenui.UI{Container: rootContainer}
 }

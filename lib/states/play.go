@@ -170,7 +170,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(float64(x), float64(y))
 		op.LineSpacing = lineSpacing
-		text.Draw(screen, japaneseText, utils.BodyFont(), op)
+		text.Draw(screen, japaneseText, utils.BodyFont, op)
 	}
 
 	st.ui.Draw(screen)
@@ -211,7 +211,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			}),
 		),
 		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("一覧", utils.BodyFont(), &widget.ButtonTextColor{
+		widget.ButtonOpts.Text("一覧", utils.BodyFont, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -243,7 +243,7 @@ func (st *PlayState) updateStatsContainer() {
 	st.statsContainer.RemoveChildren()
 
 	text := widget.NewText(
-		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, utils.BodyFont(), color.NRGBA{100, 100, 100, 255}),
+		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
 	)
 
 	progressbar := widget.NewProgressBar(
@@ -269,7 +269,7 @@ func (st *PlayState) updateStatsContainer() {
 	progressBarLabel := widget.NewText(
 		widget.TextOpts.Text(
 			fmt.Sprintf("%.1f%%", rate),
-			utils.BodyFont(),
+			utils.BodyFont,
 			color.NRGBA{100, 100, 100, 255},
 		),
 	)

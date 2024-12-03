@@ -14,6 +14,14 @@ import (
 	"github.com/kijimaD/na2me/embeds"
 )
 
+var (
+	BodyFont text.Face
+)
+
+func init() {
+	BodyFont = LoadFont("ui/JF-Dot-Kappa20B.ttf", 26)
+}
+
 func GetPtr[T any](x T) *T {
 	return &x
 }
@@ -45,10 +53,6 @@ func LoadImage(filename string) *ebiten.Image {
 	}
 
 	return img
-}
-
-func BodyFont() text.Face {
-	return LoadFont("ui/JF-Dot-Kappa20B.ttf", 26)
 }
 
 func LoadFont(path string, size float64) text.Face {

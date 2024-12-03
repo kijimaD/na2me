@@ -28,7 +28,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 				}),
 			),
 			widget.ListOpts.HideHorizontalSlider(),
-			widget.ListOpts.EntryFontFace(utils.BodyFont()),
+			widget.ListOpts.EntryFontFace(utils.BodyFont),
 			widget.ListOpts.EntryColor(&widget.ListEntryColor{
 				Selected:                   color.NRGBA{R: 0, G: 255, B: 0, A: 255},
 				Unselected:                 color.NRGBA{R: 254, G: 255, B: 255, A: 255},
@@ -60,7 +60,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 				widget.SliderOpts.TrackPadding(widget.NewInsetsSimple(2)),
 			),
 			widget.ListOpts.HideHorizontalSlider(),
-			widget.ListOpts.EntryFontFace(utils.BodyFont()),
+			widget.ListOpts.EntryFontFace(utils.BodyFont),
 			widget.ListOpts.AllowReselect(),
 		}, listOpts...)...,
 	)
