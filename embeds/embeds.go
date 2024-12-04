@@ -11,6 +11,9 @@ var WagahaiHaNekoDearu []byte
 //go:embed scenario/sanshirou.sce
 var Sanshirou []byte
 
+//go:embed scenario/kokoro.sce
+var Kokoro []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -25,9 +28,12 @@ func (master *ScenarioMasterType) GetScenario(key string) Scenario {
 }
 
 type Scenario struct {
+	// 一意の名前
+	Name string
+	// 表示名
 	LabelName string
-	Name      string
-	Body      []byte
+	// 本文
+	Body []byte
 }
 
 var ScenarioMaster ScenarioMasterType
@@ -36,19 +42,24 @@ func init() {
 	sm := ScenarioMasterType{}
 	sm.Scenarios = []Scenario{
 		{
-			LabelName: "坊っちゃん",
 			Name:      "Bochan",
+			LabelName: "坊っちゃん",
 			Body:      Bochan,
 		},
 		{
-			LabelName: "吾輩は猫である",
 			Name:      "WagahaiHaNekoDearu",
+			LabelName: "吾輩は猫である",
 			Body:      WagahaiHaNekoDearu,
 		},
 		{
-			LabelName: "三四郎",
 			Name:      "Sanshirou",
+			LabelName: "三四郎",
 			Body:      Sanshirou,
+		},
+		{
+			Name:      "Kokoro",
+			LabelName: "こころ",
+			Body:      Kokoro,
 		},
 	}
 	sm.ScenarioIndex = map[string]int{}
