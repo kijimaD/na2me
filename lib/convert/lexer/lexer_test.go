@@ -20,7 +20,7 @@ func TestAddPageTag(t *testing.T) {
 		l.readRune()
 	}
 
-	// fmt.Printf("%#v\n", result)
+	assert.Equal(t, 157, len(result))
 }
 
 func TestReadRune(t *testing.T) {
@@ -135,7 +135,7 @@ func TestNextToken(t *testing.T) {
 	}
 }
 
-func TestSkipShiteSpace(t *testing.T) {
+func TestSkipWhiteSpace(t *testing.T) {
 	tests := []struct {
 		input  string
 		expect string

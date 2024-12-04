@@ -212,7 +212,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 		),
 		widget.ButtonOpts.Image(utils.LoadButtonImage()),
 		widget.ButtonOpts.Text("一覧", utils.BodyFont, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
+			Idle: color.RGBA{0xaa, 0xaa, 0xaa, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
 			Left:   10,

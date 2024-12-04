@@ -177,8 +177,8 @@ func TestSplitByPeriod(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(fmt.Sprintf("入力が%sの場合", tt.inputText), func(t *testing.T) {
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("スナップショット%d", i+1), func(t *testing.T) {
 			got := splitByPeriod(tt.inputText, tt.inputLen, tt.forceLen)
 			assert.Equal(t, tt.expect, got)
 		})
