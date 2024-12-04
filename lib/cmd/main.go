@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/kijimaD/na2me/lib"
@@ -37,6 +38,7 @@ func NewMainApp() *cli.App {
 		CmdConvert,
 		CmdCheckLen,
 		CmdCheckNotes,
+		CmdPrintChapterTmpl,
 	}
 	cli.AppHelpTemplate = fmt.Sprintf(`%s
 %s
@@ -59,7 +61,7 @@ func RunMainApp(app *cli.App, args ...string) error {
 var CmdLaunch = &cli.Command{
 	Name:        "launch",
 	Usage:       "launch",
-	Description: "launch",
+	Description: "起動する",
 	Action:      cmdLaunch,
 	Flags:       []cli.Flag{},
 }
@@ -76,7 +78,7 @@ func cmdLaunch(_ *cli.Context) error {
 var CmdConvert = &cli.Command{
 	Name:        "convert",
 	Usage:       "convert",
-	Description: "convert",
+	Description: "機械的に改ページタグをつける",
 	Action:      cmdConvert,
 	Flags:       []cli.Flag{},
 }
@@ -86,7 +88,7 @@ func cmdConvert(_ *cli.Context) error {
 		return fmt.Errorf("パイプで加工したいテキストを標準入力に渡す必要がある")
 	}
 
-	b, err := ioutil.ReadAll(os.Stdin)
+	b, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		return err
 	}
@@ -108,7 +110,7 @@ func cmdConvert(_ *cli.Context) error {
 var CmdCheckLen = &cli.Command{
 	Name:        "checkLen",
 	Usage:       "checkLen",
-	Description: "checkLen",
+	Description: "行の長さが超えてないかチェックする",
 	Action:      cmdCheckLen,
 	Flags:       []cli.Flag{},
 }
@@ -145,7 +147,7 @@ func cmdCheckLen(_ *cli.Context) error {
 var CmdCheckNotes = &cli.Command{
 	Name:        "checkNotes",
 	Usage:       "checkNotes",
-	Description: "checkNotes",
+	Description: "おかしくなりがちな脚注部分を表示する",
 	Action:      cmdCheckNotes,
 	Flags:       []cli.Flag{},
 }
@@ -173,6 +175,35 @@ func cmdCheckNotes(_ *cli.Context) error {
 
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+var CmdPrintChapterTmpl = &cli.Command{
+	Name:        "printChapterTmpl",
+	Usage:       "printChapterTmpl",
+	Description: "章は手動でつけるので、コピペ用のテンプレートを標準出力する",
+	Action:      cmdPrintChapterTmpl,
+	Flags:       []cli.Flag{},
+}
+
+func cmdPrintChapterTmpl(ctx *cli.Context) error {
+	if ctx.Args().Len() < 1 {
+		return fmt.Errorf("引数が不足している")
+	}
+	numString := ctx.Args().Get(0)
+	num, err := strconv.Atoi(numString)
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < num; i++ {
+		str := `[jump target="%d"]
+
+*ch%d
+`
+		fmt.Printf(str, i, i)
 	}
 
 	return nil
