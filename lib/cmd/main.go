@@ -226,6 +226,10 @@ func cmdPrintChapterTmpl(ctx *cli.Context) error {
 終わり
 [p]
 [jump target="start"]
+
+*footnotes
+xxx
+[jump target="start"]
 `
 		fmt.Printf(str)
 	}

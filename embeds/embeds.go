@@ -14,6 +14,9 @@ var Sanshirou []byte
 //go:embed scenario/kokoro.sce
 var Kokoro []byte
 
+//go:embed scenario/ningen_shikkaku.sce
+var NingenShikkaku []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -66,6 +69,12 @@ func init() {
 			LabelName:  "こころ",
 			AuthorName: "夏目漱石",
 			Body:       Kokoro,
+		},
+		{
+			Name:       "NingenShikkaku",
+			LabelName:  "人間失格",
+			AuthorName: "太宰治",
+			Body:       NingenShikkaku,
 		},
 	}
 	sm.ScenarioIndex = map[string]int{}
