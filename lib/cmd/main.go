@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -12,6 +13,7 @@ import (
 	"github.com/kijimaD/na2me/lib/check"
 	"github.com/kijimaD/na2me/lib/convert/lexer"
 	"github.com/kijimaD/na2me/lib/convert/parser"
+	"github.com/kijimaD/na2me/lib/normalize"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -39,6 +41,7 @@ func NewMainApp() *cli.App {
 		CmdCheckLen,
 		CmdCheckNotes,
 		CmdPrintChapterTmpl,
+		CmdNormalizeBg,
 	}
 	cli.AppHelpTemplate = fmt.Sprintf(`%s
 %s
@@ -225,6 +228,39 @@ func cmdPrintChapterTmpl(ctx *cli.Context) error {
 [jump target="start"]
 `
 		fmt.Printf(str)
+	}
+
+	return nil
+}
+
+// ================
+
+var CmdNormalizeBg = &cli.Command{
+	Name:        "normalizeBg",
+	Usage:       "normalizeBg",
+	Description: "背景画像を標準化する",
+	Action:      runNormalizeBg,
+	Flags:       []cli.Flag{},
+}
+
+func runNormalizeBg(_ *cli.Context) error {
+	const srcDir = "./raw/bg"
+	const destDir = "./embeds/bg"
+
+	c, err := os.ReadDir(srcDir)
+	if err != nil {
+		return err
+	}
+	for _, entry := range c {
+		if !strings.HasSuffix(entry.Name(), ".png") && !strings.HasSuffix(entry.Name(), ".jpg") {
+			return fmt.Errorf("%sにjpgもしくはpng以外のファイルが含まれている: %s", srcDir, entry.Name())
+		}
+		src := path.Join(srcDir, entry.Name())
+		dest := path.Join(destDir, entry.Name())
+		err := normalize.NormalizeBg(src, dest)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
