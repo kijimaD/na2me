@@ -73,6 +73,22 @@ func (st *PauseState) Draw(screen *ebiten.Image) {
 func (st *PauseState) initUI() *ebitenui.UI {
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.RGBA{0x13, 0x1a, 0x22, 0xff})),
+		widget.ContainerOpts.Layout(
+			widget.NewGridLayout(
+				widget.GridLayoutOpts.Columns(1),
+				widget.GridLayoutOpts.Spacing(4, 4),
+				widget.GridLayoutOpts.Stretch([]bool{true}, []bool{true}),
+				widget.GridLayoutOpts.Padding(widget.Insets{
+					Top:    4,
+					Bottom: 4,
+					Left:   4,
+					Right:  4,
+				}),
+			),
+		),
+	)
+
+	buttonContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
 			widget.RowLayoutOpts.Padding(widget.Insets{
@@ -84,11 +100,12 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
 		)),
 	)
+	buttonContainer.AddChild(st.backButton(utils.BodyFont), st.mainMenuButton(utils.BodyFont))
+
 	entries := []any{}
 	for _, label := range st.labels {
 		entries = append(entries, label)
 	}
-
 	list := eui.NewList(
 		widget.ListOpts.Entries(entries),
 		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
@@ -101,9 +118,15 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: st.scenario, startLabel: utils.GetPtr(key)}}}
 		}),
 	)
-	rootContainer.AddChild(st.backButton(utils.BodyFont))
-	rootContainer.AddChild(list)
-	rootContainer.AddChild(st.mainMenuButton(utils.BodyFont))
+	// Listは高さのあるレイアウトのコンテナに入れないと、スクロールされない
+	listContainer := widget.NewContainer(
+		widget.ContainerOpts.Layout(
+			widget.NewAnchorLayout(),
+		),
+	)
+	listContainer.AddChild(list, buttonContainer)
+
+	rootContainer.AddChild(listContainer)
 
 	return &ebitenui.UI{Container: rootContainer}
 }
