@@ -65,5 +65,5 @@ RUN yarn install
 FROM python:3.13.1-slim-bookworm as filter
 RUN apt update -y
 RUN apt install python3-opencv -y
-COPY requirements.txt .
+COPY ./scripts/requirements.txt .
 RUN pip install -r requirements.txt
