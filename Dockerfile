@@ -57,3 +57,13 @@ ENTRYPOINT ["na2me"]
 
 FROM node:22 as releaser
 RUN yarn install
+
+##########
+# filter #
+##########
+
+FROM python:3.13.1-slim-bookworm as filter
+RUN apt update -y
+RUN apt install python3-opencv -y
+COPY requirements.txt .
+RUN pip install -r requirements.txt
