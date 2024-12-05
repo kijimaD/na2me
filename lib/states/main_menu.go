@@ -1,7 +1,9 @@
 package states
 
 import (
+	"fmt"
 	"image/color"
+	"strings"
 
 	"github.com/ebitenui/ebitenui"
 	"github.com/ebitenui/ebitenui/image"
@@ -78,7 +80,9 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 			key := e.(string)
 			scenario := embeds.ScenarioMaster.GetScenario(key)
 
-			return scenario.LabelName
+			whitespace := strings.Repeat("　", 26-(len([]rune(scenario.LabelName))+len([]rune(scenario.AuthorName))))
+
+			return fmt.Sprintf("%s%s%s", scenario.LabelName, whitespace, scenario.AuthorName)
 		}),
 		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
 			key := args.Entry.(string)

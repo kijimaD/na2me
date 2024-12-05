@@ -32,6 +32,8 @@ type Scenario struct {
 	Name string
 	// 表示名
 	LabelName string
+	// 著者名
+	AuthorName string
 	// 本文
 	Body []byte
 }
@@ -42,24 +44,28 @@ func init() {
 	sm := ScenarioMasterType{}
 	sm.Scenarios = []Scenario{
 		{
-			Name:      "Bochan",
-			LabelName: "坊っちゃん",
-			Body:      Bochan,
+			Name:       "Bochan",
+			LabelName:  "坊っちゃん",
+			AuthorName: "夏目漱石",
+			Body:       Bochan,
 		},
 		{
-			Name:      "WagahaiHaNekoDearu",
-			LabelName: "吾輩は猫である",
-			Body:      WagahaiHaNekoDearu,
+			Name:       "WagahaiHaNekoDearu",
+			LabelName:  "吾輩は猫である",
+			AuthorName: "夏目漱石",
+			Body:       WagahaiHaNekoDearu,
 		},
 		{
-			Name:      "Sanshirou",
-			LabelName: "三四郎",
-			Body:      Sanshirou,
+			Name:       "Sanshirou",
+			LabelName:  "三四郎",
+			AuthorName: "夏目漱石",
+			Body:       Sanshirou,
 		},
 		{
-			Name:      "Kokoro",
-			LabelName: "こころ",
-			Body:      Kokoro,
+			Name:       "Kokoro",
+			LabelName:  "こころ",
+			AuthorName: "夏目漱石",
+			Body:       Kokoro,
 		},
 	}
 	sm.ScenarioIndex = map[string]int{}
