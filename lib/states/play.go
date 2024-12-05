@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"log"
 	"math"
+	"path"
 	"time"
 
 	"github.com/ebitenui/ebitenui"
@@ -75,7 +76,7 @@ func (st *PlayState) OnStart() {
 	}
 
 	{
-		eimg := utils.LoadImage("black.png")
+		eimg := utils.LoadImage("bg/black.png")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -120,7 +121,7 @@ func (st *PlayState) Update() Transition {
 	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
 		case *event.ChangeBg:
-			eimg := utils.LoadImage(event.Source)
+			eimg := utils.LoadImage(path.Join("bg", event.Source))
 			st.bgImage = eimg
 		}
 	default:
@@ -130,6 +131,7 @@ func (st *PlayState) Update() Transition {
 	if st.prevOnAnim != st.eventQ.OnAnim {
 		st.updateStatsContainer()
 
+		st.startTime = time.Now()
 		st.prevOnAnim = !st.prevOnAnim
 	}
 
@@ -153,7 +155,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	// 待ち状態表示
 	if st.eventQ.OnAnim {
 		elapsed := time.Since(st.startTime).Seconds()
-		offsetY := 4 * math.Sin(elapsed*4) // sin関数で上下に動かす
+		offsetY := 4 * math.Cos(elapsed*4) // sin関数で上下に動かす
 		bounds := st.promptImage.Bounds()
 		bounds.Min.Y = int(20 + offsetY) // 初期位置 + オフセット
 		bounds.Max.Y = bounds.Min.Y + bounds.Dy()
