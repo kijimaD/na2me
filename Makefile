@@ -1,12 +1,18 @@
 .DEFAULT_GOAL := help
 
 .PHONY: run
-sample: ## サンプルを実行する
+sample: ## ゲームを実行する
 	go run .
 
 .PHONY: test
 test: ## テストを実行する
 	go test ./... -v
+
+.PHONY: genbg
+genbg: ## 元ファイルから背景ファイルを生成する。サイズ変更、フィルタ適用を行う
+	go run . normalizeBg
+	docker build . --target filter -t filter
+	docker run --rm -it -v $(PWD):/work -w /work filter /bin/sh -c "python filter.py"
 
 .PHONY: help
 help: ## ヘルプを表示する

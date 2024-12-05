@@ -6,6 +6,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 import sys
+import os
+
+# ================================================
+# ターゲットディレクトリの画像に一括でフィルターをかける
+# ================================================
+
+dir_path = "embeds/bg"
 
 # (PIC: 元画像、R: 正方形領域の一辺)
 def kuwahara(pic,r=5):
@@ -23,12 +30,15 @@ def kuwahara(pic,r=5):
     filtered_pic = filt(*np.meshgrid(np.arange(h),np.arange(w))).astype(pic.dtype)
     return filtered_pic
 
-args = sys.argv
-input = args[1]
+target_files = [
+    f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))
+]
 
-pic = np.array(plt.imread(input))
-filtered_pic = kuwahara(pic,5)
-filtered_pic = np.clip(filtered_pic, 0, 1)  # 値を0〜1にクリップ
-filtered_pic = (filtered_pic * 255).astype(np.uint8)
-filtered_image = Image.fromarray(filtered_pic)
-filtered_image.save(input)
+for input in target_files:
+  input_path = os.path.join(dir_path, input)
+  pic = np.array(plt.imread(input_path))
+  filtered_pic = kuwahara(pic,5)
+  filtered_pic = np.clip(filtered_pic, 0, 1)  # 値を0〜1にクリップ
+  filtered_pic = (filtered_pic * 255).astype(np.uint8)
+  filtered_image = Image.fromarray(filtered_pic)
+  filtered_image.save(input_path)
