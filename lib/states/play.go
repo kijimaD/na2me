@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"log"
 	"math"
+	"path"
 	"time"
 
 	"github.com/ebitenui/ebitenui"
@@ -75,7 +76,7 @@ func (st *PlayState) OnStart() {
 	}
 
 	{
-		eimg := utils.LoadImage("black.png")
+		eimg := utils.LoadImage("bg/black.png")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -120,7 +121,7 @@ func (st *PlayState) Update() Transition {
 	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
 		case *event.ChangeBg:
-			eimg := utils.LoadImage(event.Source)
+			eimg := utils.LoadImage(path.Join("bg", event.Source))
 			st.bgImage = eimg
 		}
 	default:
