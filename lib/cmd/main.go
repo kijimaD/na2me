@@ -198,12 +198,33 @@ func cmdPrintChapterTmpl(ctx *cli.Context) error {
 		return err
 	}
 
-	for i := 0; i < num; i++ {
-		str := `[jump target="%d"]
+	{
+		str := `*start
+[image source="black.png"]
+『xxx』xxxx
+[p]
+`
+		fmt.Printf(str)
+	}
+
+	for i := 1; i <= num; i++ {
+		str := `[jump target="ch%d"]
 
 *ch%d
+--------
 `
 		fmt.Printf(str, i, i)
+	}
+
+	{
+		str := `[jump target="end"]
+
+*end
+終わり
+[p]
+[jump target="start"]
+`
+		fmt.Printf(str)
 	}
 
 	return nil
