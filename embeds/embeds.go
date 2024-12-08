@@ -20,6 +20,9 @@ var NingenShikkaku []byte
 //go:embed scenario/hashire_merosu.sce
 var HashireMerosu []byte
 
+//go:embed scenario/mohouto_dokuritu.sce
+var MohoutoDokuritu []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -72,6 +75,12 @@ func init() {
 			LabelName:  "こころ",
 			AuthorName: "夏目漱石",
 			Body:       Kokoro,
+		},
+		{
+			Name:       "MohoutoDokuritu",
+			LabelName:  "模倣と独立",
+			AuthorName: "夏目漱石",
+			Body:       MohoutoDokuritu,
 		},
 		{
 			Name:       "NingenShikkaku",
