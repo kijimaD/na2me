@@ -245,9 +245,10 @@ func (st *PlayState) updateStatsContainer() {
 	st.statsContainer.RemoveChildren()
 
 	text := widget.NewText(
-		widget.TextOpts.Text(st.eventQ.Evaluator.CurrentLabel, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
+		widget.TextOpts.Text(st.eventQ.CurrentLabel, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
 	)
 
+	idx := len(st.eventQ.Evaluator.Events) - len(st.eventQ.WaitingQueue)
 	progressbar := widget.NewProgressBar(
 		widget.ProgressBarOpts.WidgetOpts(
 			widget.WidgetOpts.MinSize(300, 16),
@@ -265,9 +266,9 @@ func (st *PlayState) updateStatsContainer() {
 				Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
 			},
 		),
-		widget.ProgressBarOpts.Values(0, len(st.eventQ.Evaluator.Events), st.eventQ.Evaluator.CurrentEventIdx+1),
+		widget.ProgressBarOpts.Values(0, len(st.eventQ.Evaluator.Events), idx+1),
 	)
-	rate := float64(st.eventQ.Evaluator.CurrentEventIdx+1) / float64(len(st.eventQ.Evaluator.Events)) * 100
+	rate := float64(idx+1) / float64(len(st.eventQ.Evaluator.Events)) * 100
 	progressBarLabel := widget.NewText(
 		widget.TextOpts.Text(
 			fmt.Sprintf("%.1f%%", rate),

@@ -7,7 +7,7 @@ toolchain go1.22.7
 require (
 	github.com/ebitenui/ebitenui v0.6.0
 	github.com/hajimehoshi/ebiten/v2 v2.8.0
-	github.com/kijimaD/nova v0.0.6
+	github.com/kijimaD/nova v0.1.2
 	github.com/stretchr/testify v1.9.0
 	github.com/urfave/cli/v2 v2.27.5
 	golang.org/x/crypto v0.29.0
