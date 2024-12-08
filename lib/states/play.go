@@ -248,7 +248,7 @@ func (st *PlayState) updateStatsContainer() {
 		widget.TextOpts.Text(st.eventQ.CurrentLabel, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
 	)
 
-	idx := len(st.eventQ.Evaluator.Events) - len(st.eventQ.EventQueue)
+	idx := len(st.eventQ.Evaluator.Events) - len(st.eventQ.WaitingQueue)
 	progressbar := widget.NewProgressBar(
 		widget.ProgressBarOpts.WidgetOpts(
 			widget.WidgetOpts.MinSize(300, 16),
