@@ -23,6 +23,9 @@ var HashireMerosu []byte
 //go:embed scenario/mohouto_dokuritu.sce
 var MohoutoDokuritu []byte
 
+//go:embed scenario/meian.sce
+var Meian []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -81,6 +84,12 @@ func init() {
 			LabelName:  "模倣と独立",
 			AuthorName: "夏目漱石",
 			Body:       MohoutoDokuritu,
+		},
+		{
+			Name:       "Meian",
+			LabelName:  "明暗",
+			AuthorName: "夏目漱石",
+			Body:       Meian,
 		},
 		{
 			Name:       "NingenShikkaku",
