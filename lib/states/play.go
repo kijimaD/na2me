@@ -72,7 +72,7 @@ func (st *PlayState) OnStart() {
 	st.eventQ = event.NewQueue(e)
 	st.eventQ.Start()
 	if st.startLabel != nil {
-		st.eventQ.Evaluator.Play(*st.startLabel)
+		st.eventQ.Play(*st.startLabel)
 	}
 
 	{
