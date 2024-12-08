@@ -229,6 +229,7 @@ func cmdPrintChapterTmpl(ctx *cli.Context) error {
 
 *footnotes
 xxx
+[p]
 [jump target="start"]
 `
 		fmt.Printf(str)
