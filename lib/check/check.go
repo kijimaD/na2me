@@ -7,7 +7,10 @@ import (
 	"strings"
 )
 
-func WarnLongLine(r io.Reader, w io.Writer, threshold int, fileName string) {
+// upperThreshold: より大きい
+// lowerThreshold: より小さい
+// 場合にエラーを出す
+func WarnLineLen(r io.Reader, w io.Writer, upperThreshold int, lowerThreshold int, fileName string) {
 	fmt.Fprintf(w, "%s\n", fileName)
 
 	scanner := bufio.NewScanner(r)
@@ -15,7 +18,10 @@ func WarnLongLine(r io.Reader, w io.Writer, threshold int, fileName string) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		lineLen := len([]rune(line))
-		if lineLen > threshold {
+		if lineLen == 0 {
+			continue
+		}
+		if lowerThreshold > lineLen || lineLen > upperThreshold {
 			fmt.Fprintf(w, "Line: %d, Length: %d\n", lineNumber, lineLen)
 			fmt.Fprintf(w, "  %s\n", line)
 		}

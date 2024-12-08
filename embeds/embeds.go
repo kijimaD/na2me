@@ -17,6 +17,15 @@ var Kokoro []byte
 //go:embed scenario/ningen_shikkaku.sce
 var NingenShikkaku []byte
 
+//go:embed scenario/hashire_merosu.sce
+var HashireMerosu []byte
+
+//go:embed scenario/mohouto_dokuritu.sce
+var MohoutoDokuritu []byte
+
+//go:embed scenario/meian.sce
+var Meian []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -71,10 +80,28 @@ func init() {
 			Body:       Kokoro,
 		},
 		{
+			Name:       "MohoutoDokuritu",
+			LabelName:  "模倣と独立",
+			AuthorName: "夏目漱石",
+			Body:       MohoutoDokuritu,
+		},
+		{
+			Name:       "Meian",
+			LabelName:  "明暗",
+			AuthorName: "夏目漱石",
+			Body:       Meian,
+		},
+		{
 			Name:       "NingenShikkaku",
 			LabelName:  "人間失格",
 			AuthorName: "太宰治",
 			Body:       NingenShikkaku,
+		},
+		{
+			Name:       "HashireMerosu",
+			LabelName:  "走れメロス",
+			AuthorName: "太宰治",
+			Body:       HashireMerosu,
 		},
 	}
 	sm.ScenarioIndex = map[string]int{}

@@ -121,7 +121,8 @@ var CmdCheckLen = &cli.Command{
 func cmdCheckLen(_ *cli.Context) error {
 	directory := "./embeds/scenario" // 検索するディレクトリ
 	extension := ".sce"              // 対象ファイルの拡張子
-	threshold := 240                 // 長い行とみなす文字数の閾値
+	upperThreshold := 240            // 長い行とみなす文字数。より大きい
+	lowerThreshold := 3              // 短いとみなす文字数。より小さい
 
 	// ディレクトリを再帰的に検索
 	err := filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
@@ -134,7 +135,7 @@ func cmdCheckLen(_ *cli.Context) error {
 		}
 		// ファイルであり、指定の拡張子を持つ場合のみ処理
 		if !info.IsDir() && strings.HasSuffix(info.Name(), extension) {
-			check.WarnLongLine(f, os.Stdout, threshold, f.Name())
+			check.WarnLineLen(f, os.Stdout, upperThreshold, lowerThreshold, f.Name())
 		}
 
 		return nil
@@ -229,6 +230,7 @@ func cmdPrintChapterTmpl(ctx *cli.Context) error {
 
 *footnotes
 xxx
+[p]
 [jump target="start"]
 `
 		fmt.Printf(str)
