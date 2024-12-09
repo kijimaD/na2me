@@ -17,6 +17,9 @@ func WarnLineLen(r io.Reader, w io.Writer, upperThreshold int, lowerThreshold in
 	lineNumber := 1
 	for scanner.Scan() {
 		line := scanner.Text()
+		if isKanjiNumeralsOnly(line) {
+			continue
+		}
 		lineLen := len([]rune(line))
 		if lineLen == 0 {
 			continue
@@ -32,6 +35,23 @@ func WarnLineLen(r io.Reader, w io.Writer, upperThreshold int, lowerThreshold in
 	if err := scanner.Err(); err != nil {
 		fmt.Fprintf(w, "Error reading: %v\n", err)
 	}
+}
+
+var kanjiNumerals = map[rune]bool{
+	'一': true, '二': true, '三': true, '四': true,
+	'五': true, '六': true, '七': true, '八': true,
+	'九': true, '十': true, '百': true, '〇': true,
+	'零': true, ' ': true,
+}
+
+func isKanjiNumeralsOnly(input string) bool {
+	for _, r := range input {
+		if !kanjiNumerals[r] {
+			return false
+		}
+	}
+
+	return len(input) > 0
 }
 
 func WarnNotes(r io.Reader, w io.Writer, fileName string) {

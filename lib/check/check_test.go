@@ -39,6 +39,36 @@ Line: 9, Length: 9
 	assert.Equal(t, expect, buf.String())
 }
 
+func TestIsKanjiNumeralsOnly(t *testing.T) {
+	tests := []struct {
+		input  string
+		expect bool
+	}{
+		{
+			input:  "一",
+			expect: true,
+		},
+		{
+			input:  "十一",
+			expect: true,
+		},
+		{
+			input:  "  十一",
+			expect: true,
+		},
+		{
+			input:  "  百五",
+			expect: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			assert.Equal(t, tt.expect, isKanjiNumeralsOnly(tt.input))
+		})
+	}
+}
+
 func TestWarnNotes(t *testing.T) {
 	buf := bytes.Buffer{}
 	r := strings.NewReader(`sample
