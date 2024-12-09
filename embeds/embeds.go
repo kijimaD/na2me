@@ -29,6 +29,9 @@ var Meian []byte
 //go:embed scenario/souseki_no_jinbutu.sce
 var SousekiNoJinbutu []byte
 
+//go:embed scenario/sorekara.sce
+var Sorekara []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -93,6 +96,12 @@ func init() {
 			LabelName:  "明暗",
 			AuthorName: "夏目漱石",
 			Body:       Meian,
+		},
+		{
+			Name:       "Sorekara",
+			LabelName:  "それから",
+			AuthorName: "夏目漱石",
+			Body:       Sorekara,
 		},
 		{
 			Name:       "NingenShikkaku",
