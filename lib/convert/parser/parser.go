@@ -108,7 +108,6 @@ func (p *Parser) parseSentence() []ast.Node {
 // forceLengthを超えると、括弧の中でも読点で分割を行う
 func splitByPeriod(text string, minLength int, forceLength int) []string {
 	const jpPeriodChar = '。'
-	const jpCommaChar = '、'
 	const jpBracketStartChar1 = '「'
 	const jpBracketEndChar1 = '」'
 	const parentStartChar = '('
@@ -149,12 +148,11 @@ func splitByPeriod(text string, minLength int, forceLength int) []string {
 		}
 
 		if (char == jpPeriodChar || char == jpBracketEndChar1) && !insideJPBrackets1 && len([]rune(current)) > minLength {
+			// 括弧内での分割を避ける
 			result = append(result, strings.TrimSpace(current))
 			current = ""
-		} else if char == jpPeriodChar && len([]rune(current)) > forceLength {
-			result = append(result, strings.TrimSpace(current))
-			current = ""
-		} else if char == jpCommaChar && len([]rune(current)) > forceLength {
+		} else if (char == jpPeriodChar || char == jpBracketEndChar1) && len([]rune(current)) > forceLength {
+			// 括弧内だろうと分割する
 			result = append(result, strings.TrimSpace(current))
 			current = ""
 		}
