@@ -26,6 +26,9 @@ var MohoutoDokuritu []byte
 //go:embed scenario/meian.sce
 var Meian []byte
 
+//go:embed scenario/souseki_no_jinbutu.sce
+var SousekiNoJinbutu []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -103,6 +106,18 @@ func init() {
 			AuthorName: "太宰治",
 			Body:       HashireMerosu,
 		},
+		{
+			Name:       "SousekiNoJinbutu",
+			LabelName:  "漱石の人物",
+			AuthorName: "和辻哲郎",
+			Body:       SousekiNoJinbutu,
+		},
+		// {
+		// 	Name:       "",
+		// 	LabelName:  "",
+		// 	AuthorName: "",
+		// 	Body:       ,
+		// },
 	}
 	sm.ScenarioIndex = map[string]int{}
 	for i, s := range sm.Scenarios {

@@ -23,3 +23,21 @@ $('rt').hide();
 ```js
 document.querySelectorAll("rt").forEach(el => el.remove());
 ```
+
+## 手順
+
+`./raw/scenario`ディレクトリに、コピーしてきた原文を保存する。
+
+変換する。
+
+```shell
+target=souseki_no_jinbutu; cat ./raw/scenario/$target | go run . convert > ./embeds/scenario/$target.sce
+```
+
+シナリオファイルにラベルをつける。テンプレートを生成する。
+
+```shell
+go run . printChapterTmpl 100 > aaa.txt
+```
+
+`embeds.go`に追加する。
