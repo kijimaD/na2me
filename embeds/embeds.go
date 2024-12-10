@@ -35,6 +35,9 @@ var Sorekara []byte
 //go:embed scenario/rasyomon.sce
 var Rasyomon []byte
 
+//go:embed scenario/gakumon_no_susume.sce
+var GakumonNoSusume []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -129,6 +132,12 @@ func init() {
 			LabelName:  "羅生門",
 			AuthorName: "芥川龍之介",
 			Body:       Rasyomon,
+		},
+		{
+			Name:       "GakumonNoSusume",
+			LabelName:  "学問のすすめ",
+			AuthorName: "福沢諭吉",
+			Body:       GakumonNoSusume,
 		},
 		// {
 		// 	Name:       "",
