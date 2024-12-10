@@ -32,6 +32,9 @@ var SousekiNoJinbutu []byte
 //go:embed scenario/sorekara.sce
 var Sorekara []byte
 
+//go:embed scenario/rasyomon.sce
+var Rasyomon []byte
+
 // ================
 
 type ScenarioMasterType struct {
@@ -120,6 +123,12 @@ func init() {
 			LabelName:  "漱石の人物",
 			AuthorName: "和辻哲郎",
 			Body:       SousekiNoJinbutu,
+		},
+		{
+			Name:       "Rasyomon",
+			LabelName:  "羅生門",
+			AuthorName: "芥川龍之介",
+			Body:       Rasyomon,
 		},
 		// {
 		// 	Name:       "",
