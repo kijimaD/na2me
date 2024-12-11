@@ -35,6 +35,9 @@ var Sorekara []byte
 //go:embed scenario/mon.sce
 var Mon []byte
 
+//go:embed scenario/watashi_no_kojinsyugi.sce
+var WatashiNoKojinsyugi []byte
+
 //go:embed scenario/rasyomon.sce
 var Rasyomon []byte
 
@@ -120,6 +123,12 @@ func init() {
 			LabelName:  "門",
 			AuthorName: "夏目漱石",
 			Body:       Mon,
+		},
+		{
+			Name:       "WatashiNoKojinsyugi",
+			LabelName:  "私の個人主義",
+			AuthorName: "夏目漱石",
+			Body:       WatashiNoKojinsyugi,
 		},
 		{
 			Name:       "NingenShikkaku",
