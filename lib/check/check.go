@@ -16,6 +16,9 @@ func WarnLineLen(r io.Reader, w io.Writer, upperThreshold int, lowerThreshold in
 	scanner := bufio.NewScanner(r)
 	lineNumber := 1
 	for scanner.Scan() {
+		curLineNumber := lineNumber
+		lineNumber++
+
 		line := scanner.Text()
 		if isKanjiNumeralsOnly(line) {
 			continue
@@ -25,10 +28,9 @@ func WarnLineLen(r io.Reader, w io.Writer, upperThreshold int, lowerThreshold in
 			continue
 		}
 		if lowerThreshold > lineLen || lineLen > upperThreshold {
-			fmt.Fprintf(w, "Line: %d, Length: %d\n", lineNumber, lineLen)
+			fmt.Fprintf(w, "Line: %d, Length: %d\n", curLineNumber, lineLen)
 			fmt.Fprintf(w, "  %s\n", line)
 		}
-		lineNumber++
 	}
 	fmt.Fprintln(w, strings.Repeat("-", 80))
 
