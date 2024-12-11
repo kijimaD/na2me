@@ -32,11 +32,17 @@ var SousekiNoJinbutu []byte
 //go:embed scenario/sorekara.sce
 var Sorekara []byte
 
+//go:embed scenario/mon.sce
+var Mon []byte
+
 //go:embed scenario/rasyomon.sce
 var Rasyomon []byte
 
 //go:embed scenario/gakumon_no_susume.sce
 var GakumonNoSusume []byte
+
+//go:embed scenario/kokyo.sce
+var Kokyo []byte
 
 // ================
 
@@ -110,6 +116,12 @@ func init() {
 			Body:       Sorekara,
 		},
 		{
+			Name:       "Mon",
+			LabelName:  "門",
+			AuthorName: "夏目漱石",
+			Body:       Mon,
+		},
+		{
 			Name:       "NingenShikkaku",
 			LabelName:  "人間失格",
 			AuthorName: "太宰治",
@@ -138,6 +150,12 @@ func init() {
 			LabelName:  "学問のすすめ",
 			AuthorName: "福沢諭吉",
 			Body:       GakumonNoSusume,
+		},
+		{
+			Name:       "Kokyo",
+			LabelName:  "故郷",
+			AuthorName: "魯迅",
+			Body:       Kokyo,
 		},
 		// {
 		// 	Name:       "",
