@@ -114,6 +114,9 @@ func (st *PauseState) initUI() *ebitenui.UI {
 
 			return key
 		}),
+		widget.ListOpts.ContainerOpts(widget.ContainerOpts.WidgetOpts(
+			widget.WidgetOpts.MinSize(300, 0),
+		)),
 		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
 			key := args.Entry.(string)
 			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: st.scenario, startLabel: utils.GetPtr(key)}}}
