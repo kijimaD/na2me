@@ -31,7 +31,7 @@ document.querySelectorAll("rt").forEach(el => el.remove());
 変換する。
 
 ```shell
-target=souseki_no_jinbutu; cat ./raw/scenario/$target | go run . convert > ./embeds/scenario/$target.sce
+author=坂口安吾; title=堕落論; mkdir -p ./embeds/scenario/$author && cat ./raw/scenario/$author/$title | go run . convert > ./embeds/scenario/$author/$title.sce
 ```
 
 シナリオファイルにラベルをつける。テンプレートを生成する。

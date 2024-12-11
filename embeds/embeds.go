@@ -46,6 +46,7 @@ func init() {
 	sm := ScenarioMasterType{}
 	sm.Scenarios = append(sm.Scenarios,
 		NewScenario("和辻哲郎", "漱石の人物"),
+		NewScenario("坂口安吾", "堕落論"),
 		NewScenario("夏目漱石", "こころ"),
 		NewScenario("夏目漱石", "それから"),
 		NewScenario("夏目漱石", "三四郎"),
