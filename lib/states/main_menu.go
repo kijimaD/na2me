@@ -2,22 +2,23 @@ package states
 
 import (
 	"fmt"
-	"image/color"
 	"strings"
 
 	"github.com/ebitenui/ebitenui"
-	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/eui"
+	"github.com/kijimaD/na2me/lib/utils"
 )
 
 type MainMenuState struct {
 	ui            *ebitenui.UI
 	trans         *Transition
 	rootContainer *widget.Container
+
+	bgImage *ebiten.Image
 }
 
 func (st *MainMenuState) OnPause() {}
@@ -26,6 +27,7 @@ func (st *MainMenuState) OnResume() {}
 
 func (st *MainMenuState) OnStart() {
 	st.ui = st.initUI()
+	st.bgImage = utils.LoadImage("ui/desk.jpg")
 }
 
 func (st *MainMenuState) OnStop() {}
@@ -48,6 +50,7 @@ func (st *MainMenuState) Update() Transition {
 }
 
 func (st *MainMenuState) Draw(screen *ebiten.Image) {
+	screen.DrawImage(st.bgImage, nil)
 	st.ui.Draw(screen)
 }
 
@@ -55,7 +58,6 @@ func (st *MainMenuState) updateMenuContainer() {}
 
 func (st *MainMenuState) initUI() *ebitenui.UI {
 	rootContainer := widget.NewContainer(
-		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.RGBA{0x13, 0x1a, 0x22, 0xff})),
 		widget.ContainerOpts.Layout(
 			widget.NewGridLayout(
 				widget.GridLayoutOpts.Columns(1),

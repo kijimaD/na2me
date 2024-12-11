@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/ebitenui/ebitenui"
-	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -21,8 +20,9 @@ type PauseState struct {
 	scenario []byte
 	trans    *Transition
 
-	ui     *ebitenui.UI
-	labels []string
+	ui      *ebitenui.UI
+	labels  []string
+	bgImage *ebiten.Image
 }
 
 func (st *PauseState) OnPause() {}
@@ -45,6 +45,7 @@ func (st *PauseState) OnStart() {
 	st.labels = e.Labels()
 
 	st.ui = st.initUI()
+	st.bgImage = utils.LoadImage("ui/door.jpg")
 }
 
 func (st *PauseState) OnStop() {}
@@ -67,12 +68,12 @@ func (st *PauseState) Update() Transition {
 }
 
 func (st *PauseState) Draw(screen *ebiten.Image) {
+	screen.DrawImage(st.bgImage, nil)
 	st.ui.Draw(screen)
 }
 
 func (st *PauseState) initUI() *ebitenui.UI {
 	rootContainer := widget.NewContainer(
-		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.RGBA{0x13, 0x1a, 0x22, 0xff})),
 		widget.ContainerOpts.Layout(
 			widget.NewGridLayout(
 				widget.GridLayoutOpts.Columns(1),

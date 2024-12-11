@@ -77,16 +77,10 @@ func (st *PlayState) OnStart() {
 
 	{
 		eimg := utils.LoadImage("bg/black.png")
-		if err != nil {
-			log.Fatal(err)
-		}
 		st.bgImage = eimg
 	}
 	{
 		eimg := utils.LoadImage("ui/prompt.png")
-		if err != nil {
-			log.Fatal(err)
-		}
 		st.promptImage = eimg
 	}
 

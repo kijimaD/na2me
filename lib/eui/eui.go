@@ -22,8 +22,8 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 			)),
 			widget.ListOpts.ScrollContainerOpts(
 				widget.ScrollContainerOpts.Image(&widget.ScrollContainerImage{
-					Idle:     image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-					Disabled: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
+					Idle:     image.NewNineSliceColor(color.NRGBA{100, 100, 100, 100}),
+					Disabled: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 100}),
 					Mask:     image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
 				}),
 			),
