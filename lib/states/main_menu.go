@@ -77,7 +77,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 	)
 	entries := []any{}
 	for _, s := range embeds.ScenarioMaster.Scenarios {
-		entries = append(entries, s.Name)
+		entries = append(entries, s.ID)
 	}
 	list := eui.NewList(
 		widget.ListOpts.Entries(entries),
@@ -85,9 +85,9 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 			key := e.(string)
 			scenario := embeds.ScenarioMaster.GetScenario(key)
 
-			whitespace := strings.Repeat("　", 20-(len([]rune(scenario.LabelName))+len([]rune(scenario.AuthorName))))
+			whitespace := strings.Repeat("　", 20-(len([]rune(scenario.Title))+len([]rune(scenario.AuthorName))))
 
-			return fmt.Sprintf("%s%s%s", scenario.LabelName, whitespace, scenario.AuthorName)
+			return fmt.Sprintf("%s%s%s", scenario.Title, whitespace, scenario.AuthorName)
 		}),
 		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
 			key := args.Entry.(string)

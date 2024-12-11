@@ -24,9 +24,9 @@ func (master *ScenarioMasterType) GetScenario(key string) Scenario {
 
 type Scenario struct {
 	// 一意の名前
-	Name string
-	// 表示名
-	LabelName string
+	ID string
+	// タイトル
+	Title string
 	// 著者名
 	AuthorName string
 	// 本文
@@ -39,71 +39,71 @@ func init() {
 	sm := ScenarioMasterType{}
 	sm.Scenarios = []Scenario{
 		{
-			LabelName:  "こころ",
+			Title:      "こころ",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "坊っちゃん",
+			Title:      "坊っちゃん",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "吾輩は猫である",
+			Title:      "吾輩は猫である",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "三四郎",
+			Title:      "三四郎",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "模倣と独立",
+			Title:      "模倣と独立",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "明暗",
+			Title:      "明暗",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "それから",
+			Title:      "それから",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "門",
+			Title:      "門",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "私の個人主義",
+			Title:      "私の個人主義",
 			AuthorName: "夏目漱石",
 		},
 		{
-			LabelName:  "人間失格",
+			Title:      "人間失格",
 			AuthorName: "太宰治",
 		},
 		{
-			LabelName:  "走れメロス",
+			Title:      "走れメロス",
 			AuthorName: "太宰治",
 		},
 		{
-			LabelName:  "漱石の人物",
+			Title:      "漱石の人物",
 			AuthorName: "和辻哲郎",
 		},
 		{
-			LabelName:  "羅生門",
+			Title:      "羅生門",
 			AuthorName: "芥川龍之介",
 		},
 		{
-			LabelName:  "学問のすすめ",
+			Title:      "学問のすすめ",
 			AuthorName: "福沢諭吉",
 		},
 		{
-			LabelName:  "故郷",
+			Title:      "故郷",
 			AuthorName: "魯迅",
 		},
 	}
 
 	sm.ScenarioIndex = map[string]int{}
 	for i, s := range sm.Scenarios {
-		fname := fmt.Sprintf("scenario/%s/%s.sce", s.AuthorName, s.LabelName)
-		sm.Scenarios[i].Name = fname
+		fname := fmt.Sprintf("scenario/%s/%s.sce", s.AuthorName, s.Title)
+		sm.Scenarios[i].ID = fname
 		sm.ScenarioIndex[fname] = i
 
 		body, err := FS.ReadFile(fname)
