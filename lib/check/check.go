@@ -41,7 +41,12 @@ var kanjiNumerals = map[rune]bool{
 	'一': true, '二': true, '三': true, '四': true,
 	'五': true, '六': true, '七': true, '八': true,
 	'九': true, '十': true, '百': true, '〇': true,
-	'零': true, ' ': true, '編': true,
+	'零': true,
+	'1': true, '2': true, '3': true,
+	'4': true, '5': true, '6': true,
+	'7': true, '8': true, '9': true,
+	'0': true,
+	' ': true, '編': true,
 }
 
 func isKanjiNumeralsOnly(input string) bool {
