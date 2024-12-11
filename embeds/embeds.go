@@ -33,72 +33,34 @@ type Scenario struct {
 	Body []byte
 }
 
+func NewScenario(authorName string, title string) Scenario {
+	return Scenario{
+		Title:      title,
+		AuthorName: authorName,
+	}
+}
+
 var ScenarioMaster ScenarioMasterType
 
 func init() {
 	sm := ScenarioMasterType{}
-	sm.Scenarios = []Scenario{
-		{
-			Title:      "こころ",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "坊っちゃん",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "吾輩は猫である",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "三四郎",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "模倣と独立",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "明暗",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "それから",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "門",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "私の個人主義",
-			AuthorName: "夏目漱石",
-		},
-		{
-			Title:      "人間失格",
-			AuthorName: "太宰治",
-		},
-		{
-			Title:      "走れメロス",
-			AuthorName: "太宰治",
-		},
-		{
-			Title:      "漱石の人物",
-			AuthorName: "和辻哲郎",
-		},
-		{
-			Title:      "羅生門",
-			AuthorName: "芥川龍之介",
-		},
-		{
-			Title:      "学問のすすめ",
-			AuthorName: "福沢諭吉",
-		},
-		{
-			Title:      "故郷",
-			AuthorName: "魯迅",
-		},
-	}
+	sm.Scenarios = append(sm.Scenarios,
+		NewScenario("和辻哲郎", "漱石の人物"),
+		NewScenario("夏目漱石", "こころ"),
+		NewScenario("夏目漱石", "それから"),
+		NewScenario("夏目漱石", "三四郎"),
+		NewScenario("夏目漱石", "吾輩は猫である"),
+		NewScenario("夏目漱石", "坊っちゃん"),
+		NewScenario("夏目漱石", "明暗"),
+		NewScenario("夏目漱石", "模倣と独立"),
+		NewScenario("夏目漱石", "私の個人主義"),
+		NewScenario("夏目漱石", "門"),
+		NewScenario("太宰治", "人間失格"),
+		NewScenario("太宰治", "走れメロス"),
+		NewScenario("福沢諭吉", "学問のすすめ"),
+		NewScenario("芥川龍之介", "羅生門"),
+		NewScenario("魯迅", "故郷"),
+	)
 
 	sm.ScenarioIndex = map[string]int{}
 	for i, s := range sm.Scenarios {
