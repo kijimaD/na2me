@@ -149,7 +149,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	// 待ち状態表示
 	if st.eventQ.OnAnim {
 		elapsed := time.Since(st.startTime).Seconds()
-		offsetY := 4 * math.Cos(elapsed*4) // sin関数で上下に動かす
+		offsetY := 2 * math.Cos(elapsed*4) // cos関数で上下に動かす
 		bounds := st.promptImage.Bounds()
 		bounds.Min.Y = int(20 + offsetY) // 初期位置 + オフセット
 		bounds.Max.Y = bounds.Min.Y + bounds.Dy()
