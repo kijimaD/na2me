@@ -45,6 +45,7 @@ var ScenarioMaster ScenarioMasterType
 func init() {
 	sm := ScenarioMasterType{}
 	sm.Scenarios = append(sm.Scenarios,
+		NewScenario("フランツカフカ", "変身"),
 		NewScenario("和辻哲郎", "漱石の人物"),
 		NewScenario("坂口安吾", "堕落論"),
 		NewScenario("夏目漱石", "こころ"),
@@ -59,11 +60,11 @@ func init() {
 		NewScenario("夏目漱石", "門"),
 		NewScenario("太宰治", "人間失格"),
 		NewScenario("太宰治", "走れメロス"),
+		NewScenario("梶井基次郎", "檸檬"),
 		NewScenario("福沢諭吉", "学問のすすめ"),
 		NewScenario("芥川龍之介", "或阿呆の一生"),
 		NewScenario("芥川龍之介", "羅生門"),
 		NewScenario("魯迅", "故郷"),
-		NewScenario("フランツカフカ", "変身"),
 		// NewScenario("", ""),
 	)
 
