@@ -61,6 +61,7 @@ func init() {
 		NewScenario("太宰治", "人間失格"),
 		NewScenario("太宰治", "走れメロス"),
 		NewScenario("梶井基次郎", "檸檬"),
+		NewScenario("石原莞爾", "最終戦争論"),
 		NewScenario("福沢諭吉", "学問のすすめ"),
 		NewScenario("芥川龍之介", "或阿呆の一生"),
 		NewScenario("芥川龍之介", "羅生門"),
