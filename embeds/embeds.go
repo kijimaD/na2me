@@ -61,6 +61,7 @@ func init() {
 		NewScenario("夏目漱石", "道草"),
 		NewScenario("夏目漱石", "門"),
 		NewScenario("太宰治", "人間失格"),
+		NewScenario("太宰治", "斜陽"),
 		NewScenario("太宰治", "走れメロス"),
 		NewScenario("梶井基次郎", "檸檬"),
 		NewScenario("梶井基次郎", "桜の樹の下には"),
