@@ -57,6 +57,7 @@ func init() {
 		NewScenario("夏目漱石", "模倣と独立"),
 		NewScenario("夏目漱石", "満韓ところどころ"),
 		NewScenario("夏目漱石", "私の個人主義"),
+		NewScenario("夏目漱石", "草枕"),
 		NewScenario("夏目漱石", "虞美人草"),
 		NewScenario("夏目漱石", "道草"),
 		NewScenario("夏目漱石", "門"),
