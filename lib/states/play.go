@@ -15,6 +15,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/touch"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
@@ -34,8 +35,8 @@ type PlayState struct {
 	ui             *ebitenui.UI
 	statsContainer *widget.Container
 
-	// 選択中のシナリオファイルのバイト列
-	scenario []byte
+	// 選択中のシナリオ
+	scenario embeds.Scenario
 	// 指定された章で再生開始する。外部ステートから指定するときに使う
 	startLabel *string
 	// ステート遷移
@@ -55,13 +56,13 @@ func (st *PlayState) OnPause() {}
 func (st *PlayState) OnResume() {}
 
 func (st *PlayState) OnStart() {
-	if len(st.scenario) == 0 {
+	if len(st.scenario.Body) == 0 {
 		log.Fatal("シナリオが選択されていない")
 	}
 
 	st.startTime = time.Now()
 
-	l := lexer.NewLexer(string(st.scenario))
+	l := lexer.NewLexer(string(st.scenario.Body))
 	p := parser.NewParser(l)
 	program, err := p.ParseProgram()
 	if err != nil {

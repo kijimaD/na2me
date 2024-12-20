@@ -95,7 +95,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 			key := args.Entry.(string)
 			scenario := embeds.ScenarioMaster.GetScenario(key)
 
-			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario.Body}}}
+			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario}}}
 		}),
 	)
 	listContainer.AddChild(list)

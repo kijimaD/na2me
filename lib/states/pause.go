@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
@@ -17,11 +18,15 @@ import (
 )
 
 type PauseState struct {
-	scenario []byte
 	trans    *Transition
 
+	scenario embeds.Scenario
+	// ラベル一覧
+	labels []string
+	// 再生中ラベル
+	currentLabel string
+
 	ui      *ebitenui.UI
-	labels  []string
 	bgImage *ebiten.Image
 }
 
@@ -30,11 +35,11 @@ func (st *PauseState) OnPause() {}
 func (st *PauseState) OnResume() {}
 
 func (st *PauseState) OnStart() {
-	if len(st.scenario) == 0 {
+	if len(st.scenario.Body) == 0 {
 		log.Fatal("シナリオが選択されていない")
 	}
 
-	l := lexer.NewLexer(string(st.scenario))
+	l := lexer.NewLexer(string(st.scenario.Body))
 	p := parser.NewParser(l)
 	program, err := p.ParseProgram()
 	if err != nil {
