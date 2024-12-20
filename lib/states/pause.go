@@ -10,6 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	embeds "github.com/kijimaD/na2me/embeds"
+	"github.com/kijimaD/na2me/lib/bookmark"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
@@ -17,8 +18,9 @@ import (
 	"github.com/kijimaD/nova/parser"
 )
 
+// TODO: Newを作ったほうがよさそう
 type PauseState struct {
-	trans    *Transition
+	trans *Transition
 
 	scenario embeds.Scenario
 	// ラベル一覧
@@ -106,7 +108,11 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
 		)),
 	)
-	buttonContainer.AddChild(st.backButton(utils.BodyFont), st.mainMenuButton(utils.BodyFont))
+	buttonContainer.AddChild(
+		st.backButton(utils.BodyFont),
+		st.mainMenuButton(utils.BodyFont),
+		st.saveButton(utils.BodyFont),
+	)
 
 	entries := []any{}
 	for _, label := range st.labels {
@@ -185,6 +191,36 @@ func (st *PauseState) backButton(face text.Face) *widget.Button {
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			st.trans = &Transition{Type: TransPop}
+		}),
+	)
+	return button
+}
+
+func (st *PauseState) saveButton(face text.Face) *widget.Button {
+	button := widget.NewButton(
+		widget.ButtonOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
+				HorizontalPosition: widget.AnchorLayoutPositionCenter,
+				VerticalPosition:   widget.AnchorLayoutPositionCenter,
+			}),
+		),
+		widget.ButtonOpts.Image(utils.LoadButtonImage()),
+		widget.ButtonOpts.Text("保存", face, &widget.ButtonTextColor{
+			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
+		}),
+		widget.ButtonOpts.TextPadding(widget.Insets{
+			Left:   30,
+			Right:  30,
+			Top:    5,
+			Bottom: 5,
+		}),
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			bm := bookmark.NewBookmark(
+				st.scenario.Title,
+				st.currentLabel,
+				0,
+			)
+			bookmark.Bookmarks.Add(bm)
 		}),
 	)
 	return button
