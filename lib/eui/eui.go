@@ -17,7 +17,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 					HorizontalPosition: widget.AnchorLayoutPositionCenter,
 					VerticalPosition:   widget.AnchorLayoutPositionEnd,
 					StretchVertical:    true,
-					Padding:            widget.NewInsetsSimple(20),
+					Padding:            widget.NewInsetsSimple(10),
 				}),
 			)),
 			widget.ListOpts.ScrollContainerOpts(

@@ -13,10 +13,10 @@ var FS embed.FS
 
 type ScenarioMasterType struct {
 	Scenarios     []Scenario
-	ScenarioIndex map[string]int
+	ScenarioIndex map[ScenarioIDType]int
 }
 
-func (master *ScenarioMasterType) GetScenario(key string) Scenario {
+func (master *ScenarioMasterType) GetScenario(key ScenarioIDType) Scenario {
 	idx := master.ScenarioIndex[key]
 
 	return master.Scenarios[idx]
@@ -24,7 +24,7 @@ func (master *ScenarioMasterType) GetScenario(key string) Scenario {
 
 type Scenario struct {
 	// 一意の名前
-	ID string
+	ID ScenarioIDType
 	// タイトル
 	Title string
 	// 著者名
@@ -33,11 +33,17 @@ type Scenario struct {
 	Body []byte
 }
 
+type ScenarioIDType string
+
 func NewScenario(authorName string, title string) Scenario {
 	return Scenario{
 		Title:      title,
 		AuthorName: authorName,
 	}
+}
+
+func generateScenarioID(authorName, title string) ScenarioIDType {
+	return ScenarioIDType(fmt.Sprintf("scenario/%s/%s.sce", authorName, title))
 }
 
 var ScenarioMaster ScenarioMasterType
@@ -76,13 +82,13 @@ func init() {
 		// NewScenario("", ""),
 	)
 
-	sm.ScenarioIndex = map[string]int{}
+	sm.ScenarioIndex = map[ScenarioIDType]int{}
 	for i, s := range sm.Scenarios {
-		fname := fmt.Sprintf("scenario/%s/%s.sce", s.AuthorName, s.Title)
-		sm.Scenarios[i].ID = fname
-		sm.ScenarioIndex[fname] = i
+		id := generateScenarioID(s.AuthorName, s.Title)
+		sm.Scenarios[i].ID = id
+		sm.ScenarioIndex[id] = i
 
-		body, err := FS.ReadFile(fname)
+		body, err := FS.ReadFile(string(id))
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -2,7 +2,6 @@ package states
 
 import (
 	"image/color"
-	"sort"
 
 	"github.com/ebitenui/ebitenui"
 	"github.com/ebitenui/ebitenui/image"
@@ -11,8 +10,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/utils"
-	"golang.org/x/text/collate"
-	"golang.org/x/text/language"
 )
 
 type MainMenuState struct {
@@ -112,8 +109,10 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
 			widget.RowLayoutOpts.Padding(widget.Insets{
-				Left:  25,
-				Right: 25,
+				Top:    10,
+				Bottom: 10,
+				Left:   25,
+				Right:  25,
 			}),
 		)),
 	)
@@ -163,15 +162,9 @@ func (st *MainMenuState) actionContainer(ui func() *ebitenui.UI) widget.Preferre
 		)))
 
 	pages := []interface{}{
+		st.recentPage(),
 		st.bookListPage(),
 	}
-
-	collator := collate.New(language.English)
-	sort.Slice(pages, func(a int, b int) bool {
-		p1 := pages[a].(*page)
-		p2 := pages[b].(*page)
-		return collator.CompareString(p1.title, p2.title) < 0
-	})
 
 	pageContainer := st.newPageContainer()
 

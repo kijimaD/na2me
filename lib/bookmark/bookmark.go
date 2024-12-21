@@ -2,6 +2,8 @@ package bookmark
 
 import (
 	"time"
+
+	"github.com/kijimaD/na2me/embeds"
 )
 
 var Bookmarks BookmarksType
@@ -9,13 +11,13 @@ var Bookmarks BookmarksType
 func init() {
 	Bookmarks = BookmarksType{
 		Bookmarks:     []Bookmark{},
-		BookmarkIndex: map[string]int{},
+		BookmarkIndex: map[embeds.ScenarioIDType]int{},
 	}
 }
 
 type Bookmark struct {
 	// 一意の名前。現在タイトルごとになっているので、タイトル名を入れる
-	ID string
+	ID embeds.ScenarioIDType
 	// タイトル名
 	ScenarioName string
 	// 章ラベル
@@ -24,9 +26,9 @@ type Bookmark struct {
 	SavedAt time.Time
 }
 
-func NewBookmark(scenarioName string, label string) Bookmark {
+func NewBookmark(id embeds.ScenarioIDType, scenarioName string, label string) Bookmark {
 	return Bookmark{
-		ID:           scenarioName,
+		ID:           id,
 		ScenarioName: scenarioName,
 		Label:        label,
 		SavedAt:      time.Now(),
@@ -35,10 +37,10 @@ func NewBookmark(scenarioName string, label string) Bookmark {
 
 type BookmarksType struct {
 	Bookmarks     []Bookmark
-	BookmarkIndex map[string]int
+	BookmarkIndex map[embeds.ScenarioIDType]int
 }
 
-func (master *BookmarksType) Get(key string) (Bookmark, bool) {
+func (master *BookmarksType) Get(key embeds.ScenarioIDType) (Bookmark, bool) {
 	idx, ok := master.BookmarkIndex[key]
 	if !ok {
 		return Bookmark{}, false

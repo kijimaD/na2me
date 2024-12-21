@@ -148,7 +148,6 @@ func (st *PauseState) reloadUI() {
 		st.mainMenuButton(utils.BodyFont),
 		emptyContainer,
 		st.saveButton(utils.BodyFont),
-		st.loadButton(utils.BodyFont),
 		st.saveText(),
 	)
 
@@ -258,6 +257,7 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			bm := bookmark.NewBookmark(
+				st.scenario.ID,
 				st.scenario.Title,
 				st.currentLabel,
 			)
@@ -268,42 +268,9 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 	return button
 }
 
-func (st *PauseState) loadButton(face text.Face) *widget.Button {
-	button := widget.NewButton(
-		widget.ButtonOpts.WidgetOpts(
-			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
-				HorizontalPosition: widget.AnchorLayoutPositionCenter,
-				VerticalPosition:   widget.AnchorLayoutPositionCenter,
-			}),
-		),
-		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("読込", face, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
-		}),
-		widget.ButtonOpts.TextPadding(widget.Insets{
-			Left:   30,
-			Right:  30,
-			Top:    5,
-			Bottom: 5,
-		}),
-		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-			bm, ok := bookmark.Bookmarks.Get(st.scenario.Title)
-			if !ok {
-				return
-			}
-			newState := PlayState{
-				scenario:   st.scenario,
-				startLabel: utils.GetPtr(bm.Label),
-			}
-			st.trans = &Transition{Type: TransPush, NewStates: []State{&newState}}
-		}),
-	)
-	return button
-}
-
 func (st *PauseState) saveText() *widget.Text {
 	str := ""
-	bookmark, ok := bookmark.Bookmarks.Get(st.scenario.Title)
+	bookmark, ok := bookmark.Bookmarks.Get(st.scenario.ID)
 	if !ok {
 		str = "未保存"
 	} else {
