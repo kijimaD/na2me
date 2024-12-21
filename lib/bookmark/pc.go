@@ -18,9 +18,9 @@ func GlobalLoad() error {
 		return err
 	}
 
-	bmt := BookmarksType{}
-	bmt.Import(bytes.NewReader(bs))
-	Bookmarks = bmt
+	newBM := BookmarksType{}
+	newBM.Import(bytes.NewReader(bs))
+	Bookmarks = newBM
 
 	return nil
 }
