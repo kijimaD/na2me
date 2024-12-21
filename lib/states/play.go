@@ -223,7 +223,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			Bottom: 5,
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-			st.trans = &Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario}}}
+			st.trans = &Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario, currentLabel: st.eventQ.CurrentLabel}}}
 		}),
 	)
 

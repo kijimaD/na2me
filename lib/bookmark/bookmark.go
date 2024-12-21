@@ -1,6 +1,8 @@
 package bookmark
 
-import "time"
+import (
+	"time"
+)
 
 var Bookmarks BookmarksType
 
@@ -39,13 +41,23 @@ type BookmarksType struct {
 	BookmarkIndex map[string]int
 }
 
-func (master BookmarksType) Get(key string) Bookmark {
-	idx := master.BookmarkIndex[key]
+func (master *BookmarksType) Get(key string) (Bookmark, bool) {
+	idx, ok := master.BookmarkIndex[key]
+	if !ok {
+		return Bookmark{}, false
+	}
 
-	return master.Bookmarks[idx]
+	return master.Bookmarks[idx], true
 }
 
-func (master BookmarksType) Add(bookmark Bookmark) {
+func (master *BookmarksType) Add(bookmark Bookmark) {
+	idx, ok := master.BookmarkIndex[bookmark.ID]
+	if ok {
+		master.Bookmarks[idx] = bookmark
+
+		return
+	}
+
 	master.Bookmarks = append(master.Bookmarks, bookmark)
 	for i, bm := range master.Bookmarks {
 		master.BookmarkIndex[bm.ID] = i

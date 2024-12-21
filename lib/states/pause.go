@@ -1,6 +1,7 @@
 package states
 
 import (
+	"fmt"
 	"image/color"
 	"log"
 
@@ -28,8 +29,9 @@ type PauseState struct {
 	// 再生中ラベル
 	currentLabel string
 
-	ui      *ebitenui.UI
-	bgImage *ebiten.Image
+	ui            *ebitenui.UI
+	bgImage       *ebiten.Image
+	rootContainer *widget.Container
 }
 
 func (st *PauseState) OnPause() {}
@@ -95,6 +97,14 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			),
 		),
 	)
+	st.rootContainer = rootContainer
+	st.reloadUI()
+
+	return &ebitenui.UI{Container: st.rootContainer}
+}
+
+func (st *PauseState) reloadUI() {
+	st.rootContainer.RemoveChildren()
 
 	buttonContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
@@ -108,10 +118,28 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
 		)),
 	)
+	emptyContainer := widget.NewContainer(
+		widget.ContainerOpts.Layout(widget.NewRowLayout(
+			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
+			widget.RowLayoutOpts.Padding(widget.Insets{
+				Top:    10,
+				Bottom: 10,
+				Left:   10,
+				Right:  10,
+			}),
+			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
+		)),
+	)
+	title := widget.NewText(
+		widget.TextOpts.Text(st.scenario.Title, utils.BodyFont, color.White),
+	)
 	buttonContainer.AddChild(
+		title,
 		st.backButton(utils.BodyFont),
 		st.mainMenuButton(utils.BodyFont),
+		emptyContainer,
 		st.saveButton(utils.BodyFont),
+		st.saveText(),
 	)
 
 	entries := []any{}
@@ -122,6 +150,9 @@ func (st *PauseState) initUI() *ebitenui.UI {
 		widget.ListOpts.Entries(entries),
 		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
 			key := e.(string)
+			if key == st.currentLabel {
+				key += " ←"
+			}
 
 			return key
 		}),
@@ -139,11 +170,12 @@ func (st *PauseState) initUI() *ebitenui.UI {
 			widget.NewAnchorLayout(),
 		),
 	)
-	listContainer.AddChild(list, buttonContainer)
+	listContainer.AddChild(
+		list,
+		buttonContainer,
+	)
 
-	rootContainer.AddChild(listContainer)
-
-	return &ebitenui.UI{Container: rootContainer}
+	st.rootContainer.AddChild(listContainer)
 }
 
 func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
@@ -221,7 +253,24 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 				0,
 			)
 			bookmark.Bookmarks.Add(bm)
+			st.reloadUI()
 		}),
 	)
 	return button
+}
+
+func (st *PauseState) saveText() *widget.Text {
+	str := ""
+	bookmark, ok := bookmark.Bookmarks.Get(st.scenario.Title)
+	if !ok {
+		str = "未保存"
+	} else {
+		str = fmt.Sprintf("%s\n位置%d", bookmark.Label, bookmark.EventIdx)
+	}
+
+	text := widget.NewText(
+		widget.TextOpts.Text(str, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
+	)
+
+	return text
 }
