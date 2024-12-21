@@ -17,7 +17,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 					HorizontalPosition: widget.AnchorLayoutPositionCenter,
 					VerticalPosition:   widget.AnchorLayoutPositionEnd,
 					StretchVertical:    true,
-					Padding:            widget.NewInsetsSimple(50),
+					Padding:            widget.NewInsetsSimple(10),
 				}),
 			)),
 			widget.ListOpts.ScrollContainerOpts(
@@ -42,7 +42,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 				DisabledSelectedBackground: color.NRGBA{R: 100, G: 100, B: 100, A: 255},
 			}),
 			widget.ListOpts.EntryLabelFunc(func(e interface{}) string { return "" }),
-			widget.ListOpts.EntryTextPadding(widget.NewInsetsSimple(5)),
+			widget.ListOpts.EntryTextPadding(widget.NewInsetsSimple(6)),
 			widget.ListOpts.EntryTextPosition(widget.TextPositionStart, widget.TextPositionCenter),
 			widget.ListOpts.SliderOpts(
 				widget.SliderOpts.Images(&widget.SliderTrackImage{

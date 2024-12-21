@@ -16,10 +16,12 @@ import (
 
 var (
 	BodyFont text.Face
+	UIFont   text.Face
 )
 
 func init() {
 	BodyFont = LoadFont("ui/JF-Dot-Kappa20B.ttf", 26)
+	UIFont = LoadFont("ui/JF-Dot-Kappa20B.ttf", 20)
 }
 
 func GetPtr[T any](x T) *T {
