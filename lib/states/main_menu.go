@@ -78,7 +78,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 		}),
 	)))
 	footerContainer.AddChild(widget.NewText(
-		widget.TextOpts.Text("github.com/kijimaD/na2me", utils.UIFont, color.NRGBA{100, 100, 100, 255})))
+		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", utils.UIFont, color.NRGBA{100, 100, 100, 255})))
 
 	var ui *ebitenui.UI
 	rootContainer.AddChild(
@@ -99,7 +99,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 			widget.RowLayoutOpts.Spacing(10))),
 	)
 
-	c.AddChild(st.header("話灯機 -- 電子紙芝居方式流通推進委員会",
+	c.AddChild(st.header("話灯機",
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
 			Stretch: true,
 		})),

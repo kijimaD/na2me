@@ -1,6 +1,9 @@
 package bookmark
 
 import (
+	"encoding/json"
+	"io"
+	"log"
 	"time"
 
 	"github.com/kijimaD/na2me/embeds"
@@ -12,6 +15,10 @@ func init() {
 	Bookmarks = BookmarksType{
 		Bookmarks:     []Bookmark{},
 		BookmarkIndex: map[embeds.ScenarioIDType]int{},
+	}
+
+	if err := GlobalLoad(); err != nil {
+		log.Fatal(err)
 	}
 }
 
@@ -71,4 +78,36 @@ func (master *BookmarksType) Delete(key embeds.ScenarioIDType) {
 
 	master.Bookmarks = append(master.Bookmarks[:idx], master.Bookmarks[idx+1:]...)
 	delete(master.BookmarkIndex, key)
+}
+
+func (master *BookmarksType) Export(w io.Writer) error {
+	encoder := json.NewEncoder(w)
+	err := encoder.Encode(master.Bookmarks)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (master *BookmarksType) Import(r io.Reader) error {
+	newBM := BookmarksType{
+		Bookmarks:     []Bookmark{},
+		BookmarkIndex: map[embeds.ScenarioIDType]int{},
+	}
+	bytes, err := io.ReadAll(r)
+	if err != nil {
+		return err
+	}
+
+	if err = json.Unmarshal(bytes, &newBM.Bookmarks); err != nil {
+		return err
+	}
+	for i, bm := range newBM.Bookmarks {
+		newBM.BookmarkIndex[bm.ID] = i
+	}
+	master.Bookmarks = newBM.Bookmarks
+	master.BookmarkIndex = newBM.BookmarkIndex
+
+	return nil
 }

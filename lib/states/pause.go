@@ -263,6 +263,9 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 				st.currentLabel,
 			)
 			bookmark.Bookmarks.Add(bm)
+			if err := bookmark.GlobalSave(); err != nil {
+				log.Fatal(err)
+			}
 			st.reloadUI()
 		}),
 	)
@@ -289,6 +292,9 @@ func (st *PauseState) deleteButton(face text.Face) *widget.Button {
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			bookmark.Bookmarks.Delete(st.scenario.ID)
+			if err := bookmark.GlobalSave(); err != nil {
+				log.Fatal(err)
+			}
 			st.reloadUI()
 		}),
 	)
