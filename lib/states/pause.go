@@ -148,6 +148,7 @@ func (st *PauseState) reloadUI() {
 		st.mainMenuButton(utils.BodyFont),
 		emptyContainer,
 		st.saveButton(utils.BodyFont),
+		st.deleteButton(utils.BodyFont),
 		st.saveText(),
 	)
 
@@ -262,6 +263,32 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 				st.currentLabel,
 			)
 			bookmark.Bookmarks.Add(bm)
+			st.reloadUI()
+		}),
+	)
+	return button
+}
+
+func (st *PauseState) deleteButton(face text.Face) *widget.Button {
+	button := widget.NewButton(
+		widget.ButtonOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
+				HorizontalPosition: widget.AnchorLayoutPositionCenter,
+				VerticalPosition:   widget.AnchorLayoutPositionCenter,
+			}),
+		),
+		widget.ButtonOpts.Image(utils.LoadButtonImage()),
+		widget.ButtonOpts.Text("破棄", face, &widget.ButtonTextColor{
+			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
+		}),
+		widget.ButtonOpts.TextPadding(widget.Insets{
+			Left:   30,
+			Right:  30,
+			Top:    5,
+			Bottom: 5,
+		}),
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			bookmark.Bookmarks.Delete(st.scenario.ID)
 			st.reloadUI()
 		}),
 	)

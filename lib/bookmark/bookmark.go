@@ -62,3 +62,13 @@ func (master *BookmarksType) Add(bookmark Bookmark) {
 		master.BookmarkIndex[bm.ID] = i
 	}
 }
+
+func (master *BookmarksType) Delete(key embeds.ScenarioIDType) {
+	idx, ok := master.BookmarkIndex[key]
+	if !ok {
+		return
+	}
+
+	master.Bookmarks = append(master.Bookmarks[:idx], master.Bookmarks[idx+1:]...)
+	delete(master.BookmarkIndex, key)
+}
