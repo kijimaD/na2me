@@ -27,8 +27,6 @@ type PauseState struct {
 	scenario embeds.Scenario
 	// 再生中ラベル
 	currentLabel string
-	// 再生中位置
-	currentIdx int
 
 	// ラベル一覧
 	labels []string
@@ -38,11 +36,10 @@ type PauseState struct {
 	rootContainer *widget.Container
 }
 
-func NewPauseState(scenario embeds.Scenario, currentLabel string, currentIdx int) PauseState {
+func NewPauseState(scenario embeds.Scenario, currentLabel string) PauseState {
 	return PauseState{
 		scenario:     scenario,
 		currentLabel: currentLabel,
-		currentIdx:   currentIdx,
 	}
 }
 
@@ -151,6 +148,7 @@ func (st *PauseState) reloadUI() {
 		st.mainMenuButton(utils.BodyFont),
 		emptyContainer,
 		st.saveButton(utils.BodyFont),
+		st.loadButton(utils.BodyFont),
 		st.saveText(),
 	)
 
@@ -262,10 +260,42 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 			bm := bookmark.NewBookmark(
 				st.scenario.Title,
 				st.currentLabel,
-				st.currentIdx,
 			)
 			bookmark.Bookmarks.Add(bm)
 			st.reloadUI()
+		}),
+	)
+	return button
+}
+
+func (st *PauseState) loadButton(face text.Face) *widget.Button {
+	button := widget.NewButton(
+		widget.ButtonOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
+				HorizontalPosition: widget.AnchorLayoutPositionCenter,
+				VerticalPosition:   widget.AnchorLayoutPositionCenter,
+			}),
+		),
+		widget.ButtonOpts.Image(utils.LoadButtonImage()),
+		widget.ButtonOpts.Text("読込", face, &widget.ButtonTextColor{
+			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
+		}),
+		widget.ButtonOpts.TextPadding(widget.Insets{
+			Left:   30,
+			Right:  30,
+			Top:    5,
+			Bottom: 5,
+		}),
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			bm, ok := bookmark.Bookmarks.Get(st.scenario.Title)
+			if !ok {
+				return
+			}
+			newState := PlayState{
+				scenario:   st.scenario,
+				startLabel: utils.GetPtr(bm.Label),
+			}
+			st.trans = &Transition{Type: TransPush, NewStates: []State{&newState}}
 		}),
 	)
 	return button
@@ -277,7 +307,7 @@ func (st *PauseState) saveText() *widget.Text {
 	if !ok {
 		str = "未保存"
 	} else {
-		str = fmt.Sprintf("%s\n位置%d", bookmark.Label, bookmark.EventIdx)
+		str = fmt.Sprintf("%s", bookmark.Label)
 	}
 
 	text := widget.NewText(

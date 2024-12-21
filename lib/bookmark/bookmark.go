@@ -20,18 +20,15 @@ type Bookmark struct {
 	ScenarioName string
 	// 章ラベル
 	Label string
-	// イベント位置
-	EventIdx int
 	// 保存日付
 	SavedAt time.Time
 }
 
-func NewBookmark(scenarioName string, label string, eventIdx int) Bookmark {
+func NewBookmark(scenarioName string, label string) Bookmark {
 	return Bookmark{
 		ID:           scenarioName,
 		ScenarioName: scenarioName,
 		Label:        label,
-		EventIdx:     eventIdx,
 		SavedAt:      time.Now(),
 	}
 }

@@ -39,8 +39,7 @@ type PlayState struct {
 	scenario embeds.Scenario
 	// 指定された章で再生開始する。外部ステートから指定するときに使う
 	startLabel *string
-	// 指定されたイベント番号で再生開始する。外部ステートから指定するときに使う
-	startEventIdx *int
+
 	// ステート遷移
 	trans *Transition
 	// イベントキュー
@@ -76,9 +75,6 @@ func (st *PlayState) OnStart() {
 	st.eventQ.Start()
 	if st.startLabel != nil {
 		st.eventQ.Play(*st.startLabel)
-	}
-	if st.startEventIdx != nil {
-		st.eventQ.WaitingQueue = st.eventQ.WaitingQueue[*st.startEventIdx:]
 	}
 
 	{
@@ -179,11 +175,9 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 }
 
 func (st *PlayState) transPause() {
-	idx := len(st.eventQ.Evaluator.Events) - len(st.eventQ.WaitingQueue)
 	newState := NewPauseState(
 		st.scenario,
 		st.eventQ.CurrentLabel,
-		idx,
 	)
 	st.trans = &Transition{Type: TransPush, NewStates: []State{&newState}}
 }
