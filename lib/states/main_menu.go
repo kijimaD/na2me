@@ -1,18 +1,18 @@
 package states
 
 import (
-	"fmt"
 	"image/color"
-	"strings"
+	"sort"
 
 	"github.com/ebitenui/ebitenui"
 	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/utils"
+	"golang.org/x/text/collate"
+	"golang.org/x/text/language"
 )
 
 type MainMenuState struct {
@@ -83,9 +83,12 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 	footerContainer.AddChild(widget.NewText(
 		widget.TextOpts.Text("github.com/kijimaD/na2me", utils.UIFont, color.NRGBA{100, 100, 100, 255})))
 
+	var ui *ebitenui.UI
 	rootContainer.AddChild(
 		st.headerContainer(),
-		st.bookListContainer(),
+		st.actionContainer(func() *ebitenui.UI {
+			return ui
+		}),
 		footerContainer,
 	)
 
@@ -99,7 +102,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 			widget.RowLayoutOpts.Spacing(10))),
 	)
 
-	c.AddChild(header("話灯機 -- 電子紙芝居方式流通推進委員会",
+	c.AddChild(st.header("話灯機 -- 電子紙芝居方式流通推進委員会",
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
 			Stretch: true,
 		})),
@@ -123,7 +126,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 	return c
 }
 
-func header(label string, opts ...widget.ContainerOpt) widget.PreferredSizeLocateableWidget {
+func (st *MainMenuState) header(label string, opts ...widget.ContainerOpt) widget.PreferredSizeLocateableWidget {
 	c := widget.NewContainer(append(opts, []widget.ContainerOpt{
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.TrackHover(false)),
 		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.NRGBA{255, 255, 255, 140})),
@@ -147,37 +150,83 @@ func header(label string, opts ...widget.ContainerOpt) widget.PreferredSizeLocat
 	return c
 }
 
-func (st *MainMenuState) bookListContainer() *widget.Container {
-	entries := []any{}
-	for _, s := range embeds.ScenarioMaster.Scenarios {
-		entries = append(entries, s.ID)
+func (st *MainMenuState) actionContainer(ui func() *ebitenui.UI) widget.PreferredSizeLocateableWidget {
+	actionContainer := widget.NewContainer(
+		widget.ContainerOpts.Layout(widget.NewGridLayout(
+			widget.GridLayoutOpts.Padding(widget.Insets{
+				Left:  25,
+				Right: 25,
+			}),
+			widget.GridLayoutOpts.Columns(2),
+			widget.GridLayoutOpts.Stretch([]bool{false, true}, []bool{true}),
+			widget.GridLayoutOpts.Spacing(20, 0),
+		)))
+
+	pages := []interface{}{
+		st.bookListPage(),
 	}
 
-	listContainer := widget.NewContainer(
-		widget.ContainerOpts.Layout(
-			widget.NewAnchorLayout(),
-		),
-	)
+	collator := collate.New(language.English)
+	sort.Slice(pages, func(a int, b int) bool {
+		p1 := pages[a].(*page)
+		p2 := pages[b].(*page)
+		return collator.CompareString(p1.title, p2.title) < 0
+	})
 
-	list := eui.NewList(
-		widget.ListOpts.Entries(entries),
+	pageContainer := st.newPageContainer()
+
+	pageList := eui.NewList(
+		widget.ListOpts.Entries(pages),
 		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
-			key := e.(string)
-			scenario := embeds.ScenarioMaster.GetScenario(key)
-
-			whitespace := strings.Repeat("　", 20-(len([]rune(scenario.Title))+len([]rune(scenario.AuthorName))))
-
-			return fmt.Sprintf("%s%s%s", scenario.Title, whitespace, scenario.AuthorName)
+			return e.(*page).title
 		}),
 		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
-			key := args.Entry.(string)
-			scenario := embeds.ScenarioMaster.GetScenario(key)
-
-			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario}}}
+			pageContainer.setPage(args.Entry.(*page))
 		}),
 	)
+	pageList.SetSelectedEntry(pages[0])
 
-	listContainer.AddChild(list)
+	actionContainer.AddChild(
+		pageList,
+		pageContainer.widget,
+	)
 
-	return listContainer
+	return actionContainer
+}
+
+func (st *MainMenuState) newPageContainer() *pageContainer {
+	c := widget.NewContainer(
+		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.TrackHover(false)),
+		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.NRGBA{255, 255, 255, 140})),
+		widget.ContainerOpts.Layout(widget.NewRowLayout(
+			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
+			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(2)),
+			widget.RowLayoutOpts.Spacing(15))),
+	)
+
+	titleText := widget.NewText(
+		widget.TextOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
+			Stretch: true,
+		})),
+		widget.TextOpts.Text("", utils.UIFont, color.NRGBA{255, 255, 255, 255}))
+	c.AddChild(titleText)
+
+	flipBook := widget.NewFlipBook(
+		widget.FlipBookOpts.ContainerOpts(widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
+			Stretch: true,
+		}))),
+	)
+	c.AddChild(flipBook)
+
+	return &pageContainer{
+		widget:    c,
+		titleText: titleText,
+		flipBook:  flipBook,
+	}
+}
+
+func (p *pageContainer) setPage(page *page) {
+	p.titleText.Label = page.title
+	p.flipBook.SetPage(page.content)
+	p.flipBook.RequestRelayout()
 }
