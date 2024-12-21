@@ -106,7 +106,7 @@ func (st *PlayState) Update() Transition {
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyEscape) {
-		return Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario, currentLabel: st.eventQ.CurrentLabel}}}
+		st.transPause()
 	}
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
@@ -178,6 +178,16 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	st.ui.Draw(screen)
 }
 
+func (st *PlayState) transPause() {
+	idx := len(st.eventQ.Evaluator.Events) - len(st.eventQ.WaitingQueue)
+	newState := NewPauseState(
+		st.scenario,
+		st.eventQ.CurrentLabel,
+		idx,
+	)
+	st.trans = &Transition{Type: TransPush, NewStates: []State{&newState}}
+}
+
 func (st *PlayState) initUI() *ebitenui.UI {
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
@@ -223,7 +233,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			Bottom: 5,
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
-			st.trans = &Transition{Type: TransPush, NewStates: []State{&PauseState{scenario: st.scenario, currentLabel: st.eventQ.CurrentLabel}}}
+			st.transPause()
 		}),
 	)
 

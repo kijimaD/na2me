@@ -23,15 +23,27 @@ import (
 type PauseState struct {
 	trans *Transition
 
+	// 再生シナリオ
 	scenario embeds.Scenario
-	// ラベル一覧
-	labels []string
 	// 再生中ラベル
 	currentLabel string
+	// 再生中位置
+	currentIdx int
+
+	// ラベル一覧
+	labels []string
 
 	ui            *ebitenui.UI
 	bgImage       *ebiten.Image
 	rootContainer *widget.Container
+}
+
+func NewPauseState(scenario embeds.Scenario, currentLabel string, currentIdx int) PauseState {
+	return PauseState{
+		scenario:     scenario,
+		currentLabel: currentLabel,
+		currentIdx:   currentIdx,
+	}
 }
 
 func (st *PauseState) OnPause() {}
@@ -250,7 +262,7 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 			bm := bookmark.NewBookmark(
 				st.scenario.Title,
 				st.currentLabel,
-				0,
+				st.currentIdx,
 			)
 			bookmark.Bookmarks.Add(bm)
 			st.reloadUI()
