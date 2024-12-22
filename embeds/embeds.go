@@ -80,6 +80,7 @@ func init() {
 		NewScenario("福沢諭吉", "学問のすすめ"),
 		NewScenario("芥川龍之介", "或阿呆の一生"),
 		NewScenario("芥川龍之介", "羅生門"),
+		NewScenario("芥川龍之介", "鼻"),
 		NewScenario("魯迅", "故郷"),
 		// NewScenario("", ""),
 	)
