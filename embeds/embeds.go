@@ -54,6 +54,7 @@ func init() {
 		NewScenario("フランツカフカ", "変身"),
 		NewScenario("和辻哲郎", "漱石の人物"),
 		NewScenario("坂口安吾", "堕落論"),
+		NewScenario("坂口安吾", "帝銀事件を論ず"),
 		NewScenario("夏目漱石", "こころ"),
 		NewScenario("夏目漱石", "それから"),
 		NewScenario("夏目漱石", "三四郎"),
