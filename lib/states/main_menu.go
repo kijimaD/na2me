@@ -9,6 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/kijimaD/na2me/lib/eui"
+	"github.com/kijimaD/na2me/lib/resources"
 	"github.com/kijimaD/na2me/lib/utils"
 )
 
@@ -78,7 +79,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 		}),
 	)))
 	footerContainer.AddChild(widget.NewText(
-		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", utils.UIFont, color.NRGBA{100, 100, 100, 255})))
+		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", resources.Master.Fonts.UIFace, color.NRGBA{100, 100, 100, 255})))
 
 	rootContainer.AddChild(
 		st.headerContainer(),
@@ -116,7 +117,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 	c.AddChild(c2)
 
 	c2.AddChild(widget.NewText(
-		widget.TextOpts.Text("注意力散漫たる現代において、歴史的読書方法は競争力を失っている。\n電子紙芝居方式の優れた威力を万人へ宣伝し、方式普及を推進する。", utils.UIFont, color.NRGBA{100, 100, 100, 255})),
+		widget.TextOpts.Text("注意力散漫たる現代において、歴史的読書方法は競争力を失っている。\n電子紙芝居方式の優れた威力を万人へ宣伝し、方式普及を推進する。", resources.Master.Fonts.UIFace, color.NRGBA{100, 100, 100, 255})),
 	)
 
 	return c
@@ -139,7 +140,7 @@ func (st *MainMenuState) header(label string, opts ...widget.ContainerOpt) widge
 			HorizontalPosition: widget.AnchorLayoutPositionStart,
 			VerticalPosition:   widget.AnchorLayoutPositionStart,
 		})),
-		widget.TextOpts.Text(label, utils.UIFont, color.NRGBA{0, 0, 0, 200}),
+		widget.TextOpts.Text(label, resources.Master.Fonts.UIFace, color.NRGBA{0, 0, 0, 200}),
 		widget.TextOpts.Position(widget.TextPositionStart, widget.TextPositionCenter),
 	))
 
@@ -198,7 +199,7 @@ func (st *MainMenuState) newPageContainer() *pageContainer {
 		widget.TextOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
 			Stretch: true,
 		})),
-		widget.TextOpts.Text("", utils.UIFont, color.NRGBA{255, 255, 255, 255}))
+		widget.TextOpts.Text("", resources.Master.Fonts.UIFace, color.NRGBA{255, 255, 255, 255}))
 	c.AddChild(titleText)
 
 	flipBook := widget.NewFlipBook(

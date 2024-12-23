@@ -9,10 +9,10 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/bookmark"
 	"github.com/kijimaD/na2me/lib/eui"
+	"github.com/kijimaD/na2me/lib/resources"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
@@ -140,15 +140,15 @@ func (st *PauseState) reloadUI() {
 		)),
 	)
 	title := widget.NewText(
-		widget.TextOpts.Text(st.scenario.Title, utils.BodyFont, color.White),
+		widget.TextOpts.Text(st.scenario.Title, resources.Master.Fonts.BodyFace, color.White),
 	)
 	buttonContainer.AddChild(
 		title,
-		st.backButton(utils.BodyFont),
-		st.mainMenuButton(utils.BodyFont),
+		st.backButton(),
+		st.mainMenuButton(),
 		emptyContainer,
-		st.saveButton(utils.BodyFont),
-		st.deleteButton(utils.BodyFont),
+		st.saveButton(),
+		st.deleteButton(),
 		st.saveText(),
 	)
 
@@ -188,7 +188,7 @@ func (st *PauseState) reloadUI() {
 	st.rootContainer.AddChild(listContainer)
 }
 
-func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
+func (st *PauseState) mainMenuButton() *widget.Button {
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -197,7 +197,7 @@ func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
 			}),
 		),
 		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("終了", face, &widget.ButtonTextColor{
+		widget.ButtonOpts.Text("終了", resources.Master.Fonts.BodyFace, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -213,7 +213,7 @@ func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
 	return button
 }
 
-func (st *PauseState) backButton(face text.Face) *widget.Button {
+func (st *PauseState) backButton() *widget.Button {
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -222,7 +222,7 @@ func (st *PauseState) backButton(face text.Face) *widget.Button {
 			}),
 		),
 		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("戻る", face, &widget.ButtonTextColor{
+		widget.ButtonOpts.Text("戻る", resources.Master.Fonts.BodyFace, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -238,7 +238,7 @@ func (st *PauseState) backButton(face text.Face) *widget.Button {
 	return button
 }
 
-func (st *PauseState) saveButton(face text.Face) *widget.Button {
+func (st *PauseState) saveButton() *widget.Button {
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -247,7 +247,7 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 			}),
 		),
 		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("保存", face, &widget.ButtonTextColor{
+		widget.ButtonOpts.Text("保存", resources.Master.Fonts.BodyFace, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -272,7 +272,7 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 	return button
 }
 
-func (st *PauseState) deleteButton(face text.Face) *widget.Button {
+func (st *PauseState) deleteButton() *widget.Button {
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -281,7 +281,7 @@ func (st *PauseState) deleteButton(face text.Face) *widget.Button {
 			}),
 		),
 		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("破棄", face, &widget.ButtonTextColor{
+		widget.ButtonOpts.Text("破棄", resources.Master.Fonts.BodyFace, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -311,7 +311,7 @@ func (st *PauseState) saveText() *widget.Text {
 	}
 
 	text := widget.NewText(
-		widget.TextOpts.Text(str, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
+		widget.TextOpts.Text(str, resources.Master.Fonts.BodyFace, color.NRGBA{100, 100, 100, 255}),
 	)
 
 	return text

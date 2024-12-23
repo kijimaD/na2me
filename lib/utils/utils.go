@@ -10,19 +10,8 @@ import (
 
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/kijimaD/na2me/embeds"
 )
-
-var (
-	BodyFont text.Face
-	UIFont   text.Face
-)
-
-func init() {
-	BodyFont = LoadFont("ui/JF-Dot-Kappa20B.ttf", 26)
-	UIFont = LoadFont("ui/JF-Dot-Kappa20B.ttf", 20)
-}
 
 func GetPtr[T any](x T) *T {
 	return &x
@@ -55,21 +44,4 @@ func LoadImage(filename string) *ebiten.Image {
 	}
 
 	return img
-}
-
-func LoadFont(path string, size float64) text.Face {
-	fontFile, err := embeds.FS.Open(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	s, err := text.NewGoTextFaceSource(fontFile)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return &text.GoTextFace{
-		Source: s,
-		Size:   size,
-	}
 }

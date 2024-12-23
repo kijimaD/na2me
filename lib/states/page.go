@@ -9,6 +9,7 @@ import (
 	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/bookmark"
 	"github.com/kijimaD/na2me/lib/eui"
+	"github.com/kijimaD/na2me/lib/resources"
 	"github.com/kijimaD/na2me/lib/utils"
 )
 
@@ -136,7 +137,7 @@ func (st *MainMenuState) recentPage() *page {
 		listContainer.AddChild(list)
 	} else {
 		noContentText := widget.NewText(
-			widget.TextOpts.Text("保存なし", utils.UIFont, color.NRGBA{255, 255, 255, 255}),
+			widget.TextOpts.Text("保存なし", resources.Master.Fonts.UIFace, color.NRGBA{255, 255, 255, 255}),
 		)
 		listContainer.AddChild(noContentText)
 	}

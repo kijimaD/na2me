@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/ebitenui/ebitenui"
-	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -167,7 +166,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(float64(x), float64(y))
 		op.LineSpacing = lineSpacing
-		text.Draw(screen, japaneseText, utils.BodyFont, op)
+		text.Draw(screen, japaneseText, resources.Master.Fonts.BodyFace, op)
 	}
 
 	st.ui.Draw(screen)
@@ -216,7 +215,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 			}),
 		),
 		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("一覧", utils.BodyFont, &widget.ButtonTextColor{
+		widget.ButtonOpts.Text("一覧", resources.Master.Fonts.BodyFace, &widget.ButtonTextColor{
 			Idle: color.RGBA{0xaa, 0xaa, 0xaa, 0xff},
 		}),
 		widget.ButtonOpts.TextPadding(widget.Insets{
@@ -248,7 +247,7 @@ func (st *PlayState) updateStatsContainer() {
 	st.statsContainer.RemoveChildren()
 
 	text := widget.NewText(
-		widget.TextOpts.Text(st.eventQ.CurrentLabel, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
+		widget.TextOpts.Text(st.eventQ.CurrentLabel, resources.Master.Fonts.BodyFace, color.NRGBA{100, 100, 100, 255}),
 	)
 
 	idx := len(st.eventQ.Evaluator.Events) - len(st.eventQ.WaitingQueue)
@@ -260,14 +259,8 @@ func (st *PlayState) updateStatsContainer() {
 			),
 		),
 		widget.ProgressBarOpts.Images(
-			&widget.ProgressBarImage{
-				Idle:  image.NewNineSliceColor(color.NRGBA{40, 40, 40, 255}),
-				Hover: image.NewNineSliceColor(color.NRGBA{40, 40, 40, 255}),
-			},
-			&widget.ProgressBarImage{
-				Idle:  image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-				Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-			},
+			resources.Master.ProgressBar.TrackImage,
+			resources.Master.ProgressBar.FillImage,
 		),
 		widget.ProgressBarOpts.Values(0, len(st.eventQ.Evaluator.Events), idx+1),
 	)
@@ -275,7 +268,7 @@ func (st *PlayState) updateStatsContainer() {
 	progressBarLabel := widget.NewText(
 		widget.TextOpts.Text(
 			fmt.Sprintf("%.1f%%", rate),
-			utils.BodyFont,
+			resources.Master.Fonts.BodyFace,
 			color.NRGBA{100, 100, 100, 255},
 		),
 	)
