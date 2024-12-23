@@ -80,12 +80,9 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 	footerContainer.AddChild(widget.NewText(
 		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", utils.UIFont, color.NRGBA{100, 100, 100, 255})))
 
-	var ui *ebitenui.UI
 	rootContainer.AddChild(
 		st.headerContainer(),
-		st.actionContainer(func() *ebitenui.UI {
-			return ui
-		}),
+		st.actionContainer(),
 		footerContainer,
 	)
 
@@ -149,7 +146,7 @@ func (st *MainMenuState) header(label string, opts ...widget.ContainerOpt) widge
 	return c
 }
 
-func (st *MainMenuState) actionContainer(ui func() *ebitenui.UI) widget.PreferredSizeLocateableWidget {
+func (st *MainMenuState) actionContainer() widget.PreferredSizeLocateableWidget {
 	actionContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewGridLayout(
 			widget.GridLayoutOpts.Padding(widget.Insets{
