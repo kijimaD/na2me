@@ -5,14 +5,8 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/kijimaD/na2me/lib/resources"
 	"github.com/kijimaD/na2me/lib/states"
-)
-
-const (
-	screenWidth  = 720
-	screenHeight = 720
-	fontSize     = 26
-	padding      = 40
 )
 
 type Game struct {
@@ -29,12 +23,12 @@ func (g *Game) Draw(screen *ebiten.Image) {
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	return screenWidth, screenHeight
+	return resources.ScreenWidth, resources.ScreenHeight
 }
 
 func (g *Game) Start() {
 	g.StateMachine = states.Init(&states.MainMenuState{})
-	ebiten.SetWindowSize(screenWidth, screenHeight)
+	ebiten.SetWindowSize(resources.ScreenWidth, resources.ScreenHeight)
 	ebiten.SetWindowTitle("demo")
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)

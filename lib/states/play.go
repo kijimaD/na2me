@@ -16,6 +16,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	embeds "github.com/kijimaD/na2me/embeds"
+	"github.com/kijimaD/na2me/lib/resources"
 	"github.com/kijimaD/na2me/lib/touch"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
@@ -24,9 +25,6 @@ import (
 )
 
 const (
-	screenWidth  = 720
-	screenHeight = 720
-	fontSize     = 26
 	padding      = 60
 	paddingSmall = 30
 )
@@ -138,14 +136,14 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	{
 		// 背景画像
 		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(0, screenHeight/4)
+		op.GeoM.Translate(0, resources.ScreenHeight/4)
 		screen.DrawImage(st.bgImage, op)
 	}
 
 	{
 		// 背景色
 		black := color.RGBA{0x10, 0x10, 0x10, 0x80}
-		vector.DrawFilledRect(screen, paddingSmall, padding, screenWidth-paddingSmall*2, screenHeight-padding*2, black, false)
+		vector.DrawFilledRect(screen, paddingSmall, padding, resources.ScreenWidth-paddingSmall*2, resources.ScreenHeight-padding*2, black, false)
 	}
 
 	// 待ち状態表示
@@ -163,6 +161,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 
 	{
 		japaneseText := st.eventQ.Display()
+		const fontSize = 26
 		const lineSpacing = fontSize + 8
 		x, y := padding-20, padding+paddingSmall
 		op := &text.DrawOptions{}
