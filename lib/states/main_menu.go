@@ -116,9 +116,14 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 	)
 	c.AddChild(c2)
 
-	c2.AddChild(widget.NewText(
-		widget.TextOpts.Text("注意力散漫たる現代において、歴史的読書方法は競争力を失っている。\n電子紙芝居方式の優れた威力を万人へ宣伝し、方式普及を推進する。", resources.Master.Fonts.UIFace, color.NRGBA{100, 100, 100, 255})),
+	headerText := widget.NewText(
+		widget.TextOpts.Text(
+			"注意力散漫たる現代において、歴史的読書方法は競争力を失っている。\n電子紙芝居方式の優れた威力を万人へ宣伝し、方式普及を推進する。",
+			resources.Master.Fonts.UIFace,
+			resources.TextSecondaryColor,
+		),
 	)
+	c2.AddChild(headerText)
 
 	return c
 }
@@ -126,7 +131,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 func (st *MainMenuState) header(label string, opts ...widget.ContainerOpt) widget.PreferredSizeLocateableWidget {
 	c := widget.NewContainer(append(opts, []widget.ContainerOpt{
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.TrackHover(false)),
-		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.NRGBA{255, 255, 255, 140})),
+		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(resources.WhiteTransColor)),
 		widget.ContainerOpts.Layout(widget.NewAnchorLayout(widget.AnchorLayoutOpts.Padding(widget.Insets{
 			Top:    4,
 			Bottom: 4,
@@ -188,7 +193,7 @@ func (st *MainMenuState) actionContainer() widget.PreferredSizeLocateableWidget 
 func (st *MainMenuState) newPageContainer() *pageContainer {
 	c := widget.NewContainer(
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.TrackHover(false)),
-		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.NRGBA{255, 255, 255, 140})),
+		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.NRGBA{50, 50, 50, 80})),
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
 			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(2)),
@@ -199,7 +204,11 @@ func (st *MainMenuState) newPageContainer() *pageContainer {
 		widget.TextOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
 			Stretch: true,
 		})),
-		widget.TextOpts.Text("", resources.Master.Fonts.UIFace, color.NRGBA{255, 255, 255, 255}))
+		widget.TextOpts.Text(
+			"",
+			resources.Master.Fonts.UIFace,
+			resources.TextPrimaryColor,
+		))
 	c.AddChild(titleText)
 
 	flipBook := widget.NewFlipBook(

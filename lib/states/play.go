@@ -184,12 +184,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
-			widget.RowLayoutOpts.Padding(widget.Insets{
-				Top:    10,
-				Bottom: 10,
-				Left:   10,
-				Right:  10,
-			}),
+			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(10)),
 			widget.RowLayoutOpts.Spacing(10),
 		)),
 	)
@@ -197,12 +192,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 	topContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionHorizontal),
-			widget.RowLayoutOpts.Padding(widget.Insets{
-				Top:    10,
-				Bottom: 10,
-				Left:   10,
-				Right:  10,
-			}),
+			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(10)),
 			widget.RowLayoutOpts.Spacing(10),
 		)),
 	)
@@ -214,15 +204,17 @@ func (st *PlayState) initUI() *ebitenui.UI {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("一覧", resources.Master.Fonts.BodyFace, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xaa, 0xaa, 0xaa, 0xff},
-		}),
+		widget.ButtonOpts.Image(resources.Master.Button.Image),
+		widget.ButtonOpts.Text(
+			"一覧",
+			resources.Master.Button.Face,
+			resources.Master.Button.TextColor,
+		),
 		widget.ButtonOpts.TextPadding(widget.Insets{
 			Left:   10,
 			Right:  10,
-			Top:    5,
-			Bottom: 5,
+			Top:    6,
+			Bottom: 6,
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			st.transPause()
@@ -269,7 +261,7 @@ func (st *PlayState) updateStatsContainer() {
 		widget.TextOpts.Text(
 			fmt.Sprintf("%.1f%%", rate),
 			resources.Master.Fonts.BodyFace,
-			color.NRGBA{100, 100, 100, 255},
+			resources.TextSecondaryColor,
 		),
 	)
 

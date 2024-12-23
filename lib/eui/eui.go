@@ -6,7 +6,6 @@ import (
 	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/kijimaD/na2me/lib/resources"
-	"github.com/kijimaD/na2me/lib/utils"
 )
 
 func NewList(listOpts ...widget.ListOpt) *widget.List {
@@ -49,7 +48,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 				widget.SliderOpts.Images(&widget.SliderTrackImage{
 					Idle:  image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
 					Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-				}, utils.LoadButtonImage()),
+				}, resources.Master.Button.Image),
 				widget.SliderOpts.MinHandleSize(10),
 				widget.SliderOpts.TrackPadding(widget.NewInsetsSimple(2)),
 			),

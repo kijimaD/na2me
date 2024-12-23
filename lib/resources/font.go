@@ -18,7 +18,7 @@ type fonts struct {
 func newFonts() *fonts {
 	return &fonts{
 		BodyFace: loadFont("ui/JF-Dot-Kappa20B.ttf", 26),
-		UIFace:   loadFont("ui/JF-Dot-Kappa20B.ttf", 20),
+		UIFace:   loadFont("ui/JF-Dot-Kappa20B.ttf", 22),
 	}
 }
 
