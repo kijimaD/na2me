@@ -123,7 +123,7 @@ func (st *PauseState) reloadUI() {
 		)),
 	)
 	title := widget.NewText(
-		widget.TextOpts.Text(st.scenario.Title, resources.Master.Fonts.BodyFace, color.White),
+		widget.TextOpts.Text(st.scenario.Title, resources.Master.Fonts.BodyFace, resources.TextPrimaryColor),
 	)
 	buttonContainer.AddChild(
 		title,

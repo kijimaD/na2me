@@ -77,6 +77,7 @@ func init() {
 		NewScenario("梶井基次郎", "桜の樹の下には"),
 		NewScenario("梶井基次郎", "檸檬"),
 		NewScenario("森鴎外", "舞姫"),
+		NewScenario("森鴎外", "高瀬舟"),
 		NewScenario("泉鏡花", "高野聖"),
 		NewScenario("田山花袋", "蒲団"),
 		NewScenario("石原莞爾", "最終戦争論"),
