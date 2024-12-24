@@ -163,6 +163,7 @@ func (st *MainMenuState) actionContainer() widget.PreferredSizeLocateableWidget 
 	pages := []interface{}{
 		st.recentPage(),
 		st.bookListPage(),
+		st.infoPage(),
 	}
 
 	pageContainer := st.newPageContainer()
