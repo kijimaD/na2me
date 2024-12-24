@@ -60,6 +60,7 @@ func init() {
 		NewScenario("夏目漱石", "三四郎"),
 		NewScenario("夏目漱石", "吾輩は猫である"),
 		NewScenario("夏目漱石", "坊っちゃん"),
+		NewScenario("夏目漱石", "文士の生活"),
 		NewScenario("夏目漱石", "明暗"),
 		NewScenario("夏目漱石", "模倣と独立"),
 		NewScenario("夏目漱石", "満韓ところどころ"),
