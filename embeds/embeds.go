@@ -82,6 +82,7 @@ func init() {
 		NewScenario("芥川龍之介", "地獄変"),
 		NewScenario("芥川龍之介", "或阿呆の一生"),
 		NewScenario("芥川龍之介", "羅生門"),
+		NewScenario("芥川龍之介", "葉"),
 		NewScenario("芥川龍之介", "蜜柑"),
 		NewScenario("芥川龍之介", "鼻"),
 		NewScenario("魯迅", "故郷"),
