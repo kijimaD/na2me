@@ -5,6 +5,7 @@
 [jump target="ch1-1"]
 
 *ch1-1
+[image source="house.jpg"]
 上　先生と私
 [p]
 一

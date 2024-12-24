@@ -72,8 +72,6 @@ func (st *PlayState) OnStart() {
 	if st.startLabel != nil {
 		st.eventQ.Play(*st.startLabel)
 	}
-	st.bgImage = utils.LoadImage("bg/black.png")
-
 	st.ui = st.initUI()
 }
 
@@ -105,6 +103,7 @@ func (st *PlayState) Update() Transition {
 	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
 		case *event.ChangeBg:
+			fmt.Printf("%#v\n", event)
 			st.bgImage = utils.LoadImage(path.Join("bg", event.Source))
 		}
 	default:
@@ -126,7 +125,9 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 		// 背景画像
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(0, resources.ScreenHeight/4)
-		screen.DrawImage(st.bgImage, op)
+		if st.bgImage != nil {
+			screen.DrawImage(st.bgImage, op)
+		}
 	}
 
 	{
