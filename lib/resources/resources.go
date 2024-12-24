@@ -5,7 +5,9 @@ import (
 
 	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
+	"github.com/kijimaD/na2me/lib/utils"
 )
 
 var Master uiResources
@@ -16,6 +18,7 @@ func init() {
 		Fonts:       fonts,
 		ProgressBar: newProgressBarResources(),
 		Button:      newButtonResources(fonts.UIFace),
+		Backgrounds: newBackgroundResources(),
 	}
 	Master = res
 }
@@ -43,6 +46,7 @@ type uiResources struct {
 	Fonts       *fonts
 	ProgressBar *progressBarResources
 	Button      *buttonResources
+	Backgrounds *backgroundResources
 }
 
 type progressBarResources struct {
@@ -55,6 +59,12 @@ type buttonResources struct {
 	TextColor *widget.ButtonTextColor
 	Face      text.Face
 	Padding   widget.Insets
+}
+
+type backgroundResources struct {
+	MainMenuBG *ebiten.Image
+	PauseBG    *ebiten.Image
+	PromptIcon *ebiten.Image
 }
 
 func newProgressBarResources() *progressBarResources {
@@ -97,5 +107,13 @@ func newButtonResources(face text.Face) *buttonResources {
 			Top:    8,
 			Bottom: 8,
 		},
+	}
+}
+
+func newBackgroundResources() *backgroundResources {
+	return &backgroundResources{
+		MainMenuBG: utils.LoadImage("ui/desk.jpg"),
+		PauseBG:    utils.LoadImage("ui/door.jpg"),
+		PromptIcon: utils.LoadImage("ui/prompt.png"),
 	}
 }

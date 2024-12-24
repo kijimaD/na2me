@@ -10,15 +10,12 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/resources"
-	"github.com/kijimaD/na2me/lib/utils"
 )
 
 type MainMenuState struct {
 	ui            *ebitenui.UI
 	trans         *Transition
 	rootContainer *widget.Container
-
-	bgImage *ebiten.Image
 }
 
 func (st *MainMenuState) OnPause() {}
@@ -27,7 +24,6 @@ func (st *MainMenuState) OnResume() {}
 
 func (st *MainMenuState) OnStart() {
 	st.ui = st.initUI()
-	st.bgImage = utils.LoadImage("ui/desk.jpg")
 }
 
 func (st *MainMenuState) OnStop() {}
@@ -50,7 +46,7 @@ func (st *MainMenuState) Update() Transition {
 }
 
 func (st *MainMenuState) Draw(screen *ebiten.Image) {
-	screen.DrawImage(st.bgImage, nil)
+	screen.DrawImage(resources.Master.Backgrounds.MainMenuBG, nil)
 	st.ui.Draw(screen)
 }
 

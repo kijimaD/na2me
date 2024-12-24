@@ -32,7 +32,6 @@ type PauseState struct {
 	labels []string
 
 	ui            *ebitenui.UI
-	bgImage       *ebiten.Image
 	rootContainer *widget.Container
 }
 
@@ -63,7 +62,6 @@ func (st *PauseState) OnStart() {
 	st.labels = e.Labels()
 
 	st.ui = st.initUI()
-	st.bgImage = utils.LoadImage("ui/door.jpg")
 }
 
 func (st *PauseState) OnStop() {}
@@ -86,7 +84,7 @@ func (st *PauseState) Update() Transition {
 }
 
 func (st *PauseState) Draw(screen *ebiten.Image) {
-	screen.DrawImage(st.bgImage, nil)
+	screen.DrawImage(resources.Master.Backgrounds.PauseBG, nil)
 	st.ui.Draw(screen)
 }
 

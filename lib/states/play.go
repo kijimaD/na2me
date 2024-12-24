@@ -44,9 +44,8 @@ type PlayState struct {
 	// アニメーション状態が切り替わったかを判断する用
 	prevOnAnim bool
 
-	bgImage     *ebiten.Image
-	promptImage *ebiten.Image
-	startTime   time.Time
+	bgImage   *ebiten.Image
+	startTime time.Time
 }
 
 func (st *PlayState) OnPause() {}
@@ -73,15 +72,7 @@ func (st *PlayState) OnStart() {
 	if st.startLabel != nil {
 		st.eventQ.Play(*st.startLabel)
 	}
-
-	{
-		eimg := utils.LoadImage("bg/black.png")
-		st.bgImage = eimg
-	}
-	{
-		eimg := utils.LoadImage("ui/prompt.png")
-		st.promptImage = eimg
-	}
+	st.bgImage = utils.LoadImage("bg/black.png")
 
 	st.ui = st.initUI()
 }
@@ -114,8 +105,7 @@ func (st *PlayState) Update() Transition {
 	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
 		case *event.ChangeBg:
-			eimg := utils.LoadImage(path.Join("bg", event.Source))
-			st.bgImage = eimg
+			st.bgImage = utils.LoadImage(path.Join("bg", event.Source))
 		}
 	default:
 	}
@@ -147,15 +137,16 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 
 	// 待ち状態表示
 	if st.eventQ.OnAnim {
+		promptImage := resources.Master.Backgrounds.PromptIcon
 		elapsed := time.Since(st.startTime).Seconds()
 		offsetY := 2 * math.Cos(elapsed*4) // cos関数で上下に動かす
-		bounds := st.promptImage.Bounds()
+		bounds := promptImage.Bounds()
 		bounds.Min.Y = int(20 + offsetY) // 初期位置 + オフセット
 		bounds.Max.Y = bounds.Min.Y + bounds.Dy()
 
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(720-float64(bounds.Max.X*2), 720-float64(bounds.Min.Y*2))
-		screen.DrawImage(st.promptImage, op)
+		screen.DrawImage(promptImage, op)
 	}
 
 	{
