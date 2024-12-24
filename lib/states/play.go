@@ -9,13 +9,13 @@ import (
 	"time"
 
 	"github.com/ebitenui/ebitenui"
-	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	embeds "github.com/kijimaD/na2me/embeds"
+	"github.com/kijimaD/na2me/lib/resources"
 	"github.com/kijimaD/na2me/lib/touch"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
@@ -24,9 +24,6 @@ import (
 )
 
 const (
-	screenWidth  = 720
-	screenHeight = 720
-	fontSize     = 26
 	padding      = 60
 	paddingSmall = 30
 )
@@ -47,9 +44,8 @@ type PlayState struct {
 	// アニメーション状態が切り替わったかを判断する用
 	prevOnAnim bool
 
-	bgImage     *ebiten.Image
-	promptImage *ebiten.Image
-	startTime   time.Time
+	bgImage   *ebiten.Image
+	startTime time.Time
 }
 
 func (st *PlayState) OnPause() {}
@@ -76,15 +72,7 @@ func (st *PlayState) OnStart() {
 	if st.startLabel != nil {
 		st.eventQ.Play(*st.startLabel)
 	}
-
-	{
-		eimg := utils.LoadImage("bg/black.png")
-		st.bgImage = eimg
-	}
-	{
-		eimg := utils.LoadImage("ui/prompt.png")
-		st.promptImage = eimg
-	}
+	st.bgImage = utils.LoadImage("bg/black.png")
 
 	st.ui = st.initUI()
 }
@@ -117,8 +105,7 @@ func (st *PlayState) Update() Transition {
 	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
 		case *event.ChangeBg:
-			eimg := utils.LoadImage(path.Join("bg", event.Source))
-			st.bgImage = eimg
+			st.bgImage = utils.LoadImage(path.Join("bg", event.Source))
 		}
 	default:
 	}
@@ -138,37 +125,39 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 	{
 		// 背景画像
 		op := &ebiten.DrawImageOptions{}
-		op.GeoM.Translate(0, screenHeight/4)
+		op.GeoM.Translate(0, resources.ScreenHeight/4)
 		screen.DrawImage(st.bgImage, op)
 	}
 
 	{
 		// 背景色
 		black := color.RGBA{0x10, 0x10, 0x10, 0x80}
-		vector.DrawFilledRect(screen, paddingSmall, padding, screenWidth-paddingSmall*2, screenHeight-padding*2, black, false)
+		vector.DrawFilledRect(screen, paddingSmall, padding, resources.ScreenWidth-paddingSmall*2, resources.ScreenHeight-padding*2, black, false)
 	}
 
 	// 待ち状態表示
 	if st.eventQ.OnAnim {
+		promptImage := resources.Master.Backgrounds.PromptIcon
 		elapsed := time.Since(st.startTime).Seconds()
 		offsetY := 2 * math.Cos(elapsed*4) // cos関数で上下に動かす
-		bounds := st.promptImage.Bounds()
+		bounds := promptImage.Bounds()
 		bounds.Min.Y = int(20 + offsetY) // 初期位置 + オフセット
 		bounds.Max.Y = bounds.Min.Y + bounds.Dy()
 
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(720-float64(bounds.Max.X*2), 720-float64(bounds.Min.Y*2))
-		screen.DrawImage(st.promptImage, op)
+		screen.DrawImage(promptImage, op)
 	}
 
 	{
 		japaneseText := st.eventQ.Display()
+		const fontSize = 26
 		const lineSpacing = fontSize + 8
 		x, y := padding-20, padding+paddingSmall
 		op := &text.DrawOptions{}
 		op.GeoM.Translate(float64(x), float64(y))
 		op.LineSpacing = lineSpacing
-		text.Draw(screen, japaneseText, utils.BodyFont, op)
+		text.Draw(screen, japaneseText, resources.Master.Fonts.BodyFace, op)
 	}
 
 	st.ui.Draw(screen)
@@ -186,12 +175,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 	rootContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
-			widget.RowLayoutOpts.Padding(widget.Insets{
-				Top:    10,
-				Bottom: 10,
-				Left:   10,
-				Right:  10,
-			}),
+			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(10)),
 			widget.RowLayoutOpts.Spacing(10),
 		)),
 	)
@@ -199,12 +183,7 @@ func (st *PlayState) initUI() *ebitenui.UI {
 	topContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionHorizontal),
-			widget.RowLayoutOpts.Padding(widget.Insets{
-				Top:    10,
-				Bottom: 10,
-				Left:   10,
-				Right:  10,
-			}),
+			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(10)),
 			widget.RowLayoutOpts.Spacing(10),
 		)),
 	)
@@ -216,15 +195,17 @@ func (st *PlayState) initUI() *ebitenui.UI {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("一覧", utils.BodyFont, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xaa, 0xaa, 0xaa, 0xff},
-		}),
+		widget.ButtonOpts.Image(resources.Master.Button.Image),
+		widget.ButtonOpts.Text(
+			"一覧",
+			resources.Master.Button.Face,
+			resources.Master.Button.TextColor,
+		),
 		widget.ButtonOpts.TextPadding(widget.Insets{
 			Left:   10,
 			Right:  10,
-			Top:    5,
-			Bottom: 5,
+			Top:    6,
+			Bottom: 6,
 		}),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			st.transPause()
@@ -249,7 +230,7 @@ func (st *PlayState) updateStatsContainer() {
 	st.statsContainer.RemoveChildren()
 
 	text := widget.NewText(
-		widget.TextOpts.Text(st.eventQ.CurrentLabel, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
+		widget.TextOpts.Text(st.eventQ.CurrentLabel, resources.Master.Fonts.BodyFace, color.NRGBA{100, 100, 100, 255}),
 	)
 
 	idx := len(st.eventQ.Evaluator.Events) - len(st.eventQ.WaitingQueue)
@@ -261,14 +242,8 @@ func (st *PlayState) updateStatsContainer() {
 			),
 		),
 		widget.ProgressBarOpts.Images(
-			&widget.ProgressBarImage{
-				Idle:  image.NewNineSliceColor(color.NRGBA{40, 40, 40, 255}),
-				Hover: image.NewNineSliceColor(color.NRGBA{40, 40, 40, 255}),
-			},
-			&widget.ProgressBarImage{
-				Idle:  image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-				Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-			},
+			resources.Master.ProgressBar.TrackImage,
+			resources.Master.ProgressBar.FillImage,
 		),
 		widget.ProgressBarOpts.Values(0, len(st.eventQ.Evaluator.Events), idx+1),
 	)
@@ -276,8 +251,8 @@ func (st *PlayState) updateStatsContainer() {
 	progressBarLabel := widget.NewText(
 		widget.TextOpts.Text(
 			fmt.Sprintf("%.1f%%", rate),
-			utils.BodyFont,
-			color.NRGBA{100, 100, 100, 255},
+			resources.Master.Fonts.BodyFace,
+			resources.TextSecondaryColor,
 		),
 	)
 

@@ -9,15 +9,13 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/kijimaD/na2me/lib/eui"
-	"github.com/kijimaD/na2me/lib/utils"
+	"github.com/kijimaD/na2me/lib/resources"
 )
 
 type MainMenuState struct {
 	ui            *ebitenui.UI
 	trans         *Transition
 	rootContainer *widget.Container
-
-	bgImage *ebiten.Image
 }
 
 func (st *MainMenuState) OnPause() {}
@@ -26,7 +24,6 @@ func (st *MainMenuState) OnResume() {}
 
 func (st *MainMenuState) OnStart() {
 	st.ui = st.initUI()
-	st.bgImage = utils.LoadImage("ui/desk.jpg")
 }
 
 func (st *MainMenuState) OnStop() {}
@@ -49,7 +46,7 @@ func (st *MainMenuState) Update() Transition {
 }
 
 func (st *MainMenuState) Draw(screen *ebiten.Image) {
-	screen.DrawImage(st.bgImage, nil)
+	screen.DrawImage(resources.Master.Backgrounds.MainMenuBG, nil)
 	st.ui.Draw(screen)
 }
 
@@ -78,7 +75,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 		}),
 	)))
 	footerContainer.AddChild(widget.NewText(
-		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", utils.UIFont, color.NRGBA{100, 100, 100, 255})))
+		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", resources.Master.Fonts.UIFace, color.NRGBA{100, 100, 100, 255})))
 
 	rootContainer.AddChild(
 		st.headerContainer(),
@@ -115,9 +112,14 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 	)
 	c.AddChild(c2)
 
-	c2.AddChild(widget.NewText(
-		widget.TextOpts.Text("注意力散漫たる現代において、歴史的読書方法は競争力を失っている。\n電子紙芝居方式の優れた威力を万人へ宣伝し、方式普及を推進する。", utils.UIFont, color.NRGBA{100, 100, 100, 255})),
+	headerText := widget.NewText(
+		widget.TextOpts.Text(
+			"注意力散漫たる現代において、歴史的読書方法は競争力を失っている。\n電子紙芝居方式の優れた威力を万人へ宣伝し、方式普及を推進する。",
+			resources.Master.Fonts.UIFace,
+			resources.TextSecondaryColor,
+		),
 	)
+	c2.AddChild(headerText)
 
 	return c
 }
@@ -125,7 +127,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 func (st *MainMenuState) header(label string, opts ...widget.ContainerOpt) widget.PreferredSizeLocateableWidget {
 	c := widget.NewContainer(append(opts, []widget.ContainerOpt{
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.TrackHover(false)),
-		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.NRGBA{255, 255, 255, 140})),
+		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(resources.WhiteTransColor)),
 		widget.ContainerOpts.Layout(widget.NewAnchorLayout(widget.AnchorLayoutOpts.Padding(widget.Insets{
 			Top:    4,
 			Bottom: 4,
@@ -139,7 +141,7 @@ func (st *MainMenuState) header(label string, opts ...widget.ContainerOpt) widge
 			HorizontalPosition: widget.AnchorLayoutPositionStart,
 			VerticalPosition:   widget.AnchorLayoutPositionStart,
 		})),
-		widget.TextOpts.Text(label, utils.UIFont, color.NRGBA{0, 0, 0, 200}),
+		widget.TextOpts.Text(label, resources.Master.Fonts.UIFace, color.NRGBA{0, 0, 0, 200}),
 		widget.TextOpts.Position(widget.TextPositionStart, widget.TextPositionCenter),
 	))
 
@@ -187,7 +189,7 @@ func (st *MainMenuState) actionContainer() widget.PreferredSizeLocateableWidget 
 func (st *MainMenuState) newPageContainer() *pageContainer {
 	c := widget.NewContainer(
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.TrackHover(false)),
-		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.NRGBA{255, 255, 255, 140})),
+		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(color.NRGBA{50, 50, 50, 80})),
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
 			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(2)),
@@ -198,7 +200,11 @@ func (st *MainMenuState) newPageContainer() *pageContainer {
 		widget.TextOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
 			Stretch: true,
 		})),
-		widget.TextOpts.Text("", utils.UIFont, color.NRGBA{255, 255, 255, 255}))
+		widget.TextOpts.Text(
+			"",
+			resources.Master.Fonts.UIFace,
+			resources.TextPrimaryColor,
+		))
 	c.AddChild(titleText)
 
 	flipBook := widget.NewFlipBook(

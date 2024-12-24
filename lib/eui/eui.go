@@ -5,7 +5,7 @@ import (
 
 	"github.com/ebitenui/ebitenui/image"
 	"github.com/ebitenui/ebitenui/widget"
-	"github.com/kijimaD/na2me/lib/utils"
+	"github.com/kijimaD/na2me/lib/resources"
 )
 
 func NewList(listOpts ...widget.ListOpt) *widget.List {
@@ -28,7 +28,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 				}),
 			),
 			widget.ListOpts.HideHorizontalSlider(),
-			widget.ListOpts.EntryFontFace(utils.BodyFont),
+			widget.ListOpts.EntryFontFace(resources.Master.Fonts.BodyFace),
 			widget.ListOpts.EntryColor(&widget.ListEntryColor{
 				Selected:                   color.NRGBA{R: 0, G: 255, B: 0, A: 255},
 				Unselected:                 color.NRGBA{R: 255, G: 255, B: 255, A: 255},
@@ -48,7 +48,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 				widget.SliderOpts.Images(&widget.SliderTrackImage{
 					Idle:  image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
 					Hover: image.NewNineSliceColor(color.NRGBA{100, 100, 100, 255}),
-				}, utils.LoadButtonImage()),
+				}, resources.Master.Button.Image),
 				widget.SliderOpts.MinHandleSize(10),
 				widget.SliderOpts.TrackPadding(widget.NewInsetsSimple(2)),
 			),

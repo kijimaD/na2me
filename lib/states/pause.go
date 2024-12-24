@@ -9,10 +9,10 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/bookmark"
 	"github.com/kijimaD/na2me/lib/eui"
+	"github.com/kijimaD/na2me/lib/resources"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
@@ -32,7 +32,6 @@ type PauseState struct {
 	labels []string
 
 	ui            *ebitenui.UI
-	bgImage       *ebiten.Image
 	rootContainer *widget.Container
 }
 
@@ -63,7 +62,6 @@ func (st *PauseState) OnStart() {
 	st.labels = e.Labels()
 
 	st.ui = st.initUI()
-	st.bgImage = utils.LoadImage("ui/door.jpg")
 }
 
 func (st *PauseState) OnStop() {}
@@ -86,7 +84,7 @@ func (st *PauseState) Update() Transition {
 }
 
 func (st *PauseState) Draw(screen *ebiten.Image) {
-	screen.DrawImage(st.bgImage, nil)
+	screen.DrawImage(resources.Master.Backgrounds.PauseBG, nil)
 	st.ui.Draw(screen)
 }
 
@@ -97,12 +95,7 @@ func (st *PauseState) initUI() *ebitenui.UI {
 				widget.GridLayoutOpts.Columns(1),
 				widget.GridLayoutOpts.Spacing(4, 4),
 				widget.GridLayoutOpts.Stretch([]bool{true}, []bool{true}),
-				widget.GridLayoutOpts.Padding(widget.Insets{
-					Top:    4,
-					Bottom: 4,
-					Left:   4,
-					Right:  4,
-				}),
+				widget.GridLayoutOpts.Padding(widget.NewInsetsSimple(10)),
 			),
 		),
 	)
@@ -118,37 +111,27 @@ func (st *PauseState) reloadUI() {
 	buttonContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
-			widget.RowLayoutOpts.Padding(widget.Insets{
-				Top:    10,
-				Bottom: 10,
-				Left:   10,
-				Right:  10,
-			}),
+			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(10)),
 			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
 		)),
 	)
 	emptyContainer := widget.NewContainer(
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
-			widget.RowLayoutOpts.Padding(widget.Insets{
-				Top:    10,
-				Bottom: 10,
-				Left:   10,
-				Right:  10,
-			}),
+			widget.RowLayoutOpts.Padding(widget.NewInsetsSimple(10)),
 			widget.RowLayoutOpts.Spacing(10), // ボタンの間隔
 		)),
 	)
 	title := widget.NewText(
-		widget.TextOpts.Text(st.scenario.Title, utils.BodyFont, color.White),
+		widget.TextOpts.Text(st.scenario.Title, resources.Master.Fonts.BodyFace, color.White),
 	)
 	buttonContainer.AddChild(
 		title,
-		st.backButton(utils.BodyFont),
-		st.mainMenuButton(utils.BodyFont),
+		st.backButton(),
+		st.mainMenuButton(),
 		emptyContainer,
-		st.saveButton(utils.BodyFont),
-		st.deleteButton(utils.BodyFont),
+		st.saveButton(),
+		st.deleteButton(),
 		st.saveText(),
 	)
 
@@ -188,7 +171,7 @@ func (st *PauseState) reloadUI() {
 	st.rootContainer.AddChild(listContainer)
 }
 
-func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
+func (st *PauseState) mainMenuButton() *widget.Button {
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -196,16 +179,13 @@ func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("終了", face, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
-		}),
-		widget.ButtonOpts.TextPadding(widget.Insets{
-			Left:   30,
-			Right:  30,
-			Top:    5,
-			Bottom: 5,
-		}),
+		widget.ButtonOpts.Image(resources.Master.Button.Image),
+		widget.ButtonOpts.Text(
+			"終了",
+			resources.Master.Button.Face,
+			resources.Master.Button.TextColor,
+		),
+		widget.ButtonOpts.TextPadding(resources.Master.Button.Padding),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&MainMenuState{}}}
 		}),
@@ -213,7 +193,7 @@ func (st *PauseState) mainMenuButton(face text.Face) *widget.Button {
 	return button
 }
 
-func (st *PauseState) backButton(face text.Face) *widget.Button {
+func (st *PauseState) backButton() *widget.Button {
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -221,16 +201,13 @@ func (st *PauseState) backButton(face text.Face) *widget.Button {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("戻る", face, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
-		}),
-		widget.ButtonOpts.TextPadding(widget.Insets{
-			Left:   30,
-			Right:  30,
-			Top:    5,
-			Bottom: 5,
-		}),
+		widget.ButtonOpts.Image(resources.Master.Button.Image),
+		widget.ButtonOpts.Text(
+			"戻る",
+			resources.Master.Button.Face,
+			resources.Master.Button.TextColor,
+		),
+		widget.ButtonOpts.TextPadding(resources.Master.Button.Padding),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			st.trans = &Transition{Type: TransPop}
 		}),
@@ -238,7 +215,7 @@ func (st *PauseState) backButton(face text.Face) *widget.Button {
 	return button
 }
 
-func (st *PauseState) saveButton(face text.Face) *widget.Button {
+func (st *PauseState) saveButton() *widget.Button {
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -246,16 +223,13 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("保存", face, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
-		}),
-		widget.ButtonOpts.TextPadding(widget.Insets{
-			Left:   30,
-			Right:  30,
-			Top:    5,
-			Bottom: 5,
-		}),
+		widget.ButtonOpts.Image(resources.Master.Button.Image),
+		widget.ButtonOpts.Text(
+			"保存",
+			resources.Master.Button.Face,
+			resources.Master.Button.TextColor,
+		),
+		widget.ButtonOpts.TextPadding(resources.Master.Button.Padding),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			bm := bookmark.NewBookmark(
 				st.scenario.ID,
@@ -272,7 +246,7 @@ func (st *PauseState) saveButton(face text.Face) *widget.Button {
 	return button
 }
 
-func (st *PauseState) deleteButton(face text.Face) *widget.Button {
+func (st *PauseState) deleteButton() *widget.Button {
 	button := widget.NewButton(
 		widget.ButtonOpts.WidgetOpts(
 			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
@@ -280,16 +254,13 @@ func (st *PauseState) deleteButton(face text.Face) *widget.Button {
 				VerticalPosition:   widget.AnchorLayoutPositionCenter,
 			}),
 		),
-		widget.ButtonOpts.Image(utils.LoadButtonImage()),
-		widget.ButtonOpts.Text("破棄", face, &widget.ButtonTextColor{
-			Idle: color.RGBA{0xdf, 0xf4, 0xff, 0xff},
-		}),
-		widget.ButtonOpts.TextPadding(widget.Insets{
-			Left:   30,
-			Right:  30,
-			Top:    5,
-			Bottom: 5,
-		}),
+		widget.ButtonOpts.Image(resources.Master.Button.Image),
+		widget.ButtonOpts.Text(
+			"破棄",
+			resources.Master.Button.Face,
+			resources.Master.Button.TextColor,
+		),
+		widget.ButtonOpts.TextPadding(resources.Master.Button.Padding),
 		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
 			bookmark.Bookmarks.Delete(st.scenario.ID)
 			if err := bookmark.GlobalSave(); err != nil {
@@ -311,7 +282,7 @@ func (st *PauseState) saveText() *widget.Text {
 	}
 
 	text := widget.NewText(
-		widget.TextOpts.Text(str, utils.BodyFont, color.NRGBA{100, 100, 100, 255}),
+		widget.TextOpts.Text(str, resources.Master.Fonts.BodyFace, color.NRGBA{100, 100, 100, 255}),
 	)
 
 	return text
