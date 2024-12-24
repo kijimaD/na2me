@@ -79,6 +79,7 @@ func init() {
 		NewScenario("田山花袋", "蒲団"),
 		NewScenario("石原莞爾", "最終戦争論"),
 		NewScenario("福沢諭吉", "学問のすすめ"),
+		NewScenario("芥川龍之介", "トロッコ"),
 		NewScenario("芥川龍之介", "地獄変"),
 		NewScenario("芥川龍之介", "或阿呆の一生"),
 		NewScenario("芥川龍之介", "羅生門"),
