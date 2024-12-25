@@ -21,7 +21,10 @@ jobs:
       - name: build
         run: go build .
       - name: cross compile
-        run: ./scripts/build.sh
+        run: |
+          # ビルドでタグ情報を使うので必要
+          git fetch --prune --unshallow
+          ./scripts/build.sh
       - name: test
         run: go test ./... -v
       - name: genbg
