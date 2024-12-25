@@ -1,0 +1,17 @@
+name: Cross Compile
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: cross compile
+        run: |
+          # ビルドでタグ情報を使うので必要
+          git fetch --prune --unshallow
+          ./scripts/build.sh
+          ls -al build

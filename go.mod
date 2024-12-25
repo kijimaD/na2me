@@ -1,8 +1,6 @@
 module github.com/kijimaD/na2me
 
-go 1.22.0
-
-toolchain go1.22.7
+go 1.23
 
 require (
 	github.com/ebitenui/ebitenui v0.6.0

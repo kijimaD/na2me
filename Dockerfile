@@ -3,7 +3,7 @@
 ########
 
 # なぜかbuster以外だと、WASMビルドで真っ白表示になってしまう
-FROM golang:1.23.4-bullseye AS base
+FROM golang:1.23-bullseye AS base
 RUN apt update
 RUN apt install -y \
     gcc \
@@ -34,6 +34,12 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
     go mod download
 
+#######
+# app #
+#######
+
+FROM builder AS app
+
 COPY . .
 RUN --mount=type=cache,target=/go/pkg/mod \
     --mount=type=cache,target=/root/.cache/go-build \
@@ -47,7 +53,7 @@ RUN upx-ucl --best --ultra-brute ./bin/na2me
 
 FROM gcr.io/distroless/base-debian11:latest AS release
 
-COPY --from=builder /build/bin/na2me /bin/
+COPY --from=app /build/bin/na2me /bin/
 WORKDIR /work
 ENTRYPOINT ["na2me"]
 
