@@ -31,7 +31,7 @@ func NewList(listOpts ...widget.ListOpt) *widget.List {
 			widget.ListOpts.EntryFontFace(resources.Master.Fonts.BodyFace),
 			widget.ListOpts.EntryColor(&widget.ListEntryColor{
 				Selected:                   color.NRGBA{R: 0, G: 255, B: 0, A: 255},
-				Unselected:                 color.NRGBA{R: 255, G: 255, B: 255, A: 255},
+				Unselected:                 resources.Master.List.UnselectedColor,
 				SelectedBackground:         color.NRGBA{R: 130, G: 130, B: 200, A: 255},
 				SelectingBackground:        color.NRGBA{R: 130, G: 130, B: 130, A: 255},
 				SelectingFocusedBackground: color.NRGBA{R: 130, G: 140, B: 170, A: 255},

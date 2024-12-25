@@ -18,6 +18,7 @@ func init() {
 		Fonts:       fonts,
 		ProgressBar: newProgressBarResources(),
 		Button:      newButtonResources(fonts.UIFace),
+		List:        newListResources(),
 		Backgrounds: newBackgroundResources(),
 	}
 	Master = res
@@ -29,23 +30,29 @@ const (
 )
 
 var (
-	WhiteColor      = color.NRGBA{220, 220, 220, 255}
-	WhiteTransColor = color.NRGBA{220, 220, 220, 140}
-	BlackColor      = color.NRGBA{40, 40, 40, 255}
-	GrayColor       = color.NRGBA{100, 100, 100, 255}
+	whiteColor      = color.NRGBA{240, 240, 240, 255}
+	lightColor      = color.NRGBA{220, 220, 220, 255}
+	lightTransColor = color.NRGBA{220, 220, 220, 140}
+	blackColor      = color.NRGBA{40, 40, 40, 255}
+	grayColor       = color.NRGBA{100, 100, 100, 255}
 
-	TextPrimaryColor      = WhiteColor
-	TextSecondaryColor    = GrayColor
+	TextPrimaryColor    = lightColor
+	TextSecondaryColor  = grayColor
+	TextBodyColor       = whiteColor
+	BGPrimaryTransColor = lightTransColor
+
 	progressBarTrackColor = color.NRGBA{40, 40, 40, 255}
 	progressBarFillColor  = TextSecondaryColor
 	buttonIdleColor       = TextPrimaryColor
 	buttonDisabledColor   = TextSecondaryColor
+	listIdleColor         = lightColor
 )
 
 type uiResources struct {
 	Fonts       *fonts
 	ProgressBar *progressBarResources
 	Button      *buttonResources
+	List        *listResources
 	Backgrounds *backgroundResources
 }
 
@@ -59,6 +66,10 @@ type buttonResources struct {
 	TextColor *widget.ButtonTextColor
 	Face      text.Face
 	Padding   widget.Insets
+}
+
+type listResources struct {
+	UnselectedColor *color.NRGBA
 }
 
 type backgroundResources struct {
@@ -107,6 +118,12 @@ func newButtonResources(face text.Face) *buttonResources {
 			Top:    8,
 			Bottom: 8,
 		},
+	}
+}
+
+func newListResources() *listResources {
+	return &listResources{
+		UnselectedColor: &listIdleColor,
 	}
 }
 

@@ -85,7 +85,7 @@ func (st *MainMenuState) recentPage() *page {
 		listContainer.AddChild(list)
 	} else {
 		noContentText := widget.NewText(
-			widget.TextOpts.Text("保存なし", resources.Master.Fonts.UIFace, resources.WhiteColor),
+			widget.TextOpts.Text("保存なし", resources.Master.Fonts.UIFace, resources.TextPrimaryColor),
 		)
 		listContainer.AddChild(noContentText)
 	}
@@ -151,7 +151,7 @@ func (st *MainMenuState) bookListPage() *page {
 func (st *MainMenuState) infoPage() *page {
 	c := newPageContentContainer()
 
-	bookCount := widget.NewText(widget.TextOpts.Text(fmt.Sprintf("収録数 %d", len(embeds.ScenarioMaster.Scenarios)), resources.Master.Fonts.UIFace, resources.WhiteColor))
+	bookCount := widget.NewText(widget.TextOpts.Text(fmt.Sprintf("収録数 %d", len(embeds.ScenarioMaster.Scenarios)), resources.Master.Fonts.UIFace, resources.TextPrimaryColor))
 	c.AddChild(bookCount)
 
 	return &page{

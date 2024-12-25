@@ -155,6 +155,7 @@ func (st *PlayState) Draw(screen *ebiten.Image) {
 		const lineSpacing = fontSize + 8
 		x, y := padding-20, padding+paddingSmall
 		op := &text.DrawOptions{}
+		op.ColorScale.ScaleWithColor(resources.TextBodyColor)
 		op.GeoM.Translate(float64(x), float64(y))
 		op.LineSpacing = lineSpacing
 		text.Draw(screen, japaneseText, resources.Master.Fonts.BodyFace, op)

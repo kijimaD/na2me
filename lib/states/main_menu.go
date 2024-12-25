@@ -127,7 +127,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 func (st *MainMenuState) header(label string, opts ...widget.ContainerOpt) widget.PreferredSizeLocateableWidget {
 	c := widget.NewContainer(append(opts, []widget.ContainerOpt{
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.TrackHover(false)),
-		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(resources.WhiteTransColor)),
+		widget.ContainerOpts.BackgroundImage(image.NewNineSliceColor(resources.BGPrimaryTransColor)),
 		widget.ContainerOpts.Layout(widget.NewAnchorLayout(widget.AnchorLayoutOpts.Padding(widget.Insets{
 			Top:    4,
 			Bottom: 4,
