@@ -103,7 +103,6 @@ func (st *PlayState) Update() Transition {
 	case v := <-st.eventQ.NotifyChan:
 		switch event := v.(type) {
 		case *event.ChangeBg:
-			fmt.Printf("%#v\n", event)
 			st.bgImage = utils.LoadImage(path.Join("bg", event.Source))
 		}
 	default:
