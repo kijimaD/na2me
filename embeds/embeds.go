@@ -72,6 +72,7 @@ func init() {
 		NewScenario("夏目漱石", "門"),
 		NewScenario("太宰治", "人間失格"),
 		NewScenario("太宰治", "女生徒"),
+		NewScenario("太宰治", "富嶽百景"),
 		NewScenario("太宰治", "斜陽"),
 		NewScenario("太宰治", "走れメロス"),
 		NewScenario("小林多喜二", "蟹工船"),
