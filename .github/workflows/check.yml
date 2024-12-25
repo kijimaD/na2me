@@ -25,6 +25,7 @@ jobs:
           # ビルドでタグ情報を使うので必要
           git fetch --prune --unshallow
           ./scripts/build.sh
+          ls -al build
       - name: test
         run: go test ./... -v
       - name: genbg
