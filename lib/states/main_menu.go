@@ -75,7 +75,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 		}),
 	)))
 	footerContainer.AddChild(widget.NewText(
-		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", resources.Master.Fonts.UIFace, color.NRGBA{100, 100, 100, 255})))
+		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", resources.Master.Fonts.SmallFace, color.NRGBA{100, 100, 100, 255})))
 
 	rootContainer.AddChild(
 		st.headerContainer(),
@@ -115,7 +115,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 	headerText := widget.NewText(
 		widget.TextOpts.Text(
 			"注意力散漫たる現代において、歴史的読書方法は競争力を失っている。\n電子紙芝居方式の優れた威力を万人へ宣伝し、方式普及を推進する。",
-			resources.Master.Fonts.UIFace,
+			resources.Master.Fonts.SmallFace,
 			resources.TextSecondaryColor,
 		),
 	)
