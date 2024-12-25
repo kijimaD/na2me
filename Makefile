@@ -12,7 +12,7 @@ test: ## テストを実行する
 genbg: ## 元ファイルから背景ファイルを生成する。サイズ変更、フィルタ適用を行う
 	go run . normalizeBg
 	docker build . --target filter -t filter
-	docker run --rm -v $(PWD):/work -w /work filter /bin/sh -c "python ./scripts/filter.py"
+	docker run --rm -v $(PWD):/work -w /work filter /bin/sh -c "python ./scripts/filter/filter.py"
 
 .PHONY: help
 help: ## ヘルプを表示する
