@@ -20,19 +20,13 @@ jobs:
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
       - name: build
         run: go build .
-      - name: cross compile
-        run: |
-          # ビルドでタグ情報を使うので必要
-          git fetch --prune --unshallow
-          ./scripts/build.sh
-          ls -al build
       - name: test
         run: go test ./... -v
       - name: genbg
         env:
           DISPLAY: :99
-        run: make genbg
-      - name: ls
-        run: ls -al raw/bg
+        run: |
+          make genbg
+          ls -al raw/bg
       - name: check diff
         run: git diff --exit-code

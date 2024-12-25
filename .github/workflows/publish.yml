@@ -1,4 +1,4 @@
-name: WASM Build
+name: Publish
 
 on:
   workflow_dispatch:
