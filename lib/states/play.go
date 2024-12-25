@@ -14,8 +14,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/resources"
+	"github.com/kijimaD/na2me/lib/scenario"
 	"github.com/kijimaD/na2me/lib/touch"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
@@ -33,7 +33,7 @@ type PlayState struct {
 	statsContainer *widget.Container
 
 	// 選択中のシナリオ
-	scenario embeds.Scenario
+	scenario scenario.Scenario
 	// 指定された章で再生開始する。外部ステートから指定するときに使う
 	startLabel *string
 

@@ -9,10 +9,10 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/bookmark"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/resources"
+	"github.com/kijimaD/na2me/lib/scenario"
 	"github.com/kijimaD/na2me/lib/utils"
 	"github.com/kijimaD/nova/event"
 	"github.com/kijimaD/nova/lexer"
@@ -24,7 +24,7 @@ type PauseState struct {
 	trans *Transition
 
 	// 再生シナリオ
-	scenario embeds.Scenario
+	scenario scenario.Scenario
 	// 再生中ラベル
 	currentLabel string
 
@@ -35,7 +35,7 @@ type PauseState struct {
 	rootContainer *widget.Container
 }
 
-func NewPauseState(scenario embeds.Scenario, currentLabel string) PauseState {
+func NewPauseState(scenario scenario.Scenario, currentLabel string) PauseState {
 	return PauseState{
 		scenario:     scenario,
 		currentLabel: currentLabel,

@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/kijimaD/na2me/embeds"
+	"github.com/kijimaD/na2me/lib/scenario"
 )
 
 var Bookmarks BookmarksType
@@ -14,7 +14,7 @@ var Bookmarks BookmarksType
 func init() {
 	Bookmarks = BookmarksType{
 		Bookmarks:     []Bookmark{},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{},
+		BookmarkIndex: map[scenario.ScenarioIDType]int{},
 	}
 
 	if err := GlobalLoad(); err != nil {
@@ -24,7 +24,7 @@ func init() {
 
 type Bookmark struct {
 	// 一意の名前。現在タイトルごとになっているので、タイトル名を入れる
-	ID embeds.ScenarioIDType
+	ID scenario.ScenarioIDType
 	// タイトル名
 	ScenarioName string
 	// 章ラベル
@@ -33,7 +33,7 @@ type Bookmark struct {
 	SavedAt time.Time
 }
 
-func NewBookmark(id embeds.ScenarioIDType, scenarioName string, label string) Bookmark {
+func NewBookmark(id scenario.ScenarioIDType, scenarioName string, label string) Bookmark {
 	return Bookmark{
 		ID:           id,
 		ScenarioName: scenarioName,
@@ -44,10 +44,10 @@ func NewBookmark(id embeds.ScenarioIDType, scenarioName string, label string) Bo
 
 type BookmarksType struct {
 	Bookmarks     []Bookmark
-	BookmarkIndex map[embeds.ScenarioIDType]int
+	BookmarkIndex map[scenario.ScenarioIDType]int
 }
 
-func (master *BookmarksType) Get(key embeds.ScenarioIDType) (Bookmark, bool) {
+func (master *BookmarksType) Get(key scenario.ScenarioIDType) (Bookmark, bool) {
 	idx, ok := master.BookmarkIndex[key]
 	if !ok {
 		return Bookmark{}, false
@@ -70,7 +70,7 @@ func (master *BookmarksType) Add(bookmark Bookmark) {
 	}
 }
 
-func (master *BookmarksType) Delete(key embeds.ScenarioIDType) {
+func (master *BookmarksType) Delete(key scenario.ScenarioIDType) {
 	idx, ok := master.BookmarkIndex[key]
 	if !ok {
 		return
@@ -98,7 +98,7 @@ func (master *BookmarksType) Export(w io.Writer) error {
 func (master *BookmarksType) Import(r io.Reader) error {
 	newBM := BookmarksType{
 		Bookmarks:     []Bookmark{},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{},
+		BookmarkIndex: map[scenario.ScenarioIDType]int{},
 	}
 	bytes, err := io.ReadAll(r)
 	if err != nil {

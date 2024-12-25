@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"github.com/ebitenui/ebitenui/widget"
-	embeds "github.com/kijimaD/na2me/embeds"
 	"github.com/kijimaD/na2me/lib/bookmark"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/resources"
+	"github.com/kijimaD/na2me/lib/scenario"
 	"github.com/kijimaD/na2me/lib/utils"
 )
 
@@ -56,7 +56,7 @@ func (st *MainMenuState) recentPage() *page {
 	list := eui.NewList(
 		widget.ListOpts.Entries(entries),
 		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
-			key := e.(embeds.ScenarioIDType)
+			key := e.(scenario.ScenarioIDType)
 			bookmark, ok := bookmark.Bookmarks.Get(key)
 			if !ok {
 				return ""
@@ -65,8 +65,8 @@ func (st *MainMenuState) recentPage() *page {
 			return fmt.Sprintf("%s%s%s", bookmark.ScenarioName, whitespace, bookmark.Label)
 		}),
 		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
-			key := args.Entry.(embeds.ScenarioIDType)
-			scenario := embeds.ScenarioMaster.GetScenario(key)
+			key := args.Entry.(scenario.ScenarioIDType)
+			scenario := scenario.ScenarioMaster.GetScenario(key)
 			bm, ok := bookmark.Bookmarks.Get(key)
 			if !ok {
 				return
@@ -101,7 +101,7 @@ func (st *MainMenuState) bookListPage() *page {
 	c := newPageContentContainer()
 
 	entries := []any{}
-	for _, s := range embeds.ScenarioMaster.Scenarios {
+	for _, s := range scenario.ScenarioMaster.Scenarios {
 		entries = append(entries, s.ID)
 	}
 
@@ -119,16 +119,16 @@ func (st *MainMenuState) bookListPage() *page {
 	list := eui.NewList(
 		widget.ListOpts.Entries(entries),
 		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
-			key := e.(embeds.ScenarioIDType)
-			scenario := embeds.ScenarioMaster.GetScenario(key)
+			key := e.(scenario.ScenarioIDType)
+			scenario := scenario.ScenarioMaster.GetScenario(key)
 
 			whitespace := strings.Repeat("　", 18-(len([]rune(scenario.Title))+len([]rune(scenario.AuthorName))))
 
 			return fmt.Sprintf("%s%s%s", scenario.Title, whitespace, scenario.AuthorName)
 		}),
 		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
-			key := args.Entry.(embeds.ScenarioIDType)
-			scenario := embeds.ScenarioMaster.GetScenario(key)
+			key := args.Entry.(scenario.ScenarioIDType)
+			scenario := scenario.ScenarioMaster.GetScenario(key)
 
 			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario}}}
 		}),
@@ -151,7 +151,7 @@ func (st *MainMenuState) bookListPage() *page {
 func (st *MainMenuState) infoPage() *page {
 	c := newPageContentContainer()
 
-	bookCount := widget.NewText(widget.TextOpts.Text(fmt.Sprintf("収録数 %d", len(embeds.ScenarioMaster.Scenarios)), resources.Master.Fonts.UIFace, resources.TextPrimaryColor))
+	bookCount := widget.NewText(widget.TextOpts.Text(fmt.Sprintf("収録数 %d", len(scenario.ScenarioMaster.Scenarios)), resources.Master.Fonts.UIFace, resources.TextPrimaryColor))
 	c.AddChild(bookCount)
 
 	return &page{
