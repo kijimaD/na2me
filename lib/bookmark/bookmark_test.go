@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kijimaD/na2me/embeds"
+	"github.com/kijimaD/na2me/lib/scenario"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,7 +26,7 @@ func TestGet_取得できる(t *testing.T) {
 				SavedAt:      time.Date(2024, time.December, 21, 0, 0, 0, 0, time.UTC),
 			},
 		},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{"id/こころ": 0, "id/道草": 1},
+		BookmarkIndex: map[scenario.ScenarioIDType]int{"id/こころ": 0, "id/道草": 1},
 	}
 
 	bm, ok := bmt.Get("id/こころ")
@@ -43,7 +43,7 @@ func TestGet_取得できる(t *testing.T) {
 func TestGet_存在しないとfalseを返す(t *testing.T) {
 	bmt := BookmarksType{
 		Bookmarks:     []Bookmark{},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{},
+		BookmarkIndex: map[scenario.ScenarioIDType]int{},
 	}
 	_, ok := bmt.Get("not found")
 	assert.False(t, ok)
@@ -52,17 +52,17 @@ func TestGet_存在しないとfalseを返す(t *testing.T) {
 func TestAdd_追加できる(t *testing.T) {
 	bmt := BookmarksType{
 		Bookmarks:     []Bookmark{},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{},
+		BookmarkIndex: map[scenario.ScenarioIDType]int{},
 	}
 	testDate := time.Date(2024, time.December, 21, 0, 0, 0, 0, time.UTC)
 
 	{
-		bm := NewBookmark(embeds.ScenarioIDType("id/こころ"), "こころ", "ch1")
+		bm := NewBookmark(scenario.ScenarioIDType("id/こころ"), "こころ", "ch1")
 		bm.SavedAt = testDate
 		bmt.Add(bm)
 	}
 	{
-		bm := NewBookmark(embeds.ScenarioIDType("id/道草"), "道草", "ch2")
+		bm := NewBookmark(scenario.ScenarioIDType("id/道草"), "道草", "ch2")
 		bm.SavedAt = testDate
 		bmt.Add(bm)
 	}
@@ -82,7 +82,7 @@ func TestAdd_追加できる(t *testing.T) {
 				SavedAt:      time.Date(2024, time.December, 21, 0, 0, 0, 0, time.UTC),
 			},
 		},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{"id/こころ": 0, "id/道草": 1},
+		BookmarkIndex: map[scenario.ScenarioIDType]int{"id/こころ": 0, "id/道草": 1},
 	}
 
 	assert.Equal(t, expect, bmt)
@@ -110,7 +110,7 @@ func TestDelete_削除できる(t *testing.T) {
 				SavedAt:      time.Date(2024, time.December, 21, 0, 0, 0, 0, time.UTC),
 			},
 		},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{"id/こころ": 0, "id/道草": 1, "id/門": 2},
+		BookmarkIndex: map[scenario.ScenarioIDType]int{"id/こころ": 0, "id/道草": 1, "id/門": 2},
 	}
 
 	bmt.Delete("id/道草")
@@ -130,7 +130,7 @@ func TestDelete_削除できる(t *testing.T) {
 				SavedAt:      time.Date(2024, time.December, 21, 0, 0, 0, 0, time.UTC),
 			},
 		},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{"id/こころ": 0, "id/門": 1}, // indexが再割当てされる
+		BookmarkIndex: map[scenario.ScenarioIDType]int{"id/こころ": 0, "id/門": 1}, // indexが再割当てされる
 	}
 	assert.Equal(t, expect, bmt)
 
@@ -144,16 +144,16 @@ func TestDelete_削除できる(t *testing.T) {
 func TestExport_JSONに変換できる(t *testing.T) {
 	bmt := BookmarksType{
 		Bookmarks:     []Bookmark{},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{},
+		BookmarkIndex: map[scenario.ScenarioIDType]int{},
 	}
 	testDate := time.Date(2024, time.December, 21, 0, 0, 0, 0, time.UTC)
 	{
-		bm := NewBookmark(embeds.ScenarioIDType("id/こころ"), "こころ", "ch1")
+		bm := NewBookmark(scenario.ScenarioIDType("id/こころ"), "こころ", "ch1")
 		bm.SavedAt = testDate
 		bmt.Add(bm)
 	}
 	{
-		bm := NewBookmark(embeds.ScenarioIDType("id/道草"), "道草", "ch2")
+		bm := NewBookmark(scenario.ScenarioIDType("id/道草"), "道草", "ch2")
 		bm.SavedAt = testDate
 		bmt.Add(bm)
 	}
@@ -176,6 +176,6 @@ func TestImport_JSONから読み込める(t *testing.T) {
 		Bookmarks: []Bookmark{
 			Bookmark{ID: "id/こころ", ScenarioName: "こころ", Label: "ch1", SavedAt: time.Date(2024, time.December, 21, 0, 0, 0, 0, time.UTC)},
 			Bookmark{ID: "id/道草", ScenarioName: "道草", Label: "ch2", SavedAt: time.Date(2024, time.December, 21, 0, 0, 0, 0, time.UTC)}},
-		BookmarkIndex: map[embeds.ScenarioIDType]int{"id/こころ": 0, "id/道草": 1}}
+		BookmarkIndex: map[scenario.ScenarioIDType]int{"id/こころ": 0, "id/道草": 1}}
 	assert.Equal(t, expect, bmt)
 }
