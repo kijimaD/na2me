@@ -78,6 +78,11 @@ func (master *BookmarksType) Delete(key embeds.ScenarioIDType) {
 
 	master.Bookmarks = append(master.Bookmarks[:idx], master.Bookmarks[idx+1:]...)
 	delete(master.BookmarkIndex, key)
+
+	// 削除でindexがずれるので再計算
+	for i, bm := range master.Bookmarks {
+		master.BookmarkIndex[bm.ID] = i
+	}
 }
 
 func (master *BookmarksType) Export(w io.Writer) error {
