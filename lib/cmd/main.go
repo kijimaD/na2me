@@ -11,6 +11,7 @@ import (
 
 	"github.com/kijimaD/na2me/lib"
 	"github.com/kijimaD/na2me/lib/check"
+	"github.com/kijimaD/na2me/lib/consts"
 	"github.com/kijimaD/na2me/lib/convert/lexer"
 	"github.com/kijimaD/na2me/lib/convert/parser"
 	"github.com/kijimaD/na2me/lib/normalize"
@@ -31,9 +32,9 @@ func NewMainApp() *cli.App {
 	app := cli.NewApp()
 	app.Name = "na2me"
 	app.Usage = "na2me [subcommand] [args]"
-	app.Description = "na2me novel file converter"
+	app.Description = fmt.Sprintf("na2me novel file converter\n%s", consts.BuildInfo)
 	app.DefaultCommand = CmdLaunch.Name
-	app.Version = "v0.0.0"
+	app.Version = consts.AppVersion
 	app.EnableBashCompletion = true
 	app.Commands = []*cli.Command{
 		CmdLaunch,
