@@ -102,8 +102,10 @@ func (st *PlayState) Update() Transition {
 		}
 	}
 
-	if touch.IsTouchJustReleased() {
-		st.eventQ.Run()
+	if isTap, touchInfo := touch.IsTouchJustReleased(); isTap {
+		if touchInfo.Y > padding {
+			st.eventQ.Run()
+		}
 	}
 
 	select {
