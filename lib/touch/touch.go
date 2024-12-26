@@ -52,7 +52,8 @@ func (tm *touchIDsMap) Reset() {
 func IsTouchJustReleased() bool {
 	result := false
 
-	currentTouchIDs := ebiten.TouchIDs()
+	var currentTouchIDs []ebiten.TouchID
+	currentTouchIDs = ebiten.AppendTouchIDs(currentTouchIDs)
 
 	// タッチ開始を検出する
 	for _, id := range currentTouchIDs {
