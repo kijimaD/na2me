@@ -91,8 +91,15 @@ func (st *PlayState) Update() Transition {
 		st.transPause()
 	}
 
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) || inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 		st.eventQ.Run()
+	}
+
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		_, posY := ebiten.CursorPosition()
+		if posY > padding {
+			st.eventQ.Run()
+		}
 	}
 
 	if touch.IsTouchJustReleased() {
