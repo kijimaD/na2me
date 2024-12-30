@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/ebitenui/ebitenui v0.6.0
-	github.com/hajimehoshi/ebiten/v2 v2.8.5
+	github.com/hajimehoshi/ebiten/v2 v2.8.6
 	github.com/kijimaD/nova v0.1.3
 	github.com/stretchr/testify v1.10.0
 	github.com/urfave/cli/v2 v2.27.5
