@@ -213,9 +213,9 @@ func cmdPrintChapterTmpl(ctx *cli.Context) error {
 	}
 
 	for i := 1; i <= num; i++ {
-		str := `[jump target="ch4-%d"]
+		str := `[jump target="ch%d"]
 
-*ch4-%d
+*ch%d
 --------
 `
 		fmt.Printf(str, i, i)
