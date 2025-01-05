@@ -20,7 +20,12 @@ func WarnLineLen(r io.Reader, w io.Writer, upperThreshold int, lowerThreshold in
 		lineNumber++
 
 		line := scanner.Text()
+		// 漢数字のみは章として無視
 		if isKanjiNumeralsOnly(line) {
+			continue
+		}
+		// 見出しは無視
+		if isStartWithStar(line) {
 			continue
 		}
 		lineLen := len([]rune(line))
@@ -59,6 +64,16 @@ func isKanjiNumeralsOnly(input string) bool {
 	}
 
 	return len(input) > 0
+}
+
+func isStartWithStar(input string) bool {
+	if len(input) > 0 {
+		if input[0] == '*' {
+			return true
+		}
+	}
+
+	return false
 }
 
 func WarnNotes(r io.Reader, w io.Writer, fileName string) {
