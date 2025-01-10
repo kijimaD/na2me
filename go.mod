@@ -9,7 +9,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/urfave/cli/v2 v2.27.5
 	golang.org/x/crypto v0.31.0
-	golang.org/x/image v0.20.0
+	golang.org/x/image v0.23.0
 )
 
 require (
