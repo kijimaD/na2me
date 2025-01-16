@@ -31,26 +31,17 @@ func TestExportStatuses_JSONに変換できる(t *testing.T) {
 }
 
 func TestImportStatuses_JSONから読み込める(t *testing.T) {
-	smt := ScenarioMasterType{
-		Scenarios:     []Scenario{},
-		Statuses:      []Status{},
-		ScenarioIndex: map[ScenarioIDType]int{},
-	}
 	scenarios := []Scenario{
 		New("夏目漱石", "こころ"),
 		New("夏目漱石", "道草"),
 		New("フランツカフカ", "変身"),
 	}
-	for i, s := range scenarios {
-		id := GenerateScenarioID(s.AuthorName, s.Title)
-		smt.Scenarios = append(smt.Scenarios, Scenario{
-			ID:         id,
-			Title:      s.Title,
-			AuthorName: s.AuthorName,
-		})
-		smt.Statuses = append(smt.Statuses, Status{ID: id})
-		smt.ScenarioIndex[id] = i
+	smt := ScenarioMasterType{
+		Scenarios:     []Scenario{},
+		Statuses:      []Status{},
+		ScenarioIndex: map[ScenarioIDType]int{},
 	}
+	smt.Prepare(scenarios)
 
 	input := `[{"ID":"scenario/夏目漱石/こころ.sce","IsRead":true},{"ID":"scenario/フランツカフカ/変身.sce","IsRead":true}]
 `

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 
 	"github.com/kijimaD/na2me/embeds"
 )
@@ -12,11 +11,6 @@ import (
 var ScenarioMaster ScenarioMasterType
 
 func init() {
-	sm := ScenarioMasterType{
-		Scenarios:     []Scenario{},
-		Statuses:      []Status{},
-		ScenarioIndex: map[ScenarioIDType]int{},
-	}
 	scenarios := []Scenario{
 		New("フランツカフカ", "変身"),
 		New("和辻哲郎", "漱石の人物"),
@@ -80,23 +74,13 @@ func init() {
 		New("魯迅", "故郷"),
 		New("魯迅", "狂人日記"),
 	}
-
-	for i, s := range scenarios {
-		id := GenerateScenarioID(s.AuthorName, s.Title)
-		body, err := embeds.FS.ReadFile(string(id))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		sm.Scenarios = append(sm.Scenarios, Scenario{
-			ID:         id,
-			Title:      s.Title,
-			AuthorName: s.AuthorName,
-			Body:       body,
-		})
-		sm.Statuses = append(sm.Statuses, Status{ID: id})
-		sm.ScenarioIndex[id] = i
+	sm := ScenarioMasterType{
+		Scenarios:     []Scenario{},
+		Statuses:      []Status{},
+		ScenarioIndex: map[ScenarioIDType]int{},
 	}
+	sm.Prepare(scenarios)
+	sm.LoadBody()
 
 	ScenarioMaster = sm
 }
@@ -105,6 +89,32 @@ type ScenarioMasterType struct {
 	Scenarios     []Scenario
 	Statuses      []Status
 	ScenarioIndex map[ScenarioIDType]int
+}
+
+func (master *ScenarioMasterType) Prepare(scenarios []Scenario) {
+	for i, s := range scenarios {
+		id := GenerateScenarioID(s.AuthorName, s.Title)
+
+		master.Scenarios = append(master.Scenarios, Scenario{
+			ID:         id,
+			Title:      s.Title,
+			AuthorName: s.AuthorName,
+		})
+		master.Statuses = append(master.Statuses, Status{ID: id})
+		master.ScenarioIndex[id] = i
+	}
+}
+
+func (master *ScenarioMasterType) LoadBody() error {
+	for _, s := range master.Scenarios {
+		body, err := embeds.FS.ReadFile(string(s.ID))
+		if err != nil {
+			return err
+		}
+		s.Body = body
+	}
+
+	return nil
 }
 
 func (master *ScenarioMasterType) GetScenario(key ScenarioIDType) Scenario {
