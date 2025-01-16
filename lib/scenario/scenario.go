@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 
 	"github.com/kijimaD/na2me/embeds"
 )
@@ -81,6 +82,9 @@ func init() {
 	}
 	sm.Prepare(scenarios)
 	sm.LoadBody()
+	if err := GlobalLoad(&sm); err != nil {
+		log.Fatal(err)
+	}
 
 	ScenarioMaster = sm
 }

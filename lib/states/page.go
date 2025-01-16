@@ -143,7 +143,113 @@ func (st *MainMenuState) bookListPage() *page {
 	c.AddChild(listContainer)
 
 	return &page{
-		title:   "作品一覧",
+		title:   "全部",
+		content: c,
+	}
+}
+
+func (st *MainMenuState) unreadPage() *page {
+	c := newPageContentContainer()
+
+	entries := []any{}
+	for _, status := range scenario.ScenarioMaster.Statuses {
+		if !status.IsRead {
+			entries = append(entries, status.ID)
+		}
+	}
+
+	listContainer := widget.NewContainer(
+		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
+			Stretch: true,
+		})),
+		widget.ContainerOpts.Layout(
+			widget.NewGridLayout(
+				widget.GridLayoutOpts.Columns(1),
+				widget.GridLayoutOpts.Stretch([]bool{false}, []bool{false}),
+				widget.GridLayoutOpts.Spacing(10, 0))),
+	)
+
+	list := eui.NewList(
+		widget.ListOpts.Entries(entries),
+		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
+			key := e.(scenario.ScenarioIDType)
+			scenario := scenario.ScenarioMaster.GetScenario(key)
+
+			whitespace := strings.Repeat("　", 18-(len([]rune(scenario.Title))+len([]rune(scenario.AuthorName))))
+
+			return fmt.Sprintf("%s%s%s", scenario.Title, whitespace, scenario.AuthorName)
+		}),
+		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
+			key := args.Entry.(scenario.ScenarioIDType)
+			scenario := scenario.ScenarioMaster.GetScenario(key)
+
+			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario}}}
+		}),
+		widget.ListOpts.ContainerOpts(
+			widget.ContainerOpts.WidgetOpts(
+				widget.WidgetOpts.LayoutData(widget.GridLayoutData{
+					MaxHeight: 520,
+				}),
+			)),
+	)
+	listContainer.AddChild(list)
+	c.AddChild(listContainer)
+
+	return &page{
+		title:   "未読",
+		content: c,
+	}
+}
+
+func (st *MainMenuState) donePage() *page {
+	c := newPageContentContainer()
+
+	entries := []any{}
+	for _, status := range scenario.ScenarioMaster.Statuses {
+		if status.IsRead {
+			entries = append(entries, status.ID)
+		}
+	}
+
+	listContainer := widget.NewContainer(
+		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
+			Stretch: true,
+		})),
+		widget.ContainerOpts.Layout(
+			widget.NewGridLayout(
+				widget.GridLayoutOpts.Columns(1),
+				widget.GridLayoutOpts.Stretch([]bool{false}, []bool{false}),
+				widget.GridLayoutOpts.Spacing(10, 0))),
+	)
+
+	list := eui.NewList(
+		widget.ListOpts.Entries(entries),
+		widget.ListOpts.EntryLabelFunc(func(e interface{}) string {
+			key := e.(scenario.ScenarioIDType)
+			scenario := scenario.ScenarioMaster.GetScenario(key)
+
+			whitespace := strings.Repeat("　", 18-(len([]rune(scenario.Title))+len([]rune(scenario.AuthorName))))
+
+			return fmt.Sprintf("%s%s%s", scenario.Title, whitespace, scenario.AuthorName)
+		}),
+		widget.ListOpts.EntrySelectedHandler(func(args *widget.ListEntrySelectedEventArgs) {
+			key := args.Entry.(scenario.ScenarioIDType)
+			scenario := scenario.ScenarioMaster.GetScenario(key)
+
+			st.trans = &Transition{Type: TransSwitch, NewStates: []State{&PlayState{scenario: scenario}}}
+		}),
+		widget.ListOpts.ContainerOpts(
+			widget.ContainerOpts.WidgetOpts(
+				widget.WidgetOpts.LayoutData(widget.GridLayoutData{
+					MaxHeight: 520,
+				}),
+			)),
+	)
+	listContainer.AddChild(list)
+	c.AddChild(listContainer)
+
+	return &page{
+		title:   "既読",
 		content: c,
 	}
 }
