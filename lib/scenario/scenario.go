@@ -1,7 +1,9 @@
 package scenario
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 
 	"github.com/kijimaD/na2me/embeds"
@@ -10,8 +12,7 @@ import (
 var ScenarioMaster ScenarioMasterType
 
 func init() {
-	sm := ScenarioMasterType{}
-	sm.Scenarios = append(sm.Scenarios,
+	scenarios := []Scenario{
 		New("フランツカフカ", "変身"),
 		New("和辻哲郎", "漱石の人物"),
 		New("坂口安吾", "堕落論"),
@@ -73,20 +74,16 @@ func init() {
 		New("高村光太郎", "道程"),
 		New("魯迅", "故郷"),
 		New("魯迅", "狂人日記"),
-		// New("", ""),
-	)
-
-	sm.ScenarioIndex = map[ScenarioIDType]int{}
-	for i, s := range sm.Scenarios {
-		id := GenerateScenarioID(s.AuthorName, s.Title)
-		sm.Scenarios[i].ID = id
-		sm.ScenarioIndex[id] = i
-
-		body, err := embeds.FS.ReadFile(string(id))
-		if err != nil {
-			log.Fatal(err)
-		}
-		sm.Scenarios[i].Body = body
+	}
+	sm := ScenarioMasterType{
+		Scenarios:     []Scenario{},
+		Statuses:      []Status{},
+		ScenarioIndex: map[ScenarioIDType]int{},
+	}
+	sm.Prepare(scenarios)
+	sm.LoadBody()
+	if err := GlobalLoad(&sm); err != nil {
+		log.Fatal(err)
 	}
 
 	ScenarioMaster = sm
@@ -94,7 +91,34 @@ func init() {
 
 type ScenarioMasterType struct {
 	Scenarios     []Scenario
+	Statuses      []Status
 	ScenarioIndex map[ScenarioIDType]int
+}
+
+func (master *ScenarioMasterType) Prepare(scenarios []Scenario) {
+	for i, s := range scenarios {
+		id := GenerateScenarioID(s.AuthorName, s.Title)
+
+		master.Scenarios = append(master.Scenarios, Scenario{
+			ID:         id,
+			Title:      s.Title,
+			AuthorName: s.AuthorName,
+		})
+		master.Statuses = append(master.Statuses, Status{ID: id})
+		master.ScenarioIndex[id] = i
+	}
+}
+
+func (master *ScenarioMasterType) LoadBody() error {
+	for i, s := range master.Scenarios {
+		body, err := embeds.FS.ReadFile(string(s.ID))
+		if err != nil {
+			return err
+		}
+		master.Scenarios[i].Body = body
+	}
+
+	return nil
 }
 
 func (master *ScenarioMasterType) GetScenario(key ScenarioIDType) Scenario {
@@ -102,6 +126,38 @@ func (master *ScenarioMasterType) GetScenario(key ScenarioIDType) Scenario {
 
 	return master.Scenarios[idx]
 }
+
+func (master *ScenarioMasterType) ExportStatuses(w io.Writer) error {
+	encoder := json.NewEncoder(w)
+	err := encoder.Encode(master.Statuses)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (master *ScenarioMasterType) ImportStatuses(r io.Reader) error {
+	newStatuses := []Status{}
+	bytes, err := io.ReadAll(r)
+	if err != nil {
+		return err
+	}
+
+	if err = json.Unmarshal(bytes, &newStatuses); err != nil {
+		return err
+	}
+	for _, ns := range newStatuses {
+		idx, ok := master.ScenarioIndex[ns.ID]
+		if ok {
+			master.Statuses[idx].IsRead = ns.IsRead
+		}
+	}
+
+	return nil
+}
+
+type ScenarioIDType string
 
 type Scenario struct {
 	// 一意の名前
@@ -114,13 +170,18 @@ type Scenario struct {
 	Body []byte
 }
 
-type ScenarioIDType string
-
 func New(authorName string, title string) Scenario {
 	return Scenario{
 		Title:      title,
 		AuthorName: authorName,
 	}
+}
+
+type Status struct {
+	// 一意の名前
+	ID ScenarioIDType
+	// 既読
+	IsRead bool
 }
 
 func GenerateScenarioID(authorName, title string) ScenarioIDType {

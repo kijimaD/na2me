@@ -133,6 +133,10 @@ func (st *PauseState) reloadUI() {
 		st.saveButton(),
 		st.deleteButton(),
 		st.saveText(),
+		emptyContainer,
+		st.doneButton(),
+		st.unreadButton(),
+		st.doneText(),
 	)
 
 	entries := []any{}
@@ -272,6 +276,62 @@ func (st *PauseState) deleteButton() *widget.Button {
 	return button
 }
 
+func (st *PauseState) doneButton() *widget.Button {
+	button := widget.NewButton(
+		widget.ButtonOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
+				HorizontalPosition: widget.AnchorLayoutPositionCenter,
+				VerticalPosition:   widget.AnchorLayoutPositionCenter,
+			}),
+		),
+		widget.ButtonOpts.Image(resources.Master.Button.Image),
+		widget.ButtonOpts.Text(
+			"既読",
+			resources.Master.Button.Face,
+			resources.Master.Button.TextColor,
+		),
+		widget.ButtonOpts.TextPadding(resources.Master.Button.Padding),
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			idx := scenario.ScenarioMaster.ScenarioIndex[st.scenario.ID]
+			scenario.ScenarioMaster.Statuses[idx].IsRead = true
+			if err := scenario.GlobalSave(&scenario.ScenarioMaster); err != nil {
+				log.Fatal(err)
+			}
+
+			st.reloadUI()
+		}),
+	)
+	return button
+}
+
+func (st *PauseState) unreadButton() *widget.Button {
+	button := widget.NewButton(
+		widget.ButtonOpts.WidgetOpts(
+			widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
+				HorizontalPosition: widget.AnchorLayoutPositionCenter,
+				VerticalPosition:   widget.AnchorLayoutPositionCenter,
+			}),
+		),
+		widget.ButtonOpts.Image(resources.Master.Button.Image),
+		widget.ButtonOpts.Text(
+			"未読",
+			resources.Master.Button.Face,
+			resources.Master.Button.TextColor,
+		),
+		widget.ButtonOpts.TextPadding(resources.Master.Button.Padding),
+		widget.ButtonOpts.ClickedHandler(func(args *widget.ButtonClickedEventArgs) {
+			idx := scenario.ScenarioMaster.ScenarioIndex[st.scenario.ID]
+			scenario.ScenarioMaster.Statuses[idx].IsRead = false
+			if err := scenario.GlobalSave(&scenario.ScenarioMaster); err != nil {
+				log.Fatal(err)
+			}
+
+			st.reloadUI()
+		}),
+	)
+	return button
+}
+
 func (st *PauseState) saveText() *widget.Text {
 	str := ""
 	bookmark, ok := bookmark.Bookmarks.Get(st.scenario.ID)
@@ -279,6 +339,23 @@ func (st *PauseState) saveText() *widget.Text {
 		str = "未保存"
 	} else {
 		str = fmt.Sprintf("%s", bookmark.Label)
+	}
+
+	text := widget.NewText(
+		widget.TextOpts.Text(str, resources.Master.Fonts.BodyFace, color.NRGBA{100, 100, 100, 255}),
+	)
+
+	return text
+}
+
+func (st *PauseState) doneText() *widget.Text {
+	str := ""
+	idx := scenario.ScenarioMaster.ScenarioIndex[st.scenario.ID]
+	status := scenario.ScenarioMaster.Statuses[idx]
+	if status.IsRead {
+		str = "既読"
+	} else {
+		str = "未読"
 	}
 
 	text := widget.NewText(
