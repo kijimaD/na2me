@@ -106,12 +106,12 @@ func (master *ScenarioMasterType) Prepare(scenarios []Scenario) {
 }
 
 func (master *ScenarioMasterType) LoadBody() error {
-	for _, s := range master.Scenarios {
+	for i, s := range master.Scenarios {
 		body, err := embeds.FS.ReadFile(string(s.ID))
 		if err != nil {
 			return err
 		}
-		s.Body = body
+		master.Scenarios[i].Body = body
 	}
 
 	return nil
