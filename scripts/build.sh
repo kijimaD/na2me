@@ -7,6 +7,7 @@ set -eux
 
 # 定数ライク
 APP_NAME=na2me
+DOCKER_IMAGE_NAME=na2mebuilder
 
 # 変数ライク
 APP_VERSION=v0.0.0  # タグ
@@ -45,18 +46,18 @@ cmd() {
            --env GOPATH=/work/.cache \
            --env GOOS=$goos \
            --env GOARCH=$goarch \
-           na2mebuilder \
-           go build -o build/$output -buildvcs=false -ldflags "-X github.com/kijimaD/na2me/lib/consts.AppVersion=$APP_VERSION -X 'github.com/kijimaD/na2me/lib/consts.AppCommit=$APP_COMMIT' -X 'github.com/kijimaD/na2me/lib/consts.AppDate=$APP_DATE'" ./main.go
+           $DOCKER_IMAGE_NAME \
+           go build -o $output -buildvcs=false -ldflags "-X github.com/kijimaD/na2me/lib/consts.AppVersion=$APP_VERSION -X 'github.com/kijimaD/na2me/lib/consts.AppCommit=$APP_COMMIT' -X 'github.com/kijimaD/na2me/lib/consts.AppDate=$APP_DATE'" ./main.go
 }
 
 start() {
-    docker build --target builder -t na2mebuilder .
+    docker build --target builder -t $DOCKER_IMAGE_NAME .
 
-    cmd "${APP_NAME}_linux_amd64" linux amd64 1
+    cmd "build/${APP_NAME}_linux_amd64" linux amd64 1
     # cmd "${APP_NAME}_linux_arm64" linux arm64 1
-    cmd "${APP_NAME}_windows_amd64.exe" windows amd64 0
-    cmd "${APP_NAME}_windows_arm64.exe" windows arm64 0
-    cmd "${APP_NAME}.wasm" js wasm 0
+    cmd "build/${APP_NAME}_windows_amd64.exe" windows amd64 0
+    cmd "build/${APP_NAME}_windows_arm64.exe" windows arm64 0
+    cmd "wasm/game.wasm" js wasm 0
 }
 
 start
