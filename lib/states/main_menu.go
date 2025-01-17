@@ -1,6 +1,7 @@
 package states
 
 import (
+	"fmt"
 	"image/color"
 
 	"github.com/ebitenui/ebitenui"
@@ -8,6 +9,7 @@ import (
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
+	"github.com/kijimaD/na2me/lib/consts"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/resources"
 )
@@ -75,7 +77,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 		}),
 	)))
 	footerContainer.AddChild(widget.NewText(
-		widget.TextOpts.Text("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟", resources.Master.Fonts.SmallFace, color.NRGBA{100, 100, 100, 255})))
+		widget.TextOpts.Text(fmt.Sprintf("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟 %s", consts.AppDate), resources.Master.Fonts.SmallFace, color.NRGBA{100, 100, 100, 255})))
 
 	rootContainer.AddChild(
 		st.headerContainer(),
@@ -93,7 +95,7 @@ func (st *MainMenuState) headerContainer() widget.PreferredSizeLocateableWidget 
 			widget.RowLayoutOpts.Spacing(10))),
 	)
 
-	c.AddChild(st.header("話灯機",
+	c.AddChild(st.header(fmt.Sprintf("話灯機 %s", consts.AppVersion),
 		widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.RowLayoutData{
 			Stretch: true,
 		})),

@@ -32,7 +32,7 @@ func NewMainApp() *cli.App {
 	app := cli.NewApp()
 	app.Name = "na2me"
 	app.Usage = "na2me [subcommand] [args]"
-	app.Description = fmt.Sprintf("na2me novel file converter\n%s", consts.BuildInfo)
+	app.Description = fmt.Sprintf("na2me novel file converter %s %s", consts.AppCommit, consts.AppDate)
 	app.DefaultCommand = CmdLaunch.Name
 	app.Version = consts.AppVersion
 	app.EnableBashCompletion = true

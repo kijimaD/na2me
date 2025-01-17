@@ -24,15 +24,10 @@ function is_git_repo {
 if [ $(is_git_repo) = "true" ]; then
     APP_VERSION=`git describe --tag --abbrev=0`
     APP_COMMIT=`git rev-parse --short HEAD`
+    APP_DATE=`date +%Y-%m-%d`
 fi
 
 # ================
-
-BUILD_INFO=$(cat <<-EOF
-built at `date +%Y-%m-%d`
-commit $APP_COMMIT
-EOF
-          )
 
 # cmd <output> <GOOS> <GOARCH> <CGO>
 cmd() {
@@ -51,7 +46,7 @@ cmd() {
            --env GOOS=$goos \
            --env GOARCH=$goarch \
            na2mebuilder \
-           go build -o build/$output -buildvcs=false -ldflags "-X github.com/kijimaD/na2me/lib/consts.AppVersion=$APP_VERSION -X 'github.com/kijimaD/na2me/lib/consts.BuildInfo=$BUILD_INFO'" ./main.go
+           go build -o build/$output -buildvcs=false -ldflags "-X github.com/kijimaD/na2me/lib/consts.AppVersion=$APP_VERSION -X 'github.com/kijimaD/na2me/lib/consts.AppCommit=$APP_COMMIT' -X 'github.com/kijimaD/na2me/lib/consts.AppDate=$APP_DATE'" ./main.go
 }
 
 start() {
