@@ -13,6 +13,7 @@ jobs:
 
       - name: Build
         run: |
+          git fetch --prune --unshallow
           ./scripts/build.sh
 
       - name: Check
