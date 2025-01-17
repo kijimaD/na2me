@@ -6,6 +6,7 @@ import (
 
 	"github.com/ebitenui/ebitenui/widget"
 	"github.com/kijimaD/na2me/lib/bookmark"
+	"github.com/kijimaD/na2me/lib/consts"
 	"github.com/kijimaD/na2me/lib/eui"
 	"github.com/kijimaD/na2me/lib/resources"
 	"github.com/kijimaD/na2me/lib/scenario"
@@ -257,7 +258,18 @@ func (st *MainMenuState) donePage() *page {
 func (st *MainMenuState) infoPage() *page {
 	c := newPageContentContainer()
 
-	bookCount := widget.NewText(widget.TextOpts.Text(fmt.Sprintf("収録数 %d", len(scenario.ScenarioMaster.Scenarios)), resources.Master.Fonts.UIFace, resources.TextPrimaryColor))
+	format := `収録数 %d
+バージョン %s
+コミット %s
+ビルド日付 %s
+リポジトリ https://github.com/kijimaD/na2me`
+	label := fmt.Sprintf(format,
+		len(scenario.ScenarioMaster.Scenarios),
+		consts.AppVersion,
+		consts.AppCommit,
+		consts.AppDate,
+	)
+	bookCount := widget.NewText(widget.TextOpts.Text(label, resources.Master.Fonts.UIFace, resources.TextPrimaryColor))
 	c.AddChild(bookCount)
 
 	return &page{

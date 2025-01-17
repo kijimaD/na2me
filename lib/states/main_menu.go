@@ -77,7 +77,7 @@ func (st *MainMenuState) initUI() *ebitenui.UI {
 		}),
 	)))
 	footerContainer.AddChild(widget.NewText(
-		widget.TextOpts.Text(fmt.Sprintf("github.com/kijimaD/na2me -- 電子紙芝居方式流通推進連盟 %s", consts.AppDate), resources.Master.Fonts.SmallFace, color.NRGBA{100, 100, 100, 255})))
+		widget.TextOpts.Text("―― 電子紙芝居方式流通推進連盟", resources.Master.Fonts.SmallFace, color.NRGBA{100, 100, 100, 255})))
 
 	rootContainer.AddChild(
 		st.headerContainer(),
