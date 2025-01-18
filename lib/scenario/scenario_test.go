@@ -41,7 +41,7 @@ func TestImportStatuses_JSONから読み込める(t *testing.T) {
 		Statuses:      []Status{},
 		ScenarioIndex: map[ScenarioIDType]int{},
 	}
-	smt.Prepare(scenarios)
+	smt.prepare(scenarios)
 
 	input := `[{"ID":"scenario/夏目漱石/こころ.sce","IsRead":true},{"ID":"scenario/フランツカフカ/変身.sce","IsRead":true}]
 `

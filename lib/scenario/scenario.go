@@ -24,6 +24,7 @@ func init() {
 		New("夏目漱石", "予の描かんと欲する作品"),
 		New("夏目漱石", "余と万年筆"),
 		New("夏目漱石", "倫敦塔"),
+		New("夏目漱石", "写生文"),
 		New("夏目漱石", "博士問題の成行"),
 		New("夏目漱石", "吾輩は猫である"),
 		New("夏目漱石", "坊っちゃん"),
@@ -80,8 +81,8 @@ func init() {
 		Statuses:      []Status{},
 		ScenarioIndex: map[ScenarioIDType]int{},
 	}
-	sm.Prepare(scenarios)
-	sm.LoadBody()
+	sm.prepare(scenarios)
+	sm.loadBody()
 	if err := GlobalLoad(&sm); err != nil {
 		log.Fatal(err)
 	}
@@ -95,7 +96,7 @@ type ScenarioMasterType struct {
 	ScenarioIndex map[ScenarioIDType]int
 }
 
-func (master *ScenarioMasterType) Prepare(scenarios []Scenario) {
+func (master *ScenarioMasterType) prepare(scenarios []Scenario) {
 	for i, s := range scenarios {
 		id := GenerateScenarioID(s.AuthorName, s.Title)
 
@@ -109,7 +110,7 @@ func (master *ScenarioMasterType) Prepare(scenarios []Scenario) {
 	}
 }
 
-func (master *ScenarioMasterType) LoadBody() error {
+func (master *ScenarioMasterType) loadBody() error {
 	for i, s := range master.Scenarios {
 		body, err := embeds.FS.ReadFile(string(s.ID))
 		if err != nil {
