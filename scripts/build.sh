@@ -8,6 +8,7 @@ set -eux
 # 定数ライク
 APP_NAME=na2me
 DOCKER_IMAGE_NAME=na2mebuilder
+APP_DATE=`date +%Y-%m-%d`
 
 # 変数ライク
 APP_VERSION=v0.0.0  # タグ
@@ -25,7 +26,6 @@ function is_git_repo {
 if [ $(is_git_repo) = "true" ]; then
     APP_VERSION=`git describe --tag --abbrev=0`
     APP_COMMIT=`git rev-parse --short HEAD`
-    APP_DATE=`date +%Y-%m-%d`
 fi
 
 # ================
