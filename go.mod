@@ -3,7 +3,7 @@ module github.com/kijimaD/na2me
 go 1.23
 
 require (
-	github.com/ebitenui/ebitenui v0.6.0
+	github.com/ebitenui/ebitenui v0.6.1
 	github.com/hajimehoshi/ebiten/v2 v2.8.6
 	github.com/kijimaD/nova v0.1.3
 	github.com/stretchr/testify v1.10.0
