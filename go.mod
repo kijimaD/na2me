@@ -1,6 +1,7 @@
 module github.com/kijimaD/na2me
 
 go 1.23
+toolchain go1.24.1
 
 require (
 	github.com/ebitenui/ebitenui v0.6.1
@@ -9,7 +10,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/urfave/cli/v2 v2.27.6
 	golang.org/x/crypto v0.32.0
-	golang.org/x/image v0.24.0
+	golang.org/x/image v0.26.0
 )
 
 require (
@@ -26,9 +27,9 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa // indirect
-	golang.org/x/sync v0.11.0 // indirect
+	golang.org/x/sync v0.13.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/term v0.28.0 // indirect
-	golang.org/x/text v0.22.0 // indirect
+	golang.org/x/text v0.24.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
