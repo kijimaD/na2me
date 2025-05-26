@@ -61,7 +61,7 @@ ENTRYPOINT ["na2me"]
 # node #
 ########
 
-FROM node:23 as releaser
+FROM node:24 as releaser
 RUN yarn install
 
 ##########
