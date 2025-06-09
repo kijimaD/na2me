@@ -8,14 +8,29 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 1
 
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 1
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+    open-pull-requests-limit: 1
